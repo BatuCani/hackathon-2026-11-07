@@ -48,7 +48,7 @@ Calcium is slow, and that alone breaks the spike-era test."
 
 ## 1:35-1:45 Positive control on real data
 
-Show: [results/real/dandi/summary.csv](results/real/dandi/summary.csv).
+Show: [results/figures/positive_control_vs_riken.png](results/figures/positive_control_vs_riken.png) (left: 8 DANDI sessions, all positive with a star; right: RIKEN Split A negative, Split B ineligible), else [results/real/dandi/summary.csv](results/real/dandi/summary.csv).
 
 Say:
 "Does the toolbox find reactivation where it is known to exist?

@@ -106,6 +106,7 @@ all 8 sessions eligible (41-120 cells, 6-19 significant components);
 M3 says "yes" in **8/8** (D3 = +0.028 to +0.144, p_N1 = 0.002, the minimum, in every session);
 M4 the same direction in 8/8 (D4 = +0.028 to +0.125, reported, not counted);
 p_blockswap = 0.002 in 16/16 runs.
+Figure: [results/figures/positive_control_vs_riken.png](results/figures/positive_control_vs_riken.png) (DANDI sessions next to RIKEN Split A and B).
 So the toolbox can say "yes" on real data with established reactivation, and the RIKEN Split A "no" (D3 = -0.146) is not explained by a toolbox that cannot say yes.
 The remaining differences from RIKEN are spikes vs calcium, 100 ms bins vs 7.65 Hz frames, and a real task vs a wake bout as pseudo-TASK.
 
