@@ -138,7 +138,7 @@ low that this says anything about reactivation in general, because there is one 
 - **M2 needs at least two sessions;** splits A and B are two pseudo-sessions of the same recording, so even a "yes" would not be independent replication (caveat in every M2 result file).
 - **The answer key is signed by the team lead, not a scientist.** [PROBLEM.md](PROBLEM.md) was signed 2026-11-07 16:11 CET by Batu (team lead) on behalf of the team, after the first results; no scientist sign-off was available. The open choices (TASK frames, cell selection, block-swap) were decided by the team lead at 15:45 CET before any real-data result, and the referee in [tests/referee/](tests/referee/) (written 15:30 CET) is locked at that same signature with no threshold changed after any result.
 - **Predictions that failed.** M1 was predicted negative in both splits and came out slightly positive in Split B; M2 was predicted "yes" in both splits and said "no" (JOURNAL.md "RECORD T2 real data", "RECORD T5 real data", both labelled contradicted).
-- **Loop wiring.** [run.py](run.py) runs the methods and writes byte-identical results on synthetic data ([tests/test_run.py](tests/test_run.py)); the method tests are not yet wired into the same command, and the M3/M4 real-data run used a scratch script calling the same `toolbox` functions (JOURNAL.md "RECORD T3/T6 real data").
+- **Loop wiring.** A fresh clone reproduces all eight real-data result files byte for byte with one command ([run.py](run.py), 61 s; JOURNAL.md "RECORD T8"), but `run.py` writes them as `mouse05_split{A,B}__M{1-4}.json` next to the committed `M{n}_split{A,B}.json`, does not write `M2_verdict.json` (that comes from [scripts/run_m2.py](scripts/run_m2.py)), and does not yet run the method tests or the verdict rule; the fast test suite has one expected failure, T-M4-1.
 
 ## What it would need next
 
@@ -160,9 +160,10 @@ curl -L --fail --output mouse_data.zip \
 unzip mouse_data.zip mouse_data/sleep_data.mat
 
 # tests (fast; add -m slow for the 50-seed counted method tests)
-uv run --python 3.12 --group dev pytest -m "not slow"
+uv run --python 3.12 --group dev pytest -m "not slow"   # expect 1 failure: T-M4-1, the open M4 test
 
-# every result file, seed 0, 500 N1 shuffles -> results/real/
+# every real-data result, seed 0, 500 N1 shuffles -> results/real/mouse05_split{A,B}__M{1-4}.json (61 s;
+# byte-identical to the committed results/real/M{n}_split{A,B}.json, see JOURNAL.md RECORD T8)
 uv run --python 3.12 python run.py --data mouse_data/sleep_data.mat --seed 0
 
 # positive control: M3 and M4 on the 8 DANDI:000044 sessions (streamed, no download) -> results/real/dandi/
