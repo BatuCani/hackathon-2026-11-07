@@ -231,10 +231,10 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   height: 44px; padding: 0 22px; border-radius: 999px; border: 0; cursor: pointer;
   background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
-  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--accent) 60%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transition: transform 140ms var(--ease-out), opacity 200ms ease, box-shadow 200ms ease;
 }
-.btn:hover { box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--accent) 70%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.btn:hover { box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
 .btn:active { transform: scale(0.97); }
 .btn:disabled { opacity: 0.38; cursor: not-allowed; box-shadow: none; }
 .btn.ghost { background: var(--glass); color: var(--ink); box-shadow: var(--shadow-sm), inset 0 1px 0 var(--glass-edge); border: 1px solid var(--glass-line); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
@@ -359,7 +359,8 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 .card[data-status="error"] { box-shadow: var(--shadow-sm), inset 0 0 0 1px color-mix(in srgb, var(--err) 35%, transparent), inset 0 1px 0 var(--glass-edge); }
 .shimmer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: inherit; opacity: 0; transition: opacity 300ms ease; }
 .card[data-status="running"] .shimmer { opacity: 1; }
-.shimmer::after { content: ""; position: absolute; inset: -20% -60%; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%); transform: translateX(-60%); animation: sweep 1.6s var(--ease-out) infinite; }
+.shimmer::after { content: ""; position: absolute; inset: -20% -60%; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%); transform: translateX(-60%);  }
+.card[data-status="running"] .shimmer::after { animation: sweep 1.6s var(--ease-out) infinite; }
 @keyframes sweep { to { transform: translateX(60%); } }
 .bar-track { height: 4px; border-radius: 4px; background: var(--na-soft); overflow: hidden; }
 .bar-fill { height: 100%; width: 100%; background: var(--accent); border-radius: 4px; transform-origin: left; transform: scaleX(0); }
@@ -467,7 +468,7 @@ html, body { overflow-x: clip; }
 .sess-chip:active, .mchip:active, .fig:active img { transform: scale(0.97); transition-duration: 100ms; }
 .sess-chip[aria-pressed="true"] { color: #fff; background: var(--accent); box-shadow: none; }
 .hero-mark { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; animation: mxIn 640ms var(--spring) both; }
-.hero-mark svg { flex: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(76,155,255,.35); }
+.hero-mark svg { flex: none; border-radius: 16px; box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.4); }
 .hero-mark span { font-size: clamp(34px, 5vw, 48px); font-weight: 700; letter-spacing: -0.035em; line-height: 1; color: var(--ink); }
 @media (prefers-reduced-motion: reduce) { .hero-mark { animation: none; } }
 /* Demo import: ready recordings only. Upload and field mapping stay in the code but are not shown. */
@@ -529,7 +530,7 @@ html, body { overflow-x: clip; }
   @keyframes fade { from { opacity: 0; } }
   .seg-ind, .sheet, .elig-detail, .chev-r, .toggle input::after, .card, .example, .drop, .mchip, .seg .dot { transition-duration: 200ms !important; transition-timing-function: ease !important; }
   .sheet { transform: none; }
-  .shimmer::after { animation: none; opacity: 0; }
+  .shimmer::after, .card[data-status="running"] .shimmer::after { animation: none; opacity: 0; }
   .pill.run::before { animation: none; }
   .chart .draw { animation: none; stroke-dashoffset: 0; }
   .chart .dot { animation: fade 200ms ease both; }
@@ -653,7 +654,7 @@ html, body { overflow-x: clip; }
 </main>
 
 <div class="scrim" id="scrim"></div>
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure" aria-hidden="true"><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure" aria-hidden="true"><figure id="lbFig"><figcaption id="lbCap"></figcaption></figure></div>
 <aside class="sheet glass" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true" inert>
   <div class="sheet-head"><div><h2 id="sheetTitle"></h2><div class="muted small" id="sheetSub"></div></div>
     <button class="icon-btn" id="sheetClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -1275,7 +1276,9 @@ function openFigures() {
 let lbFocus = null;
 function openLightbox(src, cap) {
   lbFocus = document.activeElement;
-  $("#lbImg").src = src; $("#lbImg").alt = cap; $("#lbCap").textContent = cap;
+  let img = $("#lbImg");
+  if (!img) { img = document.createElement("img"); img.id = "lbImg"; $("#lbFig").prepend(img); }
+  img.src = src; img.alt = cap; $("#lbCap").textContent = cap;
   $("#lightbox").classList.add("on"); $("#lightbox").removeAttribute("aria-hidden"); $("#lightbox").tabIndex = -1; $("#lightbox").focus();
 }
 function closeLightbox() {
