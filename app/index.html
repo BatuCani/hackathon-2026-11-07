@@ -167,6 +167,9 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.88em
 @media (prefers-reduced-transparency: reduce) {
   .glass { background: var(--glass-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .ambient { opacity: 0.4; }
+  .hero-label { background: var(--glass-strong); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .lightbox { background: rgba(6, 10, 20, 0.94); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .hero-img { opacity: .35; }
 }
 @media (prefers-contrast: more) {
   .glass { background: var(--glass-strong); border-color: var(--ink-3); }
@@ -339,6 +342,9 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 .word[data-tone="ok"] { color: var(--ok); } .word[data-tone="warn"] { color: var(--warn); } .word[data-tone="err"] { color: var(--err); } .word[data-tone="run"] { color: var(--accent); }
 .mchip .word { font-size: 30px; margin: 2px 0 0; }
 .method-strip { align-items: start; }
+.verdict > .pill { justify-self: start; align-self: start; }
+.card-body:has(> .word) { justify-content: flex-start; padding-top: 22px; }
+@media (max-width: 760px) { .card { min-height: 0; } .card-body { padding-top: 6px; } .word { font-size: 34px; } }
 .why { margin-top: 8px; font-size: 13px; color: var(--ink-2); }
 .why summary { display: inline-block; cursor: pointer; color: var(--accent); font-weight: 500; list-style: none; }
 .why summary::-webkit-details-marker { display: none; }
@@ -458,6 +464,7 @@ html, body { overflow-x: clip; }
 .sess-pick .muted { margin-right: 4px; }
 .sess-chip { border: 0; cursor: pointer; padding: 7px 13px; border-radius: 999px; font: inherit; font-size: 13px; color: var(--ink-2); background: var(--glass); box-shadow: inset 0 0 0 1px var(--glass-line); transition: background 200ms ease, color 200ms ease, transform 300ms var(--spring-pop); }
 .sess-chip:hover { transform: translateY(-1px); color: var(--ink); }
+.sess-chip:active, .mchip:active, .fig:active img { transform: scale(0.97); transition-duration: 100ms; }
 .sess-chip[aria-pressed="true"] { color: #fff; background: var(--accent); box-shadow: none; }
 .hero-mark { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; animation: mxIn 640ms var(--spring) both; }
 .hero-mark svg { flex: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(76,155,255,.35); }
