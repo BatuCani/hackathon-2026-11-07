@@ -1,0 +1,28 @@
+[project]
+name = "reactivation-toolbox"
+version = "0.1.0"
+description = "Calcium sleep reactivation toolbox: M1-M4 on NREM frames, tested against a per-neuron circular-shift null"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "LICENSE-CC-BY-4.0"]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "h5py",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["toolbox"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: counted method tests (50 seeds); deselect with -m 'not slow'"]
