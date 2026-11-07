@@ -109,3 +109,9 @@ AI research loops (the hackathon format). Titles and IDs checked against the arX
 - Shuffle-comparison and bin-size studies for replay were searched for and not found (see ADDENDUM). figshare, OSF and CRCNS were not searched.
 - The AI-loop papers were not read in depth.
 - `fetch_sources.sh` was syntax-checked only; Europe PMC returns no full text for non-open-access papers, and the script skips those.
+
+## Team brief and findings
+- [team-brief.md](team-brief.md): transcription of the "Reactivation Toolbox - Team Brief" (7 Nov 2026); source screenshots in [team-brief/](team-brief/).
+- [findings/oss-toolboxes.md](findings/oss-toolboxes.md): survey of open-source replay and reactivation toolboxes, with licences, commit pins and install measurements.
+- [findings/research-skills.md](findings/research-skills.md): scan of the `davidondrej/skills` research skills; nothing usable.
+- [findings/tool-fit.md](findings/tool-fit.md): fit of those tools against the team brief, and the recommendation.
