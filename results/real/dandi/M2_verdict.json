@@ -1,0 +1,77 @@
+{
+ "alpha": 0.05,
+ "answer": "no",
+ "answer_with_blockswap": "no",
+ "caveat": "M2 needs at least two sessions; only two pseudo-sessions exist (splits A and B of one recording, same animal, mouse05), so a 'yes' is not independent replication.",
+ "ev_gt_rev_sessions": 7,
+ "ev_mean": 0.0879678499714196,
+ "method_id": "M2",
+ "per_split": {
+  "Achilles_10252013": {
+   "d2": 0.15770086030368585,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Achilles_11012013": {
+   "d2": 0.0820738704948315,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Buddy_06272013": {
+   "d2": 0.046761200006237694,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Cicero_09012014": {
+   "d2": 0.07440705034602103,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Cicero_09102014": {
+   "d2": 0.08121197890426887,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Cicero_09172014": {
+   "d2": -0.03809197926240106,
+   "eligible": true,
+   "p_blockswap": 1.0,
+   "p_n1": 1.0,
+   "yes": false,
+   "yes_with_blockswap": false
+  },
+  "Gatsby_08022013": {
+   "d2": 0.06852337302623521,
+   "eligible": true,
+   "p_blockswap": 0.001996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  },
+  "Gatsby_08282013": {
+   "d2": 0.030128443216827172,
+   "eligible": true,
+   "p_blockswap": 0.02594810379241517,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  }
+ },
+ "reason": "",
+ "rev_mean": 0.025128500341956305
+}

@@ -314,3 +314,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Note: Pearson r(log rate ratio, D3) = 0.136, p = 0.749, n = 8: "not supported". POST/PRE NREM rate ratios 0.880 to 1.135 (Gatsby_08022013 0.880, Cicero_09102014 0.939, Gatsby_08282013 0.999, Achilles_11012013 1.064, Achilles_10252013 1.072, Cicero_09012014 1.103, Buddy_06272013 1.122, Cicero_09172014 1.135), all inside the predicted 0.8-1.25. Three sessions have lower POST rates and still a clear M3 "yes" (Gatsby_08022013 D3 = 0.088 at ratio 0.880). On this data the M3 "yes" is not explained by a PRE-to-POST rate change.
 - Note: RIKEN (mean deconvolved activity x fs, not a spike rate, no test): Split A ratio 0.767 (log -0.265), Split B 0.872 (log -0.137). POST activity is lower than PRE in both splits, more than in any DANDI session. With n = 2 this is a hypothesis only, not a result: a POST drop could contribute to the Split A "no" (D3 = -0.146).
 - Note: Limits: n = 8 sessions from 4 rats has low power; one rate ratio per session (population mean), not per assembly. Figure flaw: the two Cicero_09012014/09172014 labels overlap and the Gatsby_08022013 label touches the y axis; not fixed before the 16:38 stop.
+### 2026-11-07 16:34 CET JUDGE/RECORD Loop 2: M1 and M2 on DANDI:000044, 8 sessions (Engineer B)
+
+- Step: JUDGE, RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT Loop 2 (21fbde8): "Pass = 'yes' in >= 6/8 sessions for each of M1 and M2; M2 additionally needs EV > REV across sessions (mean EV over the 8 sessions > mean REV)"
+- Command: OMP_NUM_THREADS=2 uv run --python 3.12 --with remfile python scripts/run_dandi_m1m2_parallel.py --seed 0 (same methods, loader and defaults as the PREDICT command, 8 sessions in parallel; finished 16:33)
+- Git SHA: 21fbde8 (method code unchanged)
+- Result file: results/real/dandi/<session>__M1.json, __M2.json, M2_verdict.json, summary.csv (M1/M2 rows added, M3/M4 rows unchanged)
+- Label: verified (M1 passes 6/8, M2 passes 7/8 with mean EV > mean REV)
+- Note: M1 "yes" in 6/8 (D1 0.065 to 0.286, p_N1 0.002 to 0.028); no in Cicero_09172014 (D1 = -0.053, p 0.92) and Gatsby_08282013 (D1 = 0.021, p 0.38). M2 "yes" in 7/8 (D2 0.030 to 0.158, p_N1 = 0.002); no in Cicero_09172014 (D2 = -0.038, p 1.0). Mean EV 0.088 vs mean REV 0.025; EV > REV in 7/8 sessions.
+- Note: Prediction "M1 yes in 8/8" contradicted (6/8, exactly at the pass threshold); "M2 >= 7/8 with mean EV > mean REV" held. M2's own verdict() rule (yes in every session) returns "no" because of Cicero_09172014; reported in M2_verdict.json, not the Loop 2 key. Cicero_09172014 (2 m metal linear track) is the one session where M1 and M2 both say no, while M3/M4 said yes there (D3 = 0.064).
