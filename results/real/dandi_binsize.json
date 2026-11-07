@@ -1,0 +1,106 @@
+{
+  "n_shuffles": 200,
+  "seed": 0,
+  "git_sha": "ba452b3",
+  "rows": [
+    {
+      "session_id": "Achilles_10252013",
+      "bin_ms": 50,
+      "n_cells": 120,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.10210059860131764,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 21,
+      "yes": true
+    },
+    {
+      "session_id": "Achilles_10252013",
+      "bin_ms": 100,
+      "n_cells": 120,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.13921510163509113,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 19,
+      "yes": true
+    },
+    {
+      "session_id": "Achilles_10252013",
+      "bin_ms": 200,
+      "n_cells": 120,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.18108956314311864,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 16,
+      "yes": true
+    },
+    {
+      "session_id": "Achilles_11012013",
+      "bin_ms": 50,
+      "n_cells": 92,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.11768040032641194,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 16,
+      "yes": true
+    },
+    {
+      "session_id": "Achilles_11012013",
+      "bin_ms": 100,
+      "n_cells": 92,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.14374905663683749,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 15,
+      "yes": true
+    },
+    {
+      "session_id": "Achilles_11012013",
+      "bin_ms": 200,
+      "n_cells": 92,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.16987671522340062,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 14,
+      "yes": true
+    },
+    {
+      "session_id": "Cicero_09102014",
+      "bin_ms": 50,
+      "n_cells": 81,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.02505550534325085,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 10,
+      "yes": true
+    },
+    {
+      "session_id": "Cicero_09102014",
+      "bin_ms": 100,
+      "n_cells": 81,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.027968990207697053,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 10,
+      "yes": true
+    },
+    {
+      "session_id": "Cicero_09102014",
+      "bin_ms": 200,
+      "n_cells": 81,
+      "eligible": true,
+      "reason": "",
+      "D3": 0.028690774819359867,
+      "p_n1": 0.004975124378109453,
+      "n_sig": 10,
+      "yes": true
+    }
+  ]
+}

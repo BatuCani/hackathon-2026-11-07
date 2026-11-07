@@ -13,6 +13,7 @@ Deadline 17:00.
 ## Loop tasks, in order
 
 - [x] **Loop 3** rate confound (Tingley & Peyrache 2020, 3b-v) on DANDI:000044: r(log POST/PRE NREM rate, D3) = 0.136, p = 0.749, n = 8: not supported. See JOURNAL.md RECORD Loop 3.
+- [x] **Loop 4** M3 bin-size robustness (Tingley & Peyrache 2020, 3b-v) on DANDI:000044, sessions Achilles_10252013, Achilles_11012013, Cicero_09102014 at 50/100/200 ms: yes in 9/9, robust. See JOURNAL.md RECORD Loop 4.
 
 - [x] **T1 Loader** (A): `toolbox/loader.py` reads `sleep_data.mat` into `toolbox.contract.Recording` for Split A and Split B, `fs = 7.65`, stage mapping and splits as in [PROBLEM.md](PROBLEM.md).
   Done when `tests/test_loader.py` passes (frame counts per epoch equal the vetting report) and a missing required field stops with a clear message.

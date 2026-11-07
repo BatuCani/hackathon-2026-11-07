@@ -324,3 +324,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: verified (M1 passes 6/8, M2 passes 7/8 with mean EV > mean REV)
 - Note: M1 "yes" in 6/8 (D1 0.065 to 0.286, p_N1 0.002 to 0.028); no in Cicero_09172014 (D1 = -0.053, p 0.92) and Gatsby_08282013 (D1 = 0.021, p 0.38). M2 "yes" in 7/8 (D2 0.030 to 0.158, p_N1 = 0.002); no in Cicero_09172014 (D2 = -0.038, p 1.0). Mean EV 0.088 vs mean REV 0.025; EV > REV in 7/8 sessions.
 - Note: Prediction "M1 yes in 8/8" contradicted (6/8, exactly at the pass threshold); "M2 >= 7/8 with mean EV > mean REV" held. M2's own verdict() rule (yes in every session) returns "no" because of Cicero_09172014; reported in M2_verdict.json, not the Loop 2 key. Cicero_09172014 (2 m metal linear track) is the one session where M1 and M2 both say no, while M3/M4 said yes there (D3 = 0.064).
+
+### 2026-11-07 16:47 CET JUDGE/RECORD Loop 4: M3 bin-size robustness on DANDI:000044, 3 sessions (crewmate)
+
+- Step: JUDGE, RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT Loop 4 16:28 above, rule "robust if yes at all three bin sizes in all 3 sessions; bin-dependent if any of the 9 flips to no; otherwise (a run missing or not eligible) not enough evidence"
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/binsize_m3.py
+- Git SHA: ba452b3
+- Result file: results/real/dandi_binsize.json
+- Label: verified (robust: yes in 9/9)
+- Note: All 9 rows are present and eligible: Achilles_10252013 (120 cells) D3 = 0.102 / 0.139 / 0.181 at 50 / 100 / 200 ms (n_sig 21 / 19 / 16); Achilles_11012013 (92) D3 = 0.118 / 0.144 / 0.170 (n_sig 16 / 15 / 14); Cicero_09102014 (81) D3 = 0.025 / 0.028 / 0.029 (n_sig 10 / 10 / 10). Every row has D3 > 0 and p_N1 = 0.004975 (floor for 200 shuffles, seed 0), so "yes" in 9/9. Locked rule: robust.
+- Note: The clause "D3 largest at 50-100 ms in the Achilles sessions" did not hold: in both Achilles sessions D3 is smallest at 50 ms and largest at 200 ms. That clause is not the locked label. results/figures/binsize_m3.png was not written (the script saves the figure only after the last JSON row). The JSON was not rerun.
