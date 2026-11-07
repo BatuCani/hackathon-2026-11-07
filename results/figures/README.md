@@ -50,5 +50,6 @@ A star marks `p_N1 < 0.05`.
 `n.s.` marks an eligible score that is not significant.
 A cross marks an ineligible method, which has no score.
 On the current real session the only significant positive score is M2 on split B (0.002).
+M1 on split B is positive but not significant (0.006).
 M3 and M4 on split B are ineligible.
-The other eligible scores are negative and not significant.
+The remaining eligible scores are negative and not significant.
