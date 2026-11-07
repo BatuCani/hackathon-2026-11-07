@@ -249,3 +249,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: verified (M3 positive control passes 8/8)
 - Note: All 8 sessions eligible for M3 and M4 (n_sig 6-19). M3: D3 > 0 in 8/8 (0.028 to 0.144), p_N1 = 0.002 (= 1/501, the minimum) in 8/8. M4: D4 > 0 in 8/8 (0.028 to 0.125), p_N1 = 0.002 in 8/8 (reported, does not count: T-M4-1 failed).
 - Note: Prediction "p_blockswap less often < 0.05 than p_N1" contradicted: p_blockswap = 0.002 in 16/16 runs. The toolbox detects established reactivation in real hippocampal ephys, so the RIKEN Split A "no" (D3 = -0.146) is not explained by a toolbox that cannot say yes. Remaining differences from RIKEN: ephys spikes vs calcium, 100 ms bins vs 7.65 Hz frames, real task vs a wake bout as pseudo-TASK.
+
+### 2026-11-07 16:11 CET RECORD T0 sign-off (Batu, team lead)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md section "Signature"
+- Command: none
+- Git SHA: b11e8d0 (PROBLEM.md at signing)
+- Result file: PROBLEM.md
+- Label: verified
+- Note: Batu (team lead, Engineer A) signed the answer key on behalf of the team. No scientist sign-off was available. Signed after the first results. The answer key and all decisions were committed before any real-data result: commit 20a62a8 (15:44 CET, decisions); first PREDICT 15:47, first real result 15:48 (see JOURNAL.md). Nothing in the key was changed after a result.

@@ -7,7 +7,8 @@ Deadline 17:00.
 
 ## Gate
 
-- [ ] **T0** Scientist signs the answer key in [PROBLEM.md](PROBLEM.md); referee thresholds ([plans/engineer-b.md](plans/engineer-b.md) section 5) locked. Owner: Zixi with the scientist. No result is computed before this.
+- [x] **T0** Scientist signs the answer key in [PROBLEM.md](PROBLEM.md); referee thresholds ([plans/engineer-b.md](plans/engineer-b.md) section 5) locked. Owner: Zixi with the scientist. No result is computed before this.
+  Status: signed 2026-11-07 16:11 CET by Batu (team lead) on behalf of the team; no scientist sign-off was available. Signed after the first results. The answer key and all decisions were committed before any real-data result: commit 20a62a8 (15:44 CET, decisions); first PREDICT 15:47, first real result 15:48 (see JOURNAL.md). Nothing in the key was changed after a result.
 
 ## Loop tasks, in order
 
