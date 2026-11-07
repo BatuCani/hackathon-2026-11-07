@@ -502,6 +502,17 @@ html, body { overflow-x: clip; }
 .intro-dots span.on { background: var(--accent); box-shadow: none; transform: scale(1.15); }
 @media (prefers-reduced-motion: reduce) { .intro-card { transition: opacity 200ms ease; transform: none; filter: none; } .intro-chart .draw, .intro-chart .fade { animation: none; stroke-dashoffset: 0; opacity: 1; } }
 @media (max-width: 560px) { .intro-card { padding: 20px 18px 16px; } .intro-chart text { font-size: 22px; } .intro-src { font-size: 11.5px; } }
+.shuf-wrap { padding: 4px 0 14px; margin-bottom: 6px; border-bottom: 1px solid var(--glass-line); }
+.shuf-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.shuf-big { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+.shuf { display: block; width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+.shuf text { fill: var(--ink-3); font-size: 10.5px; font-family: inherit; }
+.shuf-dots circle { fill: var(--ink-3); opacity: 0; animation: shufDrop 520ms cubic-bezier(.3,1.25,.5,1) forwards; animation-delay: var(--d); }
+.shuf-mark { opacity: 0; transform-box: fill-box; transform-origin: bottom; animation: shufMark 640ms var(--spring-pop) 1050ms forwards; }
+.shuf-real { opacity: 0; animation: introFade 400ms ease 1250ms forwards; }
+@keyframes shufDrop { from { opacity: 0; transform: translateY(-90px); } 60% { opacity: .75; } to { opacity: .55; transform: none; } }
+@keyframes shufMark { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .shuf-dots circle, .shuf-mark, .shuf-real { animation: none; opacity: 1; transform: none; } .shuf-dots circle { opacity: .55; } }
 .figs { display: grid; gap: 14px; }
 .fig { margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; color: inherit; font: inherit; }
 .fig img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-sm); transition: transform 360ms var(--spring-pop); }
@@ -1213,6 +1224,55 @@ function closeSheet() {
 $("#sheetClose").addEventListener("click", closeSheet);
 $("#scrim").addEventListener("click", closeSheet);
 addEventListener("keydown", e => { if (e.key === "Escape" && $("#sheet").classList.contains("on")) closeSheet(); });
+/* ---------- Shuffle test, animated: 500 shuffled-control scores drop into a histogram, then the real score lands ---------- */
+// Real nulls exist only where scripts/export_app_data.py recomputed them and the score and p match the stored result
+// (DANDI Buddy 06/27, M1/M3/M4). Everywhere else only p is stored, so the count comes from p and the dots are illustrative.
+let NULLS = null;
+fetch("derived/null_distributions.json").then(r => r.ok ? r.json() : null).then(d => { NULLS = d; }).catch(() => {});
+const N_SHUF = 500;
+function shuffleCase(mid) {
+  const d = ds(); let i = 0;
+  if (S.ds === "dandi" && S.sess == null) i = d.sessions.findIndex(x => x.id === "Buddy_06272013");
+  const res = d.results[mid]; if (!res[i] || !res[i].el) i = res.findIndex(r => r.el);
+  if (i < 0) return null;
+  const r = res[i], ses = d.sessions[i], real = NULLS && NULLS.yes && NULLS.yes.session === ses.id && NULLS.yes[mid];
+  const label = S.ds === "dandi" ? sessLabel(ses.id) : (ses.label || ses.id).replace(/^Split /, "Session ");
+  if (real && Math.abs(real.score - r.score) < 1e-6 && Math.abs(real.p - r.p) < 1e-9) {
+    return { label, score: r.score, p: r.p, null: real.null, real: true, beats: real.null.filter(v => v < r.score).length };
+  }
+  // p = (1 + #shuffles >= score) / (N + 1)  ->  shuffles beaten = N - (p (N + 1) - 1)
+  const atLeast = Math.max(0, Math.min(N_SHUF, Math.round(r.p * (N_SHUF + 1) - 1)));
+  const beats = N_SHUF - atLeast;
+  // illustrative shape: normal quantiles, rescaled so exactly `beats` dots fall below the real score
+  const q = Array.from({ length: N_SHUF }, (_, k) => { const u = (k + 0.5) / N_SHUF; return Math.sqrt(2) * erfinv(2 * u - 1); });
+  const spread = Math.max(Math.abs(r.score) / 2.2, 0.01), qmax = q[N_SHUF - 1] + 0.25;
+  const shift = beats === 0 ? r.score + spread * qmax : beats === N_SHUF ? r.score - spread * qmax : r.score - (q[beats - 1] + q[beats]) / 2 * spread;
+  return { label, score: r.score, p: r.p, null: q.map(v => shift + v * spread), real: false, beats };
+}
+function erfinv(x) { const a = 0.147, l = Math.log(1 - x * x), t = 2 / (Math.PI * a) + l / 2; return Math.sign(x) * Math.sqrt(Math.sqrt(t * t - l / a) - t); }
+function shuffleBlock(mid) {
+  const c = shuffleCase(mid); if (!c) return "";
+  const W = 400, H = 150, L = 8, Rr = 8, B = 22, BINS = 34, per = 3, dr = 1.6;
+  const lo = Math.min(c.score, ...c.null), hi = Math.max(c.score, ...c.null), pad = (hi - lo) * 0.06 || 0.01;
+  const a = lo - pad, b = hi + pad, x = v => L + (v - a) / (b - a) * (W - L - Rr), bw = (W - L - Rr) / BINS;
+  const stacks = new Array(BINS).fill(0), order = c.null.map((v, k) => [v, k]).sort((p, q) => ((p[1] * 7919) % 500) - ((q[1] * 7919) % 500));
+  const rowH = dr * 2 + 0.6, maxRows = Math.max(...(() => { const t = new Array(BINS).fill(0); c.null.forEach(v => t[Math.min(BINS - 1, Math.floor((v - a) / (b - a) * BINS))]++); return t.map(n => Math.ceil(n / per)); })());
+  const scaleY = Math.min(1, (H - B - 12) / (maxRows * rowH));
+  let dots = "";
+  order.forEach(([v], k) => {
+    const bin = Math.min(BINS - 1, Math.floor((v - a) / (b - a) * BINS)), n = stacks[bin]++;
+    const cx = L + bin * bw + bw / 2 + ((n % per) - 1) * (dr * 2 + 0.3), cy = H - B - dr - Math.floor(n / per) * rowH * scaleY;
+    dots += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${dr}" style="--d:${Math.round(k * 1.8)}ms"/>`;
+  });
+  const sx = x(c.score), yes = c.p < ALPHA && c.score > 0;
+  const svg = `<svg class="shuf" viewBox="0 0 ${W} ${H}" role="img" aria-label="${N_SHUF} shuffled-control scores and the real score; it beats ${c.beats} of ${N_SHUF}">
+    <line x1="${L}" x2="${W - Rr}" y1="${H - B + 1}" y2="${H - B + 1}" stroke="var(--glass-line)"/>
+    <g class="shuf-dots">${dots}</g>
+    <g class="shuf-mark" style="--c:${yes ? "var(--ok)" : "var(--err)"}"><line x1="${sx}" x2="${sx}" y1="10" y2="${H - B + 1}" stroke="var(--c)" stroke-width="2.5" stroke-linecap="round"/><circle cx="${sx}" cy="10" r="5" fill="var(--c)"/></g>
+    ${sx < W / 2 ? `<text x="${W - Rr}" y="${H - 6}" text-anchor="end">shuffled controls</text>` : `<text x="${L}" y="${H - 6}">shuffled controls</text>`}<text x="${Math.min(Math.max(sx, 60), W - 60)}" y="${H - 6}" text-anchor="middle" class="shuf-real" style="fill:${yes ? "var(--ok)" : "var(--err)"}">real score</text></svg>`;
+  return `<div class="shuf-wrap"><div class="shuf-head"><span class="shuf-big">Beats ${c.beats} of ${N_SHUF} shuffles</span><span class="muted small">${esc(c.label)}</span></div>${svg}
+    <p class="small muted" style="margin:6px 0 0">${c.real ? `Real: the ${N_SHUF} shuffled-control scores for this session (seed 0), from app/derived/null_distributions.json.` : `Illustrative dots: only p = ${fmtP(c.p)} is stored for this session, so the count comes from p and the shape is drawn, not measured.`}</p></div>`;
+}
 function openMethod(mid) {
   const m = METHODS.find(x => x.id === mid), d = ds(), st = statsFor(mid), r = S.run[mid] || { status: "idle" };
   const many = d.sessions.length > 2;
@@ -1238,7 +1298,7 @@ function openMethod(mid) {
   if (show && mid === "M3" && S.ds === "riken") extra = `<div class="callout">On split A, Marchenko-Pastur passes 29 components; the N1 bound passes 15. The method uses N1. <button class="hint-link" data-learn>Why N1</button></div>`;
   if (show && d.caveat[mid]) extra += `<div class="callout warn">${esc(d.caveat[mid])}</div>`;
   if (r.status === "na") extra = `<div class="callout">${esc(st.res.find(x => !x.el).reason)}. This is expected for this data, not a failure.</div><div class="stat-list"><div class="stat"><span class="k">Stimulus specificity</span><span class="v muted">N/A</span><span class="note">${esc(d.stimNA)}</span></div></div>`;
-  openSheet(m.name, `${m.sub} · ${d.title}`, statusLine + stats + extra + table + `<details class="more"><summary>Yes and no, side by side</summary>${methodExamples(mid)}</details>`);
+  openSheet(m.name, `${m.sub} · ${d.title}`, statusLine + (show ? shuffleBlock(mid) : "") + stats + extra + table + `<details class="more"><summary>Yes and no, side by side</summary>${methodExamples(mid)}</details>`);
   const l = $("#sheetBody [data-learn]"); if (l) l.addEventListener("click", openLearn);
 }
 /* ---------- How each method decides: one real YES and one real NO per method ---------- */
