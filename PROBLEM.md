@@ -70,9 +70,12 @@ The report also states the fraction of counted methods saying "yes" per split, a
 
 ### Not decided yet (must be settled before signing)
 
-- TASK frames: the full wake bout, or wake frames only (equal for the splits above).
-- Cell selection with 6,920 cells and fewer than 2,000 TASK frames per split: all cells, most active cells, or a cortical area from `ROIs.atlasID`.
-- Whether a supplementary block-swap null is required next to N1 for M3 and M4 ([plans/engineer-b.md](plans/engineer-b.md) step 3, known limitation).
+Decided by the team lead (captain), 2026-11-07 15:45 CET, before any real-data result:
+
+- TASK frames: **decided**, the full wake bout as in the vetting report (Split A frames 5481-7306, Split B frames 15006-15657, 0-based, half-open).
+- Cell selection with 6,920 cells and fewer than 2,000 TASK frames per split: **decided**, the 300 most active cells by mean deconvolved activity (`spike`) over the union of both splits' TASK frames, so splits A and B use the same cells (needed for M2).
+  The rule "TASK frames >= 5 x cells" is not changed: Split B (651 TASK frames) is therefore reported **not eligible** for M3 and M4, with the reason.
+- Whether a supplementary block-swap null is required next to N1 for M3 and M4: **decided**, not required for the verdict; it may be reported as a supplementary column.
 
 ## Signature
 
