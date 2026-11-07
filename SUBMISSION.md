@@ -113,6 +113,8 @@ M3 says "yes" in **8/8** (D3 = +0.028 to +0.144, p_N1 = 0.002, the minimum, in e
 M4 the same direction in 8/8 (D4 = +0.028 to +0.125, reported, not counted);
 p_blockswap = 0.002 in 16/16 runs.
 Figure: [results/figures/positive_control_vs_riken.png](results/figures/positive_control_vs_riken.png) (DANDI sessions next to RIKEN Split A and B).
+M1 and M2 on the same 8 sessions (pass rule fixed before the run, JOURNAL.md "PREDICT Loop 2": "yes" in at least 6/8 each, M2 also mean EV > mean REV): M1 says "yes" in **6/8** (D1 = +0.021 to +0.286; misses Cicero_09172014 and Gatsby_08282013), M2 in **7/8** (mean EV 0.088 > mean REV 0.025; misses Cicero_09172014) ([results/real/dandi/summary.csv](results/real/dandi/summary.csv)); M2's own per-file `answer` in [results/real/dandi/M2_verdict.json](results/real/dandi/M2_verdict.json) is "no", because that field applies the RIKEN key "D2 > 0 in every session".
+Rate confound (Tingley and Peyrache 3b-v, JOURNAL.md "Loop 3"): across the 8 sessions, D3 does not follow the PRE to POST NREM rate change, r = 0.136, p = 0.749, labelled not supported ([results/real/rate_confound.json](results/real/rate_confound.json), [results/figures/rate_confound.png](results/figures/rate_confound.png)).
 So the toolbox can say "yes" on real data with established reactivation, and the RIKEN Split A "no" (D3 = -0.146) is not explained by a toolbox that cannot say yes.
 The remaining differences from RIKEN are spikes vs calcium, 100 ms bins vs 7.65 Hz frames, and a real task vs a wake bout as pseudo-TASK.
 

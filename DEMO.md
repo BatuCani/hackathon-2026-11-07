@@ -55,7 +55,8 @@ Say:
 "Does the toolbox find reactivation where it is known to exist?
 We ran M3 and M4 on DANDI:000044.
 DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
-On all eight sessions, PCA reactivation strength is positive and at the smallest possible p, 0.002: the toolbox says yes where reactivation is known to be."
+On all eight sessions, PCA reactivation strength is positive and at the smallest possible p, 0.002: the toolbox says yes where reactivation is known to be.
+Cell-pair correlation agrees in 6 of 8 and explained variance in 7 of 8, and the score does not track a firing-rate change, r = 0.14, p = 0.75."
 
 ## 1:45-2:20 Real data, one sentence per method
 
