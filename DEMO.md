@@ -84,4 +84,4 @@ Say:
 "Where we got stuck: one public session, no real task, M2 and M4 failing their own tests, and a short second split.
 We kept every failure as a failure and moved no threshold.
 Next: sessions with a real learning task, several animals, and a null that fixes M2.
-Clone, download one zip from Zenodo, run one command, and you get every number we just showed."
+Clone, download one zip from Zenodo, and the commands in How to run it give every number we just showed: run.py for the calcium results, scripts/run_dandi.py for the positive control."

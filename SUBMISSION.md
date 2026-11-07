@@ -131,7 +131,7 @@ low that this says anything about reactivation in general, because there is one 
 
 ## Where it got stuck
 
-- **One session, no task.** The Zenodo archive holds one sleep session (mouse05), not the six the paper describes ([research/datasets/calcium-vetting.md](research/datasets/calcium-vetting.md)); there is no behavioural task, so a wake bout stands in for TASK. Nothing was learned during "TASK", so a negative result is the expected one, and the toolbox could not be tested on a positive real case.
+- **One session, no task.** The Zenodo archive holds one sleep session (mouse05), not the six the paper describes ([research/datasets/calcium-vetting.md](research/datasets/calcium-vetting.md)); there is no behavioural task, so a wake bout stands in for TASK. Nothing was learned during "TASK", so a negative result is the expected one, and the toolbox could not be tested on a positive real calcium case; the only real positive control is DANDI:000044, which is electrophysiology.
 - **M2 fails its own controls.** With the locked N1 rule M2 says "yes" in 6/10 synthetic pre-existing-assembly sessions (prediction was at most 2/10); adding a block-swap null fixes that but drops the positive control to 8/10 (< 9/10). Both are strict xfails, thresholds unchanged ([tests/test_m2.py](tests/test_m2.py), JOURNAL.md "RECORD T5" 15:50). M2 does not count.
 - **M4 fails T-M4-1.** ICA should separate overlapping assemblies where PCA fails; on seed 0 ICA reaches 0.911 but PCA reaches 0.817, so the "PCA < 0.8" half fails; over seeds 0-9 ICA reaches 0.9 in only 5/10 ([journal/engineer-b.md](journal/engineer-b.md) Entry 2). The threshold was not moved. M4 does not count.
 - **The demo figure run is not the counted run.** [results/figures/controls_m3_m4.png](results/figures/controls_m3_m4.png) recomputes the controls with 20 seeds and 100 shuffles and shows no-sleep co-activity at 0.15, just above the 0.1 line; the counted M3 tests use 50 seeds and pass ([journal/engineer-b.md](journal/engineer-b.md)). The two runs were not reconciled.
@@ -143,7 +143,7 @@ low that this says anything about reactivation in general, because there is one 
 
 ## What it would need next
 
-- **Data:** sessions with a real task and sleep on both sides, ideally several animals: the other RIKEN sessions (the archive ships only one), or calcium data with learning between sleep bouts. A known-positive real dataset would let the referee be checked on real data, not only synthetic.
+- **Data:** sessions with a real task and sleep on both sides, ideally several animals: the other RIKEN sessions (the archive ships only one), or calcium data with learning between sleep bouts. A known-positive real calcium dataset would let the referee be checked on calcium data, not only on synthetic data and on DANDI:000044 spikes.
 - **Methods:** a null that keeps calcium autocorrelation and breaks only the PRE/POST assignment for M2 (block-swap at the right block length), a second ICA test seed sweep to decide whether T-M4-1's threshold or ICA's setup is wrong, and M5-M8 (replay, sequence methods) from the team brief.
 - **Eligibility:** a principled cell-selection rule (or dimensionality reduction) so short TASK bouts like Split B's are not lost; today it is "300 most active cells".
 - **Expertise:** the scientist's sign-off on the answer key and the referee thresholds, and a sleep-physiology check of the NREM scoring at bout edges.
