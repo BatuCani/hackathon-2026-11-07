@@ -259,3 +259,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: PROBLEM.md
 - Label: verified
 - Note: Batu (team lead, Engineer A) signed the answer key on behalf of the team. No scientist sign-off was available. Signed after the first results. The answer key and all decisions were committed before any real-data result: commit 20a62a8 (15:44 CET, decisions); first PREDICT 15:47, first real result 15:48 (see JOURNAL.md). Nothing in the key was changed after a result.
+
+### 2026-11-07 16:17 CET PREDICT Loop 2: M1 and M2 on DANDI:000044, 8 sessions (crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): answer key fixed before the run. Per session, "yes" = score > 0 and p_N1 < 0.05 (500 shuffles, seed 0); D1 for M1, D2 = EV - REV for M2. Pass = "yes" in >= 6/8 sessions for each of M1 and M2; M2 additionally needs EV > REV across sessions (mean EV over the 8 sessions > mean REV). Prediction: both pass; M1 "yes" in 8/8 and M2 "yes" in >= 7/8 with mean EV > mean REV, because M3/M4 found strong reactivation (p_N1 = 0.002) in 8/8 sessions on the same data.
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/run_dandi_m1m2.py --seed 0
+- Git SHA: the commit adding this entry
+- Result file: results/real/dandi/<session>__M1.json, __M2.json, rows appended to results/real/dandi/summary.csv
+- Label: -
+- Note: Loader settings as for M3/M4: 100 ms bins, pyramidal units, all MAZE bins as TASK, NREM-only PRE/POST (contract.analysis_mask). Method code and defaults unchanged. One process, sessions in sequence.
