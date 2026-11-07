@@ -423,6 +423,7 @@ details.more[open] summary { margin-bottom: 10px; }
 @keyframes mxIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .mx-card { animation: none; } }
 @media (max-width: 400px) { .mx-pair { grid-template-columns: 1fr; } }
+.seg button[data-step="elig"] { display: none; }
 .find { padding: 14px 0; border-top: 1px solid var(--glass-line); }
 .find:first-child { border-top: 0; }
 .find h4 { margin: 0 0 4px; font-size: 15px; letter-spacing: -0.015em; }
@@ -554,10 +555,10 @@ details.more[open] summary { margin-bottom: 10px; }
   <section class="screen" id="s-summary" aria-labelledby="h-summary">
     <h1 id="h-summary" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Summary</h1>
     <div class="verdict glass" id="verdict"></div>
-    <div class="chart-grid">
+    <details class="more"><summary>Details</summary><div class="chart-grid">
       <div class="chart glass"><h3>Reactivation score</h3><p class="sub">Each dot is one session or split. Above zero means POST resembles TASK more than PRE did.</p><div id="chartScore"></div></div>
       <div class="chart glass"><h3>Evidence against the N1 null</h3><p class="sub">p from 500 circular shifts, log scale. Below the dashed line is p &lt; 0.05.</p><div id="chartP"></div></div>
-    </div>
+    </div></details>
     <div class="method-strip" id="methodStrip"></div>
     <p class="foot">UX prototype over real results from the Shift Happens toolbox. Only the run timing is simulated. <a href="https://github.com/BatuCani/hackathon-2026-11-07">Repository</a></p>
   </section>
@@ -800,12 +801,12 @@ function renderMapping() {
         <span class="status-ic ${st}" aria-label="${st === "ok" ? "Mapped" : st === "miss" ? "Missing" : "Optional"}">${st === "ok" ? IC.ok : st === "miss" ? IC.x : IC.dash}</span>${msg}</div>`;
     }).join("")}
   </div>
-  <div class="actions"><button class="btn" id="toElig" ${missing.length ? "disabled" : ""}>Check eligibility</button>
+  <div class="actions"><button class="btn" id="toElig" ${missing.length ? "disabled" : ""}>Run all four methods</button>
   <span class="muted small">${missing.length ? "Map the required fields to continue." : S.custom ? "Running your own file needs the Python toolbox; pick an example to explore the flow." : ""}</span></div>`;
   box.querySelectorAll("select").forEach(s => s.addEventListener("change", () => { S.mapping[s.dataset.k] = s.value; renderMapping(); }));
   const btn = $("#toElig");
   if (S.custom) btn.disabled = true;
-  btn.addEventListener("click", () => { enable("elig"); enable("run"); go("elig"); });
+  btn.addEventListener("click", () => { enable("elig"); enable("run"); go("run"); });
   enable("elig", !missing.length && !S.custom); enable("run", !missing.length && !S.custom && S.step !== "import" ? true : !missing.length && !S.custom);
   if (missing.length || S.custom) { enable("summary", false); }
   if (!box.dataset.shown) { box.dataset.shown = "1"; box.firstElementChild.style.animation = reduced.matches ? "fade 200ms ease both" : "materialize 620ms var(--spring) both"; }
