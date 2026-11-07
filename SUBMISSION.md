@@ -33,23 +33,29 @@ Apache 2.0 for code ([LICENSE](LICENSE)), CC BY 4.0 for text ([LICENSE-CC-BY-4.0
 
 ## Open problem
 
-Neurons that fire together during a task tend to fire together again in the sleep that follows ("reactivation").
-It is tested on the same neurons in sleep before the task (PRE), the task (TASK) and sleep after it (POST): reactivation means POST resembles TASK more than PRE does.
-Question and answer key: [PROBLEM.md](PROBLEM.md); background: [research/team-brief.md](research/team-brief.md).
+**Are the standard sleep-reactivation methods valid on calcium imaging data?**
+The methods (cell-pair correlation, explained variance vs. reverse, PCA and ICA assembly strength) were built and benchmarked on sparse electrophysiology spikes.
+Two-photon calcium data is slow and autocorrelated (neighbouring frames are not independent), so their null models and significance tests may be too lenient there, and nobody has tested this systematically.
+The anchor review, Tingley and Peyrache 2020, names two of the open gaps itself in section 3b-v ([research/briefing.md](research/briefing.md), section 3b-v quotes):
 
-Why it is still open:
-the standard methods (cell-pair correlation, explained variance vs. reverse, PCA and ICA assembly strength; Tingley and Peyrache 2020) were built for sparse electrophysiology spikes.
-Two-photon calcium data is slow, so neighbouring frames are correlated and tests built for spikes can be too lenient.
-Tingley and Peyrache also show that the methods often disagree on the same data.
-There is no shared tool that says which methods a calcium dataset can support and how likely it is that it shows reactivation.
+> "the change in intrinsic excitability initially reported in the hippocampus [17] could explain, at least in part, the change in cell-pair correlation [68]. A systematic review and analysis of this possibility is still missing in the field."
+
+> "a systemic variation of bin size and its impact on pattern detection is lacking."
+
+It also shows that the methods often disagree on the same data (section 3b-iv), so a method's answer is only worth something once the method has been checked.
 
 Why it matters:
-calcium imaging records thousands of identified cells across days, far more than electrodes, so a trustworthy reactivation test on calcium data would open sleep-and-memory questions at a scale electrophysiology cannot reach.
+calcium imaging records thousands of identified cells across days, far more than electrodes, so a reactivation test that is valid on calcium data would open sleep-and-memory questions at a scale electrophysiology cannot reach; an invalid one produces false "reactivation" findings.
 
-How it is checked computationally:
-every method returns one number with a unit and a one-sided p against a fixed null (N1: each neuron's trace circularly shifted by its own random offset, 500 times, seed 0).
-The "yes" threshold for each method was written in [PROBLEM.md](PROBLEM.md) before any real-data result.
-A method counts toward the verdict only if it passes positive and negative controls on synthetic calcium-like data with planted truth ([tests/referee/](tests/referee/), [toolbox/synth.py](toolbox/synth.py), [toolbox/controls.py](toolbox/controls.py)).
+How it is checked computationally, in three layers:
+
+1. **Planted-truth synthetic controls.** Calcium-like sessions with known answers (reactivation, noise, assemblies already in PRE, a firing-rate confound) decide whether a method may vote at all ([tests/referee/](tests/referee/), [toolbox/synth.py](toolbox/synth.py), [toolbox/controls.py](toolbox/controls.py), [results/figures/controls_m3_m4.png](results/figures/controls_m3_m4.png)).
+   This already shows the problem is real: the analytical Marchenko-Pastur bound used on spike data flags false components in 50/50 calcium-like noise runs ([results/figures/eigenvalue_bounds.png](results/figures/eigenvalue_bounds.png), [journal/engineer-b.md](journal/engineer-b.md)).
+2. **A real-data positive control.** DANDI:000044 (rat CA1 electrophysiology, established reactivation) checks that the toolbox says "yes" where it should: M3 says "yes" in 8/8 sessions ([results/real/dandi/summary.csv](results/real/dandi/summary.csv)).
+   DANDI:000044 is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
+   The rate confound and bin size from section 3b-v are run on it as further loops (JOURNAL.md "PREDICT Loop 3" and "PREDICT Loop 4").
+3. **The application.** The question locked in [PROBLEM.md](PROBLEM.md) before any result: in the RIKEN mouse cortex calcium data, does POST NREM resemble TASK more than PRE NREM does, per method, and how likely is reactivation overall?
+   Every method returns one number with a unit and a one-sided p against a fixed null (N1: each neuron's trace circularly shifted by its own random offset, 500 times, seed 0), with the "yes" threshold written before the run.
 
 ## The research loop
 

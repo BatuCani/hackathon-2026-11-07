@@ -1,7 +1,8 @@
 # Shift Happens: a reactivation toolbox that knows when not to trust itself
 
 Claude Impact Lab hackathon project, 2026-11-07.
-An open toolbox that asks whether neurons recorded with two-photon calcium imaging show sleep reactivation: sleep after a task (POST) resembling the task (TASK) more than sleep before it (PRE), NREM frames only.
+The open problem: reactivation methods were built for sparse electrophysiology spikes, and whether they are valid on slow, autocorrelated calcium data is untested; Tingley and Peyrache 2020 (section 3b-v) list the firing-rate confound and bin size as open ([research/briefing.md](research/briefing.md)).
+An open toolbox that checks the methods first, then asks whether neurons recorded with two-photon calcium imaging show sleep reactivation: sleep after a task (POST) resembling the task (TASK) more than sleep before it (PRE), NREM frames only.
 It runs four standard methods (Tingley and Peyrache 2020: M1 cell-pair correlation, M2 explained variance vs. reverse, M3 PCA and M4 ICA reactivation strength), each against the same null (N1: every neuron's trace circularly shifted by its own random offset, 500 times, seed 0).
 The question, number, unit and "yes" threshold per method are fixed in [PROBLEM.md](PROBLEM.md), and a method only counts if it passes planted-truth synthetic controls ([tests/referee/](tests/referee/)).
 On the one public RIKEN calcium session the answer is **not enough evidence**, and no counted method says "yes".
