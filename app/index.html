@@ -260,7 +260,11 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 .example:active { transform: scale(0.985); }
 .example[aria-pressed="true"] { box-shadow: var(--shadow-sm), inset 0 0 0 2px var(--accent), inset 0 1px 0 var(--glass-edge); }
 .example strong { font-size: 16px; letter-spacing: -0.015em; }
-.example .meta { grid-column: 1; color: var(--ink-3); font-size: 13.5px; }
+.example .meta { grid-column: 1; color: var(--ink-3); font-size: 13.5px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* Items wrap only between each other; the separator sits in the gap and is clipped when an item starts a line. */
+.meta-items { display: flex; flex-wrap: wrap; column-gap: 15px; overflow: hidden; }
+.meta-items > span { position: relative; white-space: nowrap; }
+.meta-items > span::before { content: "·"; position: absolute; left: -10px; }
 .example .chev { grid-row: 1 / span 2; grid-column: 2; color: var(--ink-3); }
 .example-label { font-size: 13px; color: var(--ink-3); margin: 4px 4px 0; }
 
@@ -585,17 +589,17 @@ html, body { overflow-x: clip; }
         <p class="example-label">Ready recordings, already mapped. Tap one to switch.</p>
         <button class="example glass thin" data-ds="riken" aria-pressed="false">
           <strong>RIKEN mouse05</strong>
-          <span class="meta">Two-photon calcium · 300 cells · 7.65 Hz · 2 splits</span>
+          <span class="meta"><span class="meta-kind">Two-photon calcium</span><span class="meta-items"><span>300 cells</span><span>7.65 Hz</span><span>2 splits</span></span></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <button class="example glass thin" data-ds="dandi" aria-pressed="false">
           <strong>DANDI:000044</strong>
-          <span class="meta">Rat CA1 spikes · 8 sessions · 100 ms bins · positive control</span>
+          <span class="meta"><span class="meta-kind">Rat CA1 spikes, positive control</span><span class="meta-items"><span>8 sessions</span><span>100 ms bins</span></span></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <button class="example glass thin" data-ds="d718" aria-pressed="false">
           <strong>DANDI:000718</strong>
-          <span class="meta">Mouse CA1 miniscope · 711 cells · 14.93 Hz · no NREM sleep</span>
+          <span class="meta"><span class="meta-kind">Mouse CA1 miniscope, no NREM sleep</span><span class="meta-items"><span>711 cells</span><span>14.93 Hz</span></span></span>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
         </button>
       </div>
