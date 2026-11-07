@@ -120,3 +120,11 @@ Streaming instead of downloading works with `fsspec` + `h5py` / `pynwb` on the S
 
 - DANDI: REST API `https://api.dandiarchive.org/api/dandisets/`, all 953 dandisets scanned, keywords including sleep, NREM, reactivation, replay, two-photon sleep, miniscope sleep, calcium imaging sleep, ophys sleep, EEG two-photon, RIKEN, slow wave, offline, spontaneous, consolidation; metadata and asset lists read for the promising candidates.
 - Other repositories: metadata, API listings, HTTP HEAD and one ZIP table of contents via range request; no full downloads.
+
+## Detailed scout and vetting reports
+
+- [calcium-vetting.md](calcium-vetting.md): Deep file-by-file vetting report of candidate calcium datasets against the loader specification.
+  Covers verified contents of RIKEN CBS Zenodo 17667863, exact variable names, the one-session finding, recommended splits A and B, loader field mappings, and why DANDI:000718 fails for NREM sleep reactivation.
+- [ephys.md](ephys.md): Comprehensive survey of open electrophysiology datasets for full replay and reactivation analysis against Tingley & Peyrache (2020) criteria.
+  Identifies Grosmark & Buzsáki 2016 (DANDI:000044 / CRCNS hc-11) as fully qualifying and Gonzalez & Vöröslakos 2026 (DANDI:001695) as the leading near-miss.
+

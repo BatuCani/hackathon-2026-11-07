@@ -130,3 +130,7 @@ AI research loops (the hackathon format). Titles and IDs checked against the arX
 - [findings/oss-toolboxes.md](findings/oss-toolboxes.md): survey of open-source replay and reactivation toolboxes, with licences, commit pins and install measurements.
 - [findings/research-skills.md](findings/research-skills.md): scan of the `davidondrej/skills` research skills; nothing usable.
 - [findings/tool-fit.md](findings/tool-fit.md): fit of those tools against the team brief, and the recommendation.
+- [datasets/README.md](datasets/README.md): summary index of dataset searches across DANDI and other repositories.
+- [datasets/calcium-vetting.md](datasets/calcium-vetting.md): deep vetting report on candidate calcium datasets, verifying RIKEN contents, variables, the single-session finding, recommended splits A/B, loader mappings, and why DANDI:000718 fails.
+- [datasets/ephys.md](datasets/ephys.md): search report on open electrophysiology datasets, identifying Grosmark & Buzsáki 2016 (DANDI:000044) as fully qualifying.
+
