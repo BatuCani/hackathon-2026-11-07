@@ -1,7 +1,7 @@
 # Referee
 
-**Status: PROPOSED - lock after the scientist signs.**
-Until then every number below may change.
+**Status: LOCKED at the team lead's signature of [PROBLEM.md](../../PROBLEM.md) (2026-11-07 16:11 CET); no scientist sign-off was available.**
+No threshold or count in this file was changed after it was first written (11ccb64, authored 15:30 CET, before the first real-data result at 15:48); the only later edit (3c4851c) changed which methods are xfail.
 After signing, write the signing commit in the lock block at the end; from then on the referee is frozen, and any change is a new, dated referee version, never an edit.
 
 The referee is the locked test that passes the right answer and fails a wrong one.
@@ -37,7 +37,7 @@ Per method and case, the referee runs one session per seed and counts the yes an
 A method passes the referee when it passes all four cases.
 Why these counts: a calibrated method says yes in a null case with probability 0.05, so 3 or more yes out of 5 happens with probability 0.0012 per case (about 1 percent over the 12 negative cells); a method that ignores PRE, or reads a rate change as reactivation, says yes in 5 of 5.
 
-## Numbers (PROPOSED)
+## Numbers (LOCKED)
 
 | Name | Value | Meaning |
 |---|---|---|
@@ -93,6 +93,6 @@ uv run pytest tests/referee -q -rx -s
 
 ## Lock
 
-- Signed by (scientist):
-- Date and time:
-- Referee commit at signing:
+- Signed by (scientist): none available; locked by Batu (team lead, Engineer A) with the PROBLEM.md signature
+- Date and time: 2026-11-07 16:11 CET
+- Referee commit at signing: 3c4851c

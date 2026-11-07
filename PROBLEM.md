@@ -1,6 +1,6 @@
 # Problem
 
-**Status: DRAFT - to be signed by the scientist before any result.**
+**Status: LOCKED by the team lead's signature (see Signature section); no scientist sign-off was available.**
 No method result may be computed or read before the signature block at the end is filled in.
 After signing, this file is frozen: changes only as a new dated section below the signature, never by editing the keys.
 
