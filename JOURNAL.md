@@ -156,3 +156,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/M3_splitA.json, results/real/M3_splitB.json, results/real/M4_splitA.json, results/real/M4_splitB.json
 - Label: -
 - Note: Method-test status before the run: M3 passes T-A1 to T-A5 and T-M3-1 to T-M3-8; M4 fails T-M4-1 (PCA 0.817 vs < 0.8), so M4 should not count toward the verdict whatever it returns.
+
+### 2026-11-07 16:12 CET RECORD T3/T6 real data (M3 and M4 runner, crewmate)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT T3/T6 real data 16:05 above
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 python run_m3m4.py (scratch script outside the repo: toolbox.loader.load_sessions defaults, m3_pca.run / m4_ica.run, seed 0, AssemblyParams(n_shuffles=500))
+- Git SHA: 92ff4cc
+- Result file: results/real/M3_splitA.json, results/real/M3_splitB.json, results/real/M4_splitA.json, results/real/M4_splitB.json
+- Label: verified
+- Note: Split A (eligible, 300 cells, n_sig 15, N1 bound 2.42): D3 = -0.146, p_N1 = 1.0, p_blockswap = 0.768; D4 = -0.061, p_N1 = 1.0, p_blockswap = 0.695. Split B: M3 and M4 not eligible, "TASK frames 651 < 1500 (5 per cell x 300 cells)". Prediction held: B ineligible, A eligible with n_sig >= 2, D3 <= 0 in A.
+- Note: Locked keys D3 and D4: not "yes" (D < 0 in Split A, the only eligible split; Split B cannot be scored). TASK patterns are significantly expressed in both PRE and POST alone (p_n1_pre_alone = p_n1_post_alone = 0.002) but more strongly in PRE, matching M2's r_T,PRE > r_T,POST. M3 passes its method tests; M4 fails T-M4-1, so only M3 counts toward the verdict. No parameters changed after the run.
