@@ -1,5 +1,7 @@
 # Shift Happens: a reactivation toolbox that knows when not to trust itself
 
+**Live app:** https://batucani.github.io/shift-happens/app/ (interactive prototype over our real results, no install)
+
 Claude Impact Lab hackathon project, 2026-11-07.
 The open problem: reactivation methods were built for sparse electrophysiology spikes, and whether they are valid on slow, autocorrelated calcium data is untested; Tingley and Peyrache 2020 (section 3b-v) list the firing-rate confound and bin size as open ([research/briefing.md](research/briefing.md)).
 An open toolbox that checks the methods first, then asks whether neurons recorded with two-photon calcium imaging show sleep reactivation: sleep after a task (POST) resembling the task (TASK) more than sleep before it (PRE), NREM frames only.
