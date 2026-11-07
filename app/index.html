@@ -424,6 +424,18 @@ details.more[open] summary { margin-bottom: 10px; }
 @media (prefers-reduced-motion: reduce) { .mx-card { animation: none; } }
 @media (max-width: 400px) { .mx-pair { grid-template-columns: 1fr; } }
 .seg button[data-step="elig"] { display: none; }
+.hero-mark { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; animation: mxIn 640ms var(--spring) both; }
+.hero-mark svg { flex: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(76,155,255,.35); }
+.hero-mark span { font-size: clamp(34px, 5vw, 48px); font-weight: 700; letter-spacing: -0.035em; line-height: 1; color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .hero-mark { animation: none; } }
+/* Demo import: ready recordings only. Upload and field mapping stay in the code but are not shown. */
+#drop { display: none; }
+.import-grid { grid-template-columns: 1fr; }
+.examples { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.examples .example-label { grid-column: 1 / -1; margin: 0; }
+@media (max-width: 760px) { .examples { grid-template-columns: 1fr; } }
+#mapping .mapping { background: none; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; margin-top: 8px; }
+#mapping .mapping > :not(.actions) { display: none; }
 .find { padding: 14px 0; border-top: 1px solid var(--glass-line); }
 .find:first-child { border-top: 0; }
 .find h4 { margin: 0 0 4px; font-size: 15px; letter-spacing: -0.015em; }
@@ -499,8 +511,9 @@ details.more[open] summary { margin-bottom: 10px; }
 
 <main>
   <section class="screen active" id="s-import" aria-labelledby="h-import">
+    <div class="hero-mark" aria-label="ReacDetect"><svg width="56" height="56" viewBox="0 0 26 26" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4c9bff"/><stop offset="1" stop-color="#8a6bff"/></linearGradient><linearGradient id="lgh2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect width="26" height="26" rx="8" fill="url(#lg2)"/><rect x=".5" y=".5" width="25" height="25" rx="7.5" fill="url(#lgh2)" stroke="#fff" stroke-opacity=".35"/><path d="M4 14h2.2l1.6-5 2 9 1.6-4H13" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 14h1.4l1-3.2 1.3 5.8 1-2.6H22" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>ReacDetect</span></div>
     <h1 id="h-import">Can these sleep recordings be trusted to show reactivation?</h1>
-    <p class="lede">Bring in a recording. Four standard methods each test it against the same circular-shift null, and each one reports on its own.</p>
+    <p class="lede">Pick a ready recording. Four standard methods each test it against the same shuffled control, and each one reports on its own.</p>
     <div class="import-grid">
       <label class="drop glass" id="drop" tabindex="0">
         <input type="file" id="fileIn" hidden accept=".mat,.nwb,.npz,.json,.csv,.h5">
