@@ -407,6 +407,22 @@ details.more summary::-webkit-details-marker { display: none; }
 details.more[open] summary { margin-bottom: 10px; }
 .callout { padding: 12px 14px; border-radius: 14px; background: var(--na-soft); font-size: 13px; color: var(--ink-2); margin-top: 12px; }
 .callout.warn { background: var(--warn-soft); }
+.mx { padding: 16px 0 18px; border-top: 1px solid var(--glass-line); }
+.mx:first-child { border-top: 0; padding-top: 4px; }
+.mx h4 { font-size: 15px; letter-spacing: -0.01em; margin: 0 0 10px; }
+.mx-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mx-card { border-radius: 16px; padding: 10px 10px 8px; background: var(--glass); box-shadow: inset 0 1px 0 var(--glass-edge), inset 0 0 0 1px var(--glass-line); animation: mxIn 520ms var(--spring) both; animation-delay: var(--d, 0ms); }
+.mx-card .tag { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; font-size: 11.5px; font-weight: 600; }
+.mx-card .tag.yes { color: var(--ok); } .mx-card .tag.no { color: var(--err); }
+.mx-card .tag span { color: var(--ink-3); font-weight: 500; }
+.mx-card svg { display: block; width: 100%; height: auto; margin: 6px 0 2px; }
+.mx-card svg text { fill: var(--ink-3); font-size: 9px; font-family: inherit; }
+.mx-card .num { font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mx-rule { margin: 10px 0 0; font-size: 12.5px; color: var(--ink-2); }
+.mx-rule b { color: var(--ink); font-weight: 600; }
+@keyframes mxIn { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .mx-card { animation: none; } }
+@media (max-width: 400px) { .mx-pair { grid-template-columns: 1fr; } }
 .find { padding: 14px 0; border-top: 1px solid var(--glass-line); }
 .find:first-child { border-top: 0; }
 .find h4 { margin: 0 0 4px; font-size: 15px; letter-spacing: -0.015em; }
@@ -468,6 +484,9 @@ details.more[open] summary { margin-bottom: 10px; }
     <button role="tab" data-step="summary" aria-selected="false" disabled>Summary</button>
   </nav>
   <div class="bar-actions">
+    <button class="icon-btn" id="methodsBtn" aria-label="How each method decides" title="How each method decides">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>
+    </button>
     <button class="icon-btn" id="learnBtn" aria-label="What we learned" title="What we learned">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V17h5v-1.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/></svg>
     </button>
@@ -1041,9 +1060,50 @@ function openMethod(mid) {
   if (show && mid === "M3" && S.ds === "riken") extra = `<div class="callout">On split A, Marchenko-Pastur passes 29 components; the N1 bound passes 15. The method uses N1. <button class="hint-link" data-learn>Why N1</button></div>`;
   if (show && d.caveat[mid]) extra += `<div class="callout warn">${esc(d.caveat[mid])}</div>`;
   if (r.status === "na") extra = `<div class="callout">${esc(st.res.find(x => !x.el).reason)}. This is expected for this data, not a failure.</div><div class="stat-list"><div class="stat"><span class="k">Stimulus specificity</span><span class="v muted">N/A</span><span class="note">${esc(d.stimNA)}</span></div></div>`;
-  openSheet(m.name, `${m.sub} · ${d.title}`, statusLine + stats + extra + table);
+  openSheet(m.name, `${m.sub} · ${d.title}`, statusLine + stats + extra + table + `<details class="more"><summary>Yes and no, side by side</summary>${methodExamples(mid)}</details>`);
   const l = $("#sheetBody [data-learn]"); if (l) l.addEventListener("click", openLearn);
 }
+/* ---------- How each method decides: one real YES and one real NO per method ---------- */
+// YES: DANDI:000044 Achilles_11012013 (results/real/dandi/Achilles_11012013__M*.json)
+// NO: RIKEN mouse05 split A (results/real/M*_splitA.json). Stored values only, nothing simulated.
+const MX = {
+  M1: { rule: "Yes if r(TASK, POST) minus r(TASK, PRE) beats the circular-shift null, p < 0.05.",
+    yes: { bars: [["TASK·PRE", 0.0936], ["TASK·POST", 0.3002]], score: 0.2066, p: 0.002 },
+    no: { bars: [["TASK·PRE", 0.2221], ["TASK·POST", 0.1530]], score: -0.0691, p: 1.0 } },
+  M2: { rule: "Yes if explained variance (EV) exceeds reverse variance (REV) beyond the null, p < 0.05.",
+    yes: { bars: [["REV", 0.00024], ["EV", 0.0823]], score: 0.0821, p: 0.002 },
+    no: { bars: [["REV", 0.0414], ["EV", 0.0153]], score: -0.0261, p: 1.0 } },
+  M3: { rule: "Yes if mean strength of the significant PCA templates is higher in POST than PRE, p < 0.05.",
+    yes: { pre: [0.909,-0.003,0.252,0.289,0.083,0.107,0.002,0.033,0.055,0.009,-0.011,-0.026,0.026,-0.031,0.045], post: [1.424,0.235,0.563,0.575,0.34,0.122,0.068,0.206,-0.007,0.086,0.129,0.107,0.083,0.002,-0.037], score: 0.1437, p: 0.002 },
+    no: { pre: [5.02,1.007,1.051,1.389,0.298,0.772,0.3,0.328,0.019,-0.049,0.21,0.217,0.272,0.194,0.128], post: [3.225,0.612,0.821,0.916,0.318,0.708,0.465,0.059,0.244,0.215,0.106,0.27,0.484,0.279,0.252], score: -0.1455, p: 1.0 } },
+  M4: { rule: "Yes if mean strength of the ICA assemblies is higher in POST than PRE, p < 0.05.",
+    yes: { pre: [-0.002,0.09,0.067,0.057,0.166,0.089,-0.008,0.149,0.097,0.106,0.106,0.116,0.053,0.138,0.033], post: [0.009,0.212,0.216,0.198,0.377,0.149,0.003,0.305,0.337,0.45,0.165,0.224,0.072,0.258,0.155], score: 0.1248, p: 0.002 },
+    no: { pre: [0.232,0.404,0.296,0.602,0.122,0.606,0.285,0.386,0.883,0.122,0.837,0.207,0.551,1.38,1.106], post: [0.227,0.188,0.227,0.552,0.25,0.34,0.356,0.253,0.613,0.319,0.821,0.528,0.214,1.139,1.08], score: -0.0607, p: 1.0 } }
+};
+function mxBars(e, tone) {
+  const W = 160, H = 84, base = 70, max = Math.max(...e.bars.map(b => b[1])) || 1, bw = 40;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e.bars.map(b => `${b[0]} ${b[1]}`).join(", ")}"><line x1="8" x2="${W - 8}" y1="${base}" y2="${base}" stroke="var(--glass-line)"/>` +
+    e.bars.map((b, i) => { const h = Math.max(1.5, b[1] / max * 52), x = 28 + i * 64;
+      return `<rect x="${x}" y="${base - h}" width="${bw}" height="${h}" rx="6" fill="${i ? tone : "var(--ink-3)"}" opacity="${i ? 0.9 : 0.45}"/><text x="${x + bw / 2}" y="${base - h - 4}" text-anchor="middle">${b[1] < 0.01 ? b[1].toFixed(4) : b[1].toFixed(3)}</text><text x="${x + bw / 2}" y="${base + 11}" text-anchor="middle">${b[0]}</text>`; }).join("") + `</svg>`;
+}
+function mxDots(e, tone) {
+  const W = 160, H = 84, n = e.pre.length, all = e.pre.concat(e.post), lo = Math.min(0, ...all), hi = Math.max(...all);
+  const y = v => 64 - (v - lo) / (hi - lo || 1) * 56, x = i => 12 + i * (W - 24) / (n - 1);
+  let g = `<line x1="8" x2="${W - 8}" y1="${y(0)}" y2="${y(0)}" stroke="var(--glass-line)"/>`;
+  for (let i = 0; i < n; i++) g += `<line x1="${x(i)}" x2="${x(i)}" y1="${y(e.pre[i])}" y2="${y(e.post[i])}" stroke="${tone}" stroke-opacity="0.35"/><circle cx="${x(i)}" cy="${y(e.pre[i])}" r="2.2" fill="var(--ink-3)" opacity="0.6"/><circle cx="${x(i)}" cy="${y(e.post[i])}" r="2.6" fill="${tone}"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mean template strength in PRE and POST for ${n} templates">${g}<text x="8" y="80">${n} templates · PRE grey</text></svg>`;
+}
+function methodExamples(mid, delay = 0) {
+  const m = METHODS.find(x => x.id === mid), c = MX[mid], plot = c.yes.bars ? mxBars : mxDots;
+  const card = (e, yes, d) => `<div class="mx-card" style="--d:${d}ms"><div class="tag ${yes ? "yes" : "no"}">${yes ? "Yes" : "No"}<span>${yes ? "DANDI Achilles 11/01" : "RIKEN split A"}</span></div>${plot(e, yes ? "var(--ok)" : "var(--err)")}<div class="num">score ${fmtS(e.score)} · p ${fmtP(e.p)}</div></div>`;
+  return `<div class="mx"><h4>${m.name}</h4><div class="mx-pair">${card(c.yes, true, delay)}${card(c.no, false, delay + 60)}</div><p class="mx-rule"><b>Rule.</b> ${c.rule}</p></div>`;
+}
+function openMethods() {
+  openSheet("How each method decides", "One real yes and one real no per method",
+    METHODS.map((m, i) => methodExamples(m.id, 80 + i * 90)).join("") +
+    `<p class="small muted" style="margin-top:6px">Yes: DANDI:000044 positive control. No: RIKEN mouse05 split A. On split B, PCA and ICA are N/A (651 TASK frames, they need 1500). Values from results/real/.</p>`);
+}
+$("#methodsBtn").addEventListener("click", openMethods);
 function openLearn() {
   openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p><span class="src">${f.src}</span></div>`).join(""));
 }
