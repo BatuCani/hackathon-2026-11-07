@@ -1,0 +1,27 @@
+{
+ "alpha": 0.05,
+ "answer": "no",
+ "answer_with_blockswap": "no",
+ "caveat": "M2 needs at least two sessions; only two pseudo-sessions exist (splits A and B of one recording, same animal, mouse05), so a 'yes' is not independent replication.",
+ "data": "real: sleep_data.mat, loader defaults (300 most active cells over both TASK bouts)",
+ "method_id": "M2",
+ "per_split": {
+  "mouse05_splitA": {
+   "d2": -0.026138885395351915,
+   "eligible": true,
+   "p_blockswap": 0.9620758483033932,
+   "p_n1": 1.0,
+   "yes": false,
+   "yes_with_blockswap": false
+  },
+  "mouse05_splitB": {
+   "d2": 0.0017415341407509867,
+   "eligible": true,
+   "p_blockswap": 0.24750499001996007,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": false
+  }
+ },
+ "reason": ""
+}

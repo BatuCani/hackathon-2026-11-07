@@ -135,3 +135,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/M2_splitA.json, results/real/M2_splitB.json, results/real/M2_verdict.json
 - Label: -
 - Note: Loader defaults (300 most active cells over both TASK bouts, PROBLEM.md decisions 15:45), 500 shuffles.
+
+### 2026-11-07 15:48 CET RECORD T5 real data (Engineer A, M2 worker)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT T5 real data above
+- Command: OMP_NUM_THREADS=2 uv run --python 3.12 python scripts/run_m2.py --data /Users/batu/hackathon-data/riken/mouse_data/sleep_data.mat --seed 0
+- Git SHA: bd3d759
+- Result file: results/real/M2_splitA.json, results/real/M2_splitB.json, results/real/M2_verdict.json
+- Label: contradicted
+- Note: Split A: EV 0.0153, REV 0.0414, D2 = -0.0261, p_N1 = 1.0 (r_T,PRE 0.222 > r_T,POST 0.153: TASK resembles PRE more than POST). Split B: EV 0.0133, REV 0.0116, D2 = +0.0017, p_N1 = 0.002, p_blockswap = 0.248. Locked key answer: "no" (D2 < 0 in split A); prediction "yes in both" contradicted.
+- Note: Split B's p_N1 < 0.05 on a D2 of 0.002 is the pre_existing failure mode seen in the synthetic controls (N1 null q95 = 0.0001); M2 has not passed its method tests, so it should not count toward the verdict either way.

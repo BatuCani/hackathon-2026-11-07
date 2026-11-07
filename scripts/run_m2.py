@@ -24,7 +24,7 @@ if a.data:
 
     out = root / "real"
     recs = dict(zip(("A", "B"), loader.load_sessions(a.data)))
-    data_note = f"real: {a.data}, loader defaults (300 most active cells over both TASK bouts)"
+    data_note = f"real: {pathlib.Path(a.data).name}, loader defaults (300 most active cells over both TASK bouts)"
 else:
     out = root / "synthetic"
     recs = {"A": scenario("positive", seed=0, tau_s=1.0), "B": scenario("positive", seed=1, tau_s=1.0)}
