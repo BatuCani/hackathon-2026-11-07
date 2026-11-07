@@ -103,7 +103,13 @@ In words:
 **Positive control on real data, DANDI:000044** ([research/datasets/ephys.md](research/datasets/ephys.md), [scripts/run_dandi.py](scripts/run_dandi.py), JOURNAL.md "PREDICT positive control on real data, DANDI:000044" 16:03).
 DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
 The pass rule was fixed before the run: M3 says "yes" in at least 6 of the 8 sessions (8 sessions, 41-120 pyramidal units, 100 ms bins, all MAZE bins as TASK); fewer would mean the toolbox misses established reactivation, and the RIKEN "no" would carry that caveat.
-Result: DANDI_PENDING (run in progress; results will be in [results/real/dandi/](results/real/dandi/)).
+Result, labelled verified ([results/real/dandi/summary.csv](results/real/dandi/summary.csv), per-session JSON in [results/real/dandi/](results/real/dandi/), JOURNAL.md "positive control on DANDI:000044" RECORD):
+all 8 sessions eligible (41-120 cells, 6-19 significant components);
+M3 says "yes" in **8/8** (D3 = +0.028 to +0.144, p_N1 = 0.002, the minimum, in every session);
+M4 the same direction in 8/8 (D4 = +0.028 to +0.125, reported, not counted);
+p_blockswap = 0.002 in 16/16 runs.
+So the toolbox can say "yes" on real data with established reactivation, and the RIKEN Split A "no" (D3 = -0.146) is not explained by a toolbox that cannot say yes.
+The remaining differences from RIKEN are spikes vs calcium, 100 ms bins vs 7.65 Hz frames, and a real task vs a wake bout as pseudo-TASK.
 
 Methodological finding on synthetic calcium-like data (tau 1 s, no assemblies, 50 seeds; [journal/engineer-b.md](journal/engineer-b.md), JOURNAL.md "RECORD T4"):
 the analytical Marchenko-Pastur bound, the usual way to pick significant PCA components from spike data, flags at least 5 false components in **50/50** runs; the N1 shuffle bound flags at least one in **2/50** (T-N1-8).
