@@ -317,6 +317,12 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 /* Run */
 .run-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .progress-line { display: flex; align-items: center; gap: 12px; color: var(--ink-3); font-size: 14px; }
+.replay { position: relative; margin: 0 0 16px; padding: 0; overflow: hidden; border-radius: var(--radius-lg, 22px); }
+.replay canvas { display: block; width: 100%; height: 132px; }
+.replay figcaption { display: flex; align-items: baseline; gap: 12px; padding: 0 18px 14px; font-size: 12.5px; color: var(--ink-3); }
+.replay-phase { flex: none; min-width: 64px; font-weight: 600; color: var(--ink); transition: color 300ms ease; }
+.replay-phase[data-sleep] { color: var(--accent); }
+@media (max-width: 760px) { .replay canvas { height: 112px; } .replay figcaption { flex-direction: column; gap: 2px; } }
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .card {
   padding: 22px 22px 18px; min-height: 196px; display: flex; flex-direction: column; gap: 12px; cursor: pointer; text-align: left; border: 1px solid var(--glass-line);
@@ -599,6 +605,10 @@ html, body { overflow-x: clip; }
         <button class="btn ghost" id="rerun">Run again</button>
       </div>
     </div>
+    <figure class="replay glass" aria-label="Illustration: a firing sequence during the task replays faster during sleep">
+      <canvas id="replayCanvas" aria-hidden="true"></canvas>
+      <figcaption><span class="replay-phase" id="replayPhase">Awake</span><span class="replay-cap">Illustration, not data: the sequence a cell assembly fires during the task replays, faster, in sleep. That replay is what the four methods test for.</span></figcaption>
+    </figure>
     <div class="cards" id="cards"></div>
     <div class="actions"><button class="btn" id="toSummary" disabled>See summary</button><span class="muted small" id="partialNote"></span></div>
   </section>
@@ -1265,6 +1275,49 @@ function fromHash() {
     enable("summary"); go("summary", true);
   }
 }
+/* ---------- Replay illustration (not data): a TASK sequence, then the same sequence compressed in sleep ---------- */
+(() => {
+  const cv = $("#replayCanvas"), phaseEl = $("#replayPhase"), ctx = cv.getContext("2d");
+  let rnd = 7; const rand = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647;
+  const N = 60, cells = Array.from({ length: N }, () => ({ x: rand(), y: rand(), glow: 0 }));
+  // the assembly: 8 cells ordered left to right so the sequence reads as a sweep
+  const seq = cells.map((c, i) => i).filter(i => cells[i].y > 0.22 && cells[i].y < 0.78).sort((a, b) => cells[a].x - cells[b].x).filter((_, k, arr) => k % Math.ceil(arr.length / 8) === 0).slice(0, 8);
+  let W = 0, H = 0, dpr = 1, t0 = performance.now(), raf = 0, lastPhase = "";
+  const size = () => { dpr = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  const col = () => { const cs = getComputedStyle(document.documentElement); return { a: cs.getPropertyValue("--accent").trim() || "#4c9bff", d: cs.getPropertyValue("--ink-3").trim() || "#9aa3b2" }; };
+  const px = c => ({ x: 18 + c.x * (W - 36), y: 14 + c.y * (H - 28) });
+  // timeline (ms): awake sweep 8 x 320, pause, two sleep sweeps 8 x 70, rest
+  const AW = 320, SL = 70, T_AW = 8 * AW + 500, T_SL = 8 * SL + 420, CYCLE = T_AW + 2 * T_SL + 900;
+  function frame(now, still) {
+    const c = col(), t = still ? T_AW - 400 : (now - t0) % CYCLE, sleep = t >= T_AW;
+    const phase = sleep ? "Sleep" : "Awake";
+    if (phase !== lastPhase) { lastPhase = phase; phaseEl.textContent = still ? "Awake, then sleep" : phase; phaseEl.toggleAttribute("data-sleep", sleep && !still); }
+    ctx.clearRect(0, 0, W, H);
+    if (sleep && !still) { const k = Math.min(1, (t - T_AW) / 400, (CYCLE - t) / 400); ctx.globalAlpha = 0.22 * k; ctx.fillStyle = "#070a1c"; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+    // which step of the sequence is firing now
+    let step = -1;
+    if (!sleep) step = Math.floor(t / AW); else { const u = (t - T_AW) % T_SL; step = Math.floor(u / SL); }
+    if (step >= 0 && step < 8) cells[seq[step]].glow = 1;
+    if (!still && rand() < 0.05) cells[Math.floor(rand() * N)].glow = Math.max(cells[Math.floor(rand() * N)].glow, 0.35);
+    // trail through the fired part of the sequence
+    ctx.lineWidth = 1.4; ctx.strokeStyle = c.a; ctx.globalAlpha = still ? 0.55 : sleep ? 0.5 : 0.3; ctx.beginPath();
+    seq.slice(0, still ? 8 : Math.min(step + 1, 8)).forEach((i, k) => { const p = px(cells[i]); k ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); }); ctx.stroke();
+    cells.forEach((cell, i) => {
+      const p = px(cell), inSeq = seq.includes(i), g = still ? (inSeq ? 1 : 0) : cell.glow;
+      ctx.globalAlpha = (inSeq ? 0.5 : 0.28) + 0.5 * g; ctx.fillStyle = g > 0.05 || inSeq ? c.a : c.d;
+      ctx.beginPath(); ctx.arc(p.x, p.y, (inSeq ? 2.8 : 2) + 3.4 * g, 0, Math.PI * 2); ctx.fill();
+      if (g > 0.2) { ctx.globalAlpha = 0.18 * g; ctx.beginPath(); ctx.arc(p.x, p.y, 9 + 8 * g, 0, Math.PI * 2); ctx.fill(); }
+      cell.glow *= sleep ? 0.86 : 0.93;
+    });
+    ctx.globalAlpha = 1;
+  }
+  const visible = () => cv.offsetParent !== null;
+  function loop(now) { if (visible()) frame(now, false); raf = requestAnimationFrame(loop); }
+  function start() { cancelAnimationFrame(raf); size(); if (reduced.matches) frame(0, true); else { t0 = performance.now(); raf = requestAnimationFrame(loop); } }
+  new ResizeObserver(() => { size(); if (reduced.matches) frame(0, true); }).observe(cv);
+  reduced.addEventListener && reduced.addEventListener("change", start);
+  start();
+})();
 if (!reduced.matches) {
   let ticking = false;
   addEventListener("scroll", () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { document.querySelector(".hero-img").style.setProperty("--py", `${Math.min(scrollY, 800) * 0.28}px`); ticking = false; }); }, { passive: true });
