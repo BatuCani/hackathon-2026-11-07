@@ -206,7 +206,7 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.88em
 .seg button[aria-selected="true"] { color: var(--ink); }
 .seg button:disabled { opacity: 0.4; cursor: default; }
 .seg button:not(:disabled):hover { color: var(--ink); }
-.seg .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: 6px; vertical-align: 2px; transform: scale(0); transition: transform 400ms var(--spring-pop); }
+.seg .dot { position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform 400ms var(--spring-pop); }
 .seg .dot.on { transform: scale(1); }
 
 main { position: relative; z-index: 1; width: min(1040px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 96px; }
@@ -942,7 +942,7 @@ function renderSummary() {
   $("#chartP").innerHTML = chart("p");
   $("#methodStrip").innerHTML = METHODS.map(m => {
     const r = S.run[m.id] || { status: "idle" }, st = statsFor(m.id);
-    const pill = r.status === "done" ? `<span class="pill ${st.yes ? "ok" : "na"}">${st.yes}/${st.el.length} significant</span>` : r.status === "na" ? `<span class="pill na">N/A</span>` : r.status === "error" ? `<span class="pill err">Error</span>` : `<span class="pill run">Running</span>`;
+    const pill = r.status === "done" ? `<span class="pill ${!CONTROLS[m.id] ? "warn" : st.yes ? "ok" : "na"}">${st.yes}/${st.el.length} significant</span>` : r.status === "na" ? `<span class="pill na">N/A</span>` : r.status === "error" ? `<span class="pill err">Error</span>` : `<span class="pill run">Running</span>`;
     return `<button class="mchip glass thin" data-m="${m.id}"><strong>${m.name}</strong>${pill}<span class="muted small">${CONTROLS[m.id] ? "Counted" : "Not counted: failed controls"}</span></button>`;
   }).join("");
   $("#methodStrip").querySelectorAll(".mchip").forEach(b => b.addEventListener("click", () => openMethod(b.dataset.m)));
