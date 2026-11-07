@@ -10,6 +10,18 @@ Merged from two independent literature passes (Claude and Codex) on 2026-11-07, 
 - Third-party papers and code are **not stored here**. Run `bash research/scripts/fetch_sources.sh` to pull open-access full text (Europe PMC API) and clone the reference repos into `research/_fetched/` (git-ignored).
 - The one PDF kept in `papers/` is Takigawa et al. 2024, which is CC BY.
 
+## Project focus (read this first)
+The team brief targets **calcium-imaging sleep reactivation**, not hippocampal replay: import deconvolved two-photon/miniscope data (cells x frames) with sleep stages, run only the methods the data supports (M1 cell-pair correlation, M2 EV vs REV, M3 PCA strength, M4 ICA strength; replay methods M5-M8 out of scope), test them against a per-neuron circular-shift null (N1, 500 shifts), and report how likely reactivation is. PRE and POST use NREM frames only. Method tests (positive and negative controls) decide which methods count toward the verdict.
+- [CALCIUM_DATASETS.md](CALCIUM_DATASETS.md): which public datasets fit. **Nothing fully qualifies.** Pick: G-Node PFC calcium dataset (doi:10.12751/g-node.b8k1yn, CC BY 4.0, 1.4 GiB; same-cell sleep before/after learning but no sleep staging). Fallback: RIKEN CBS 20260708-001 (doi:10.60178/cbs.20260708-001, CC BY 4.0; deconvolved spikes + EEG/EMG staging, but no task, so a wake bout stands in for TASK; check the `state` vectors first). The two DOIs and the RIKEN paper were re-resolved on 2026-11-07.
+- [CALCIUM_METHODS.md](CALCIUM_METHODS.md): calcium reactivation papers, deconvolution and binning effects, nulls, the EV formula as printed (Roscow 2025, Eq. 13), sleep scoring tools, licence-checked code, validation and p-value combination.
+- The sections below this one were written for ephys replay and are background. [BUILD_APPROACH.md](BUILD_APPROACH.md) is the replay build plan and does not match the calcium brief.
+
+Points to act on:
+- `edeno/neurospatial` (MIT, PyPI 0.6.0) already implements EV/REV, PCA/ICA assemblies and circular-shift thresholds. It is young and single-author, so test it before reusing or duplicating it.
+- Zaki et al. 2025 (Nature, doi:10.1038/s41586-024-08168-4) uses a circular shuffle x1000 that preserves each neuron's autocorrelation: the closest published match to N1. Harris 2020 (bioRxiv, "Nonsense correlations in neuroscience") warns circular shifts can give many false positives on slowly drifting signals, so detrend and measure N1's false-positive rate on your data.
+- GPL code (CaImAn, OASIS, Suite2p, Cascade, AccuSleep, RnR_methods) must be run as external tools or reimplemented from the equations, never copied, if the repo is not to become GPL.
+- EV/REV is already used on two-photon data (Chang 2023, Esteves 2026), but those papers use awake quiescence as "rest", not NREM-only.
+
 ## Evidence rules
 - Every item was returned by a live lookup (Europe PMC / bioRxiv / arXiv metadata, the GitHub API, or the publisher page). Nothing comes from memory alone.
 - "Read" means someone opened the text. Most items were identified from abstracts and metadata only; check the paper before you cite a specific claim.
