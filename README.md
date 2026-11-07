@@ -113,19 +113,22 @@ Diagram: [research/research-loop.png](research/research-loop.png).
 
 ## How to run
 
-Python 3.12 via `uv`; no API keys.
-The data is not in this repository.
+Python 3.12, dependencies from [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock) (numpy, scipy, scikit-learn, h5py; pytest in the `dev` group). `uv run --python 3.12` creates the environment. No API keys. The data is not in this repository.
 
 ```bash
-# data: RIKEN CBS, Zenodo 17667863, CC BY 4.0 (1.9 GB zip)
+git clone https://github.com/BatuCani/hackathon-2026-11-07
+cd hackathon-2026-11-07
+
+# data: RIKEN CBS, Zenodo 17667863, CC BY 4.0 (1.9 GB zip, not in the repo)
 curl -L --fail --output mouse_data.zip \
   "https://zenodo.org/records/17667863/files/mouse_data.zip?download=1"
 unzip mouse_data.zip mouse_data/sleep_data.mat
 
-# tests (fast; add -m slow for the 50-seed counted method tests)
+# tests (fast, about 4 minutes; add -m slow for the 50-seed counted method tests).
+# One locked check fails: T-M4-1, PCA 0.817 vs threshold 0.8.
 uv run --python 3.12 --group dev pytest -m "not slow"
 
-# every RIKEN result file, seed 0, 500 N1 shuffles -> results/real/
+# the one command. About 1 minute (61 s measured: seed 0, 500 N1 shuffles) -> results/real/
 uv run --python 3.12 python run.py --data mouse_data/sleep_data.mat --seed 0
 
 # positive control: M3 and M4 on the 8 DANDI:000044 sessions (streamed) -> results/real/dandi/
@@ -137,6 +140,8 @@ uv run --python 3.12 --with matplotlib python scripts/plot_referee.py
 # overview figure -> results/figures/positive_control_vs_riken.png
 uv run --python 3.12 --with matplotlib python scripts/plot_overview.py
 ```
+
+`run.py` writes `results/real/mouse05_splitA__M1.json` through `mouse05_splitB__M4.json` (eight files, one per split and method) and `results/real/summary.csv`. Each JSON file is the same bytes as the committed copy under `results/real/M1_splitA.json` through `M4_splitB.json`. `run.py` names files `<session_id>__<method>.json`; the committed copies are named `M<n>_split<A|B>.json`. `summary.csv` is the results table (session, method, score, p_n1, eligibility). `M2_verdict.json` comes from `scripts/run_m2.py`.
 
 ## Repository map
 

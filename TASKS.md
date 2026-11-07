@@ -32,8 +32,8 @@ Deadline 17:00.
   Done when T-M4-1 to T-M4-4 pass. Cut rule: if M3 is not done by 16:05, M4 is reported `eligible=False, reason="not implemented"`.
 - [x] **T7 Verdict rule** (Zixi, draft): `toolbox/verdict.py` and `toolbox/controls.py` turn method results and control outcomes into the overall verdict defined in [PROBLEM.md](PROBLEM.md).
   Done when the rule has a test with hand-made `MethodResult` inputs covering all three outcomes.
-- [ ] **T8 One-command repro** (A): `python run.py --data <path to sleep_data.mat> --seed 0` writes every result file and the results table from a fresh clone.
+- [x] **T8 One-command repro** (A): `python run.py --data <path to sleep_data.mat> --seed 0` writes every result file and the results table from a fresh clone.
   Done when a fresh clone reproduces byte-identical result JSON.
-  Status (A, partial): `run.py` wired (loader, every method with `run()`, `results/real/*.json`, `summary.csv`), byte-identical on synthetic data (`tests/test_run.py`); not run on real data until T0 is signed; method tests and verdict not wired yet.
+  Status (16:22): fresh clone of b11e8d0. `uv run --python 3.12 python run.py --data sleep_data.mat --seed 0` (61 s) wrote eight `mouse05_split{A,B}__M{1-4}.json` files, each byte-identical to `results/real/M{n}_split{A,B}.json`, plus `summary.csv`. Fast tests: 117 passed, 1 failed (T-M4-1, pre-existing), 2 xfailed, 20 deselected. See JOURNAL.md RECORD T8.
 - [ ] **T9 Submission issue** (A): open the project-submission issue on https://github.com/xemantic/claude-impact-lab-2026 with the repo link, license (Apache-2.0 code, CC BY 4.0 text), dataset citation and license, and the verdict.
   Done before 17:00.

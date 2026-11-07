@@ -291,3 +291,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/dandi_binsize.json, results/figures/binsize_m3.png
 - Label: -
 - Note: Deviation from PROBLEM.md, decided before the run: 200 shuffles instead of 500 to fit the time (min p = 1/201 = 0.005). Loader already takes bin_s (default 0.1 unchanged); no method code changes. One process, sessions in sequence. Hard stop 16:40; whatever exists then is recorded, missing runs count as "not enough evidence".
+
+### 2026-11-07 16:22 CET RECORD T8 (crewmate)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): TASKS.md T8 "Done when a fresh clone reproduces byte-identical result JSON."
+- Command: git clone --depth 1 https://github.com/BatuCani/hackathon-2026-11-07 (SHA b11e8d0); uv run --python 3.12 python run.py --data /Users/batu/hackathon-data/riken/mouse_data/sleep_data.mat --seed 0 --out <scratch>/run-out; uv run --group dev pytest -m "not slow" (CPython 3.14.7, before the 3.12 pin)
+- Git SHA: b11e8d0
+- Result file: results/real/M1_splitA.json, results/real/M1_splitB.json, results/real/M2_splitA.json, results/real/M2_splitB.json, results/real/M3_splitA.json, results/real/M3_splitB.json, results/real/M4_splitA.json, results/real/M4_splitB.json
+- Label: verified
+- Note: Each file run.py wrote (`mouse05_split{A,B}__M{1-4}.json`) is byte-identical to the committed `M{n}_split{A,B}.json` (eight sha256 matches). Wall time 61 s on Python 3.12.15, seed 0, 500 shuffles. `--out` only changed the directory. `summary.csv` is written and was not committed. `M2_verdict.json` is committed and is not written by run.py (it comes from scripts/run_m2.py). Fast tests: 117 passed, 1 failed, 2 xfailed, 20 deselected, 235 s. The failure is tests/test_m4.py::test_t_m4_1_overlap_ica_beats_pca (PCA 0.817 vs < 0.8), the open T-M4-1 threshold; no method logic, threshold, or committed result was changed.
