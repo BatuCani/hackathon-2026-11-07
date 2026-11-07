@@ -269,3 +269,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/dandi/<session>__M1.json, __M2.json, rows appended to results/real/dandi/summary.csv
 - Label: -
 - Note: Loader settings as for M3/M4: 100 ms bins, pyramidal units, all MAZE bins as TASK, NREM-only PRE/POST (contract.analysis_mask). Method code and defaults unchanged. One process, sessions in sequence.
+
+### 2026-11-07 16:22 CET PREDICT Loop 3: rate confound on DANDI:000044, 8 sessions (crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): Tingley & Peyrache (2020) section 3b-v: a change in intrinsic excitability (firing rate) between PRE and POST could explain part of the reactivation measures, and "a systematic review and analysis of this possibility is still missing". Answer key fixed before the run: per session, rate ratio = mean POST NREM rate / mean PRE NREM rate over the analysed cells (contract.analysis_mask, loader defaults). Across the 8 DANDI sessions, Pearson r between log rate ratio and the M3 score D3 (results/real/dandi/summary.csv). "Rate confound supported" if r > 0.7 and p < 0.05 (n = 8); "not supported" if |r| < 0.3 or p >= 0.05; otherwise "not enough evidence". The same ratio is reported for RIKEN Split A and Split B (mean deconvolved activity, not a spike rate), no test.
+- Prediction: "not supported". Rate ratios close to 1 (within 0.8-1.25) in all 8 sessions, and |r| < 0.3 or p >= 0.05, because D3 tracks cell count and assembly number (largest in the two Achilles sessions) more than any PRE-to-POST rate change, and z-scoring per epoch in M3 removes most of a rate offset.
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/rate_confound.py
+- Git SHA: the commit adding this entry
+- Result file: results/real/rate_confound.json, results/figures/rate_confound.png
+- Label: -
+- Note: Existing loaders only, no method code changes. One process, sessions in sequence. Hard stop 16:38; if not done, "not enough evidence".
