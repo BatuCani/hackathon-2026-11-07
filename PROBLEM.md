@@ -81,6 +81,7 @@ Decided by the team lead (captain), 2026-11-07 15:45 CET, before any real-data r
 
 The answer key above is locked before any result.
 
-- Signed by (scientist):
-- Date and time:
-- Commit of this file at signing:
+- Signed by: Batu (team lead, Engineer A), on behalf of the team. No scientist sign-off was available.
+- Date and time: 2026-11-07 16:11 CET
+- Commit of this file at signing: b11e8d0
+- Note: Signed after the first results. The answer key and all decisions were committed before any real-data result: commit 20a62a8 (15:44 CET, decisions); first PREDICT 15:47, first real result 15:48 (see JOURNAL.md). Nothing in the key was changed after a result.
