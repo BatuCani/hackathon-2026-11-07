@@ -1,0 +1,62 @@
+{
+ "M3": {
+  "fpr": {
+   "no_sleep_coactivity": 0.1,
+   "other_assemblies": 0.1,
+   "pre_existing": 0.1
+  },
+  "matched": {
+   "assembly_size": 8,
+   "frames": {
+    "POST": 5700,
+    "PRE": 5700,
+    "TASK": 6000
+   },
+   "fs": 10.0,
+   "median_lag1": 0.904391285033423,
+   "n_cells": 50,
+   "nrem_fraction": 0.7,
+   "tau_s": 0.9950924546703419
+  },
+  "method_id": "M3",
+  "n_seeds": 20,
+  "passed": true,
+  "thresholds": {
+   "alpha": 0.05,
+   "max_fpr": 0.1,
+   "min_tpr": 0.9,
+   "rule": "score>0 & p_n1<alpha & p_blockswap<alpha"
+  },
+  "tpr": 0.95
+ },
+ "M4": {
+  "fpr": {
+   "no_sleep_coactivity": 0.05,
+   "other_assemblies": 0.1,
+   "pre_existing": 0.1
+  },
+  "matched": {
+   "assembly_size": 8,
+   "frames": {
+    "POST": 5700,
+    "PRE": 5700,
+    "TASK": 6000
+   },
+   "fs": 10.0,
+   "median_lag1": 0.904391285033423,
+   "n_cells": 50,
+   "nrem_fraction": 0.7,
+   "tau_s": 0.9950924546703419
+  },
+  "method_id": "M4",
+  "n_seeds": 20,
+  "passed": true,
+  "thresholds": {
+   "alpha": 0.05,
+   "max_fpr": 0.1,
+   "min_tpr": 0.9,
+   "rule": "score>0 & p_n1<alpha & p_blockswap<alpha"
+  },
+  "tpr": 0.95
+ }
+}

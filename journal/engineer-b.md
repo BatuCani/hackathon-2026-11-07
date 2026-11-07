@@ -46,3 +46,53 @@ PREDICT (before any run; from the plan's planning pre-check, which is not a find
 - T-M3-1: positive control detected in nearly every seed.
 - T-M3-2: about 2/40 false positives; T-M3-3: p_n1 anticonservative (about 7/40), p_blockswap about 3/40.
 - T-M4-1: ICA separates overlapping assemblies (|cos| >= 0.9) where PCA mixes them (about 0.68 by the sum/difference argument).
+
+## Entry 2 - 2026-11-07 15:05 - fast run (10 seeds, 200 shuffles)
+
+RUN: `uv run --python 3.12 pytest -q` at commit 1745e34, seeds 0-9.
+JUDGE: 32 tests passed; 1 failed: T-M4-1.
+- T-M4-1 (seed 0, locked threshold): ICA matched |cos| 0.911 (>= 0.9, pass), PCA 0.817 (< 0.8 required, fail).
+  Diagnostic sweep, seeds 0-9 (not a counted test, threshold unchanged): ICA >= 0.9 in 5/10 seeds; PCA < 0.8 in 9/10; ICA > PCA in 9/10.
+  In seeds 1 and 5 ICA stays near the PCA mix (0.68, 0.70).
+  Prediction "ICA |cos| >= 0.9, PCA about 0.68" is partly contradicted: PCA is often above the sum/difference value (0.68-0.82) and ICA misses 0.9 in half the seeds.
+  RECORD label: **contradicted** (T-M4-1 as written). Not fixed by changing the threshold. Possible causes, untested: FastICA local optimum in 2 dimensions; unequal activation counts rotate the PCs toward single assemblies.
+- Fast-run counts (from pytest -s output): T-M3-3 p_n1 2/10 (info), T-M4-2 no_sleep_coactivity 1/10, pre_existing p_blockswap 1/10, other_assemblies 2/10, noise_only ineligible 10/10; T-N1-8 MP >= 5 false components 10/10.
+RECORD: fast run is a smoke check only; counted run (50 seeds) in Entry 3.
+
+READ: `research/datasets/calcium-vetting.md` (main, f86fcbc, by Batu). Quote: "TASK = frames 5481-7306 (239 s wake), PRE = 1,300 NREM frames (170 s), POST = 999 NREM frames (131 s)", RIKEN session "6,920 cells x 19,000 frames".
+Consequence for B (needs a TEAM DECISION, not decided here): with N = 6920 cells and B_task = 1825 (split A) or 650 (split B), the minimum B_task >= 5 N fails, so M3 and M4 report `eligible=False` with that reason.
+N > B_task also makes the TASK correlation matrix rank-deficient. Options for the team: restrict to the most active cells so that N <= B_task / 5 (about 365 cells for split A), or lower the minimum. Cost: one N1 shuffle at N = 6920 is about N^2 B = 8.7e10 flops; 500 shuffles will not fit before 17:00 without cell selection.
+
+## Entry 3 - 2026-11-07 15:15 - counted run (50 seeds, 200 shuffles) and run_b.py
+
+Correction to Entry 2: its time stamp "15:05" was written early; the fast run finished at about 15:00.
+
+RUN: `uv run --python 3.12 pytest -m slow -s` at commit 1745e34; 10 passed, 0 failed, 910 s.
+JUDGE (locked plan thresholds), RECORD label in brackets:
+
+| Test | Result | Threshold | Label |
+|---|---|---|---|
+| T-N1-8 N1 >= 1 false component | 2/50 | at most 5/50 | verified |
+| T-N1-8 MP >= 5 false components | 50/50 | at least 45/50 | verified |
+| T-N1-9 planted recovery, tau 0 | 50/50 | at least 47/50 | verified |
+| T-N1-9 planted recovery, tau 1 | 48/50 | at least 47/50 | verified |
+| T-M3-1 positive | 50/50 | at least 47/50 | verified |
+| T-M3-2 no sleep co-activity | 1/50 | at most 5/50 | verified |
+| T-M3-3 pre-existing, p_blockswap | 3/50 | at most 5/50 | verified |
+| T-M3-3 pre-existing, p_n1 (not gated) | 7/50 | reported | p_n1 alone is anticonservative here, as the plan predicted (7/40) |
+| T-M3-4 other assemblies | 2/50 | at most 5/50 | verified |
+| T-M3-5 noise only ineligible | 49/50 | at least 45/50 | verified |
+| T-M3-8 reversal | 50/50 | at least 47/50 | verified |
+| T-M4-2 (T-M3-1..5 for M4) | 50/50, 1/50, 3/50 (p_n1 7/50), 2/50, 50/50 | as M3 | verified |
+| T-M4-1 overlap, seed 0 | ICA 0.911, PCA 0.817 | ICA >= 0.9, PCA < 0.8 | contradicted (Entry 2) |
+
+Predictions in Entry 1 matched except T-M4-1.
+The brief's claim "the analytical bound is too lenient for calcium" is verified on synthetic data: with tau_s = 1 and no assemblies, MP gives >= 5 false components in 50/50 seeds, N1 gives >= 1 in 2/50 (`tests/test_n1.py::test_t_n1_8`).
+
+RUN: `uv run --python 3.12 python scripts/run_b.py --seed 0 --controls` (500 shuffles), loader not merged, so synthetic sessions only (`summary.csv` column `data`).
+RECORD: `results/engineer-b/summary.csv`, `controls.json`, per-session JSON and R(t) `.npz`.
+- control-positive-0: M3 score 0.156, p_n1 0.006, p_blockswap 0.056; M4 score 0.154, p_n1 0.006, p_blockswap 0.056. Under the "require both p < 0.05" rule this single session would be a "no": block-swap has low power with about 20 blocks per epoch. [not enough evidence, single seed]
+- controls.json (20 matched seeds, rule score > 0 & p_n1 < 0.05 & p_blockswap < 0.05): M3 tpr 0.95, fpr 0.10 / 0.10 / 0.10; M4 tpr 0.95, fpr 0.05 / 0.10 / 0.10; both pass the [PROPOSAL] thresholds (tpr >= 0.9, fpr <= 0.1), at the edge.
+- Diagnostic (not a test): with tau_s = 1 the per-seed PRE and POST mean strengths scatter by about +-0.1 with no planted sleep activity (seed 0: PRE 0.105, POST -0.066); tau_s = 0 stays within +-0.02. No systematic PRE/POST bias was found.
+
+Not done: optional neurospatial cross-check (plan section 7). Installing neurospatial from GitHub was blocked by this machine's permission policy; it needs the user's approval.

@@ -1,0 +1,7 @@
+session_id,method_id,eligible,reason,score,p_n1,p_blockswap,n_sig,n_shuffles,seed,git_sha,data
+control-positive-0,M3,True,,0.15589827722910693,0.005988023952095809,0.05588822355289421,2,500,0,1745e34,synthetic (loader not merged)
+control-positive-0,M4,True,,0.15355369329964985,0.005988023952095809,0.05588822355289421,2,500,0,1745e34,synthetic (loader not merged)
+control-pre_existing-0,M3,True,,-0.18497960097469107,0.998003992015968,0.9760479041916168,2,500,0,1745e34,synthetic (loader not merged)
+control-pre_existing-0,M4,True,,-0.18317169932922955,0.998003992015968,0.9760479041916168,2,500,0,1745e34,synthetic (loader not merged)
+control-no_sleep_coactivity-0,M3,True,,-0.1711996287045116,0.998003992015968,1.0,2,500,0,1745e34,synthetic (loader not merged)
+control-no_sleep_coactivity-0,M4,True,,-0.17110909186067075,0.998003992015968,1.0,2,500,0,1745e34,synthetic (loader not merged)
