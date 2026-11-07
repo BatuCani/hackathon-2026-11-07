@@ -78,6 +78,10 @@ DANDI:000044 rat CA1 ephys is a positive control only: M3 and M4 have p_N1 = 0.0
 
 ## Results
 
+![Yes and no for each method](results/figures/method_panels.png)
+
+Each method has its own plot: DANDI:000044 Buddy_06272013, where reactivation is detected, beside RIKEN mouse05 split A, where it is not, computed in the toolbox with 100 N1 shuffles.
+
 RIKEN mouse05, one recording split into two pseudo-sessions ([results/real/](results/real/), `M*_split*.json`):
 
 | Method | Split A score | Split A p_N1 | Split B score | Split B p_N1 |
@@ -156,6 +160,9 @@ uv run --python 3.12 --with matplotlib python scripts/plot_referee.py
 
 # overview figure -> results/figures/positive_control_vs_riken.png
 uv run --python 3.12 --with matplotlib python scripts/plot_overview.py
+
+# yes/no method panels -> results/figures/method_panels.png
+OMP_NUM_THREADS=1 uv run --python 3.12 --with matplotlib python scripts/plot_method_panels.py
 ```
 
 `run.py` writes `results/real/mouse05_splitA__M1.json` through `mouse05_splitB__M4.json` (eight files, one per split and method) and `results/real/summary.csv`. Each JSON file is the same bytes as the committed copy under `results/real/M1_splitA.json` through `M4_splitB.json`. `run.py` names files `<session_id>__<method>.json`; the committed copies are named `M<n>_split<A|B>.json`. `summary.csv` is the results table (session, method, score, p_n1, eligibility). `M2_verdict.json` comes from `scripts/run_m2.py`.
