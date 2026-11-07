@@ -146,3 +146,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: contradicted
 - Note: Split A: EV 0.0153, REV 0.0414, D2 = -0.0261, p_N1 = 1.0 (r_T,PRE 0.222 > r_T,POST 0.153: TASK resembles PRE more than POST). Split B: EV 0.0133, REV 0.0116, D2 = +0.0017, p_N1 = 0.002, p_blockswap = 0.248. Locked key answer: "no" (D2 < 0 in split A); prediction "yes in both" contradicted.
 - Note: Split B's p_N1 < 0.05 on a D2 of 0.002 is the pre_existing failure mode seen in the synthetic controls (N1 null q95 = 0.0001); M2 has not passed its method tests, so it should not count toward the verdict either way.
+
+### 2026-11-07 16:05 CET PREDICT T3/T6 real data (M3 and M4 runner, crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md keys D3 "D3 > 0 and p_N1 < 0.05 (500 shuffles, seed 0), in each split" and D4 "as M3, but at least two significant components"; eligibility "TASK frames >= 5 x cells" | prediction: Split B ineligible for M3 and M4 (TASK frames 651 < 1500 for 300 cells); Split A eligible for both (1824 >= 1500) with n_sig >= 2; D3 and D4 sign in Split A uncertain (M2 found TASK closer to PRE than POST, so D3 <= 0 is plausible); locked-key answer for M3 and M4 is at best "not enough evidence", since "in each split" cannot be met with Split B ineligible.
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 python (toolbox.m3_pca.run / toolbox.m4_ica.run on toolbox.loader.load_sessions defaults, seed 0, AssemblyParams(n_shuffles=500))
+- Git SHA: the commit adding this entry
+- Result file: results/real/M3_splitA.json, results/real/M3_splitB.json, results/real/M4_splitA.json, results/real/M4_splitB.json
+- Label: -
+- Note: Method-test status before the run: M3 passes T-A1 to T-A5 and T-M3-1 to T-M3-8; M4 fails T-M4-1 (PCA 0.817 vs < 0.8), so M4 should not count toward the verdict whatever it returns.
