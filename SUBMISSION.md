@@ -165,6 +165,12 @@ uv run --python 3.12 --group dev pytest -m "not slow"
 
 # every result file, seed 0, 500 N1 shuffles -> results/real/
 uv run --python 3.12 python run.py --data mouse_data/sleep_data.mat --seed 0
+
+# positive control: M3 and M4 on the 8 DANDI:000044 sessions (streamed, no download) -> results/real/dandi/
+OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/run_dandi.py --seed 0
+
+# figures -> results/figures/
+uv run --python 3.12 --with matplotlib python scripts/plot_referee.py
 ```
 
 Python 3.12 via `uv`; dependencies numpy, scipy, scikit-learn, h5py ([pyproject.toml](pyproject.toml), [uv.lock](uv.lock)).
