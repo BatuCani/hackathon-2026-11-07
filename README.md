@@ -6,7 +6,7 @@ An open toolbox that checks the methods first, then asks whether neurons recorde
 It runs four standard methods (Tingley and Peyrache 2020: M1 cell-pair correlation, M2 explained variance vs. reverse, M3 PCA and M4 ICA reactivation strength), each against the same null (N1: every neuron's trace circularly shifted by its own random offset, 500 times, seed 0).
 The question, number, unit and "yes" threshold per method are fixed in [PROBLEM.md](PROBLEM.md), and a method only counts if it passes planted-truth synthetic controls ([tests/referee/](tests/referee/)).
 On the one public RIKEN calcium session the answer is **not enough evidence**, and no counted method says "yes".
-On 8 rat electrophysiology sessions with known reactivation (DANDI:000044, used only as a positive control) M3 and M4 are significant in 8/8, so the toolbox can say "yes" on real data.
+On 8 rat electrophysiology sessions with known reactivation (DANDI:000044, used only as a positive control) M3 and M4 are significant in 8/8, M2 in 7/8 and M1 in 6/8, so the toolbox can say "yes" on real data.
 Submission text: [SUBMISSION.md](SUBMISSION.md); demo script: [DEMO.md](DEMO.md).
 
 ## Team
@@ -79,8 +79,12 @@ DANDI:000044 positive control, 8 sessions ([results/real/dandi/summary.csv](resu
 
 | Method | Sessions with score > 0 and p_N1 < 0.05 | Score range |
 |---|---|---|
+| M1 cell-pair correlation (D1) | 6/8 (no: Cicero_09172014, Gatsby_08282013) | -0.053 to +0.286 |
+| M2 EV vs. REV (D2) | 7/8 (no: Cicero_09172014); mean EV 0.088 > mean REV 0.025 | -0.038 to +0.158 |
 | M3 PCA (D3) | 8/8 | +0.028 to +0.144 |
 | M4 ICA (D4) | 8/8 | +0.028 to +0.125 |
+
+Pass rule fixed before each run (JOURNAL.md "PREDICT" entries): "yes" in at least 6/8 sessions; all four pass.
 
 Methods that fail their own tests stay out of the vote: M2 gives 6/10 false "yes" with pre-existing assemblies, and M4 misses T-M4-1 (PCA 0.817 vs. < 0.8 required); the thresholds were not moved ([tests/test_m2.py](tests/test_m2.py), [journal/engineer-b.md](journal/engineer-b.md) Entry 2).
 
