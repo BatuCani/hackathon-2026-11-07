@@ -479,6 +479,29 @@ html, body { overflow-x: clip; }
 #mapping .mapping > :not(.actions) { display: none; }
 .mini-viz { display: block; width: 100%; max-width: 340px; height: auto; margin: 10px 0 4px; }
 .mini-viz text { fill: var(--ink-3); font-size: 9.5px; font-family: inherit; }
+.intro-open { margin-left: 6px; }
+.intro { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; pointer-events: none; }
+.intro-card { width: min(780px, 100%); padding: 24px 26px 20px; background: var(--glass-strong); opacity: 0; transform: translateY(14px) scale(.98); filter: blur(6px); transition: transform 560ms var(--spring), opacity 300ms ease, filter 400ms ease; }
+.intro.on { pointer-events: auto; }
+.intro.on .intro-card { opacity: 1; transform: none; filter: none; }
+.intro-top { display: flex; justify-content: space-between; align-items: center; }
+.intro h2 { font-size: clamp(22px, 3vw, 28px); letter-spacing: -0.028em; margin: 10px 0 4px; }
+.intro-text { margin: 0; color: var(--ink-2); font-size: 15px; min-height: 2.9em; }
+.intro-chart { display: block; width: 100%; height: auto; margin: 10px 0 2px; }
+.intro-chart text { fill: var(--ink-3); font-size: 12px; font-family: inherit; }
+.intro-chart .halo { font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-width: 5px; stroke-linejoin: round; }
+.intro-chart .seg { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; transition: opacity 500ms ease, stroke 400ms ease; }
+.intro-chart .draw { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: introDraw 1300ms cubic-bezier(.3,.6,.3,1) forwards; }
+.intro-chart .fade { opacity: 0; animation: introFade 600ms ease forwards; animation-delay: var(--d, 0ms); }
+@keyframes introDraw { to { stroke-dashoffset: 0; } }
+@keyframes introFade { to { opacity: 1; } }
+.intro-src { margin: 4px 0 0; font-size: 12px; color: var(--ink-3); }
+.intro-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+.intro-dots { display: flex; gap: 6px; }
+.intro-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--glass-line); box-shadow: inset 0 0 0 1px var(--ink-3); transition: background 300ms ease, transform 400ms var(--spring-pop); }
+.intro-dots span.on { background: var(--accent); box-shadow: none; transform: scale(1.15); }
+@media (prefers-reduced-motion: reduce) { .intro-card { transition: opacity 200ms ease; transform: none; filter: none; } .intro-chart .draw, .intro-chart .fade { animation: none; stroke-dashoffset: 0; opacity: 1; } }
+@media (max-width: 560px) { .intro-card { padding: 20px 18px 16px; } .intro-chart text { font-size: 22px; } .intro-src { font-size: 11.5px; } }
 .figs { display: grid; gap: 14px; }
 .fig { margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; color: inherit; font: inherit; }
 .fig img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-sm); transition: transform 360ms var(--spring-pop); }
@@ -580,7 +603,7 @@ html, body { overflow-x: clip; }
         <span class="muted">.mat, .nwb, .npz, .json or .csv. Field names are read where the browser can.</span>
       </label>
       <div class="examples">
-        <p class="example-label">Ready recordings, already mapped. Tap one to switch.</p>
+        <p class="example-label">Ready recordings, already mapped. Tap one to switch. <button class="hint-link intro-open" data-intro>What is reactivation?</button></p>
         <button class="example glass thin" data-ds="riken" aria-pressed="false">
           <strong>RIKEN mouse05</strong>
           <span class="meta"><span class="meta-kind">Two-photon calcium</span><span class="meta-items"><span>300 cells</span><span>7.65 Hz</span><span>2 splits</span></span></span>
@@ -648,6 +671,16 @@ html, body { overflow-x: clip; }
 </main>
 
 <div class="scrim" id="scrim"></div>
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-hidden="true" inert>
+  <div class="intro-card glass">
+    <div class="intro-top"><span class="muted small" id="introStep">What is reactivation? · 1 of 3</span><button class="hint-link" id="introSkip">Skip</button></div>
+    <h2 id="introTitle"></h2>
+    <p class="intro-text" id="introText"></p>
+    <svg class="intro-chart" id="introChart" viewBox="0 0 720 230" role="img" aria-label="Reactivation strength over time for rat session Buddy 06/27: sleep before, task, sleep after"></svg>
+    <p class="intro-src">Real data: rat session Buddy 06/27 (DANDI:000044). Strength of the 8 cell groups PCA found in the task; sleep is NREM only, each period squeezed to the same width. Source: app/derived/buddy_reactivation.json.</p>
+    <div class="intro-foot"><div class="intro-dots" id="introDots"><span></span><span></span><span></span></div><button class="btn" id="introNext">Next</button></div>
+  </div>
+</div>
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure" aria-hidden="true"><figure id="lbFig"><figcaption id="lbCap"></figcaption></figure></div>
 <aside class="sheet glass" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true" inert>
   <div class="sheet-head"><div><h2 id="sheetTitle"></h2><div class="muted small" id="sheetSub"></div></div>
@@ -1292,6 +1325,70 @@ function binsizeViz() {
   BINSIZE.forEach(([n, v], k) => { g += `<polyline points="${v.map((d, i) => `${x(i)},${y(d)}`).join(" ")}" fill="none" stroke="var(--ok)" stroke-opacity=".55" stroke-width="1.5"/>` + v.map((d, i) => `<circle cx="${x(i)}" cy="${y(d)}" r="3.2" fill="var(--ok)"/>`).join("") + `<text x="${W - Rr + 8}" y="${y(v[2]) + nudge[k]}">${n}</text>`; });
   return `<svg class="mini-viz" viewBox="0 0 ${W} ${H}" role="img" aria-label="PCA score at 50, 100 and 200 ms bins for three sessions, all significant">${g}</svg>`;
 }
+/* ---------- "What is reactivation?" three-beat intro over a real trace ---------- */
+const INTRO = [
+  ["During a task, some cells fire together.", "Here a rat runs a task. PCA finds groups of cells that fire together, and their strength jumps while it works."],
+  ["Then it sleeps.", "We look at sleep before the task and sleep after it, using deep (NREM) sleep only."],
+  ["Do those groups fire together again after the task, more than before?", ""]
+];
+let introData = null, introBeat = 0, introFocus = null;
+fetch("derived/buddy_reactivation.json").then(r => r.ok ? r.json() : null).then(d => { introData = d; if ($("#intro").classList.contains("on")) drawIntro(); }).catch(() => {});
+function introChart(beat) {
+  const d = introData, svg = $("#introChart");
+  if (!d) { svg.innerHTML = `<text x="360" y="120" text-anchor="middle">Trace loads from app/derived when served over the web.</text>`; return; }
+  const W = 720, H = 230, L = 40, Rr = 12, T = 16, B = 34, order = ["PRE", "TASK", "POST"], gap = 18;
+  const n = d.bins_per_epoch, segW = (W - L - Rr - 2 * gap) / 3, all = order.flatMap(k => d.R[k]);
+  // Beat 3 zooms the y axis to the sleep range so the before/after gap is visible; the task trace is faded and clipped.
+  const sleepMax = Math.max(...d.R.PRE, ...d.R.POST);
+  const max = beat === 2 ? Math.ceil(sleepMax * 20) / 20 : Math.ceil(Math.max(...all) * 10) / 10, y = v => T + (1 - v / max) * (H - T - B);
+  const x0 = k => L + order.indexOf(k) * (segW + gap), x = (k, i) => x0(k) + (i / (n - 1)) * segW;
+  const path = k => d.R[k].map((v, i) => `${i ? "L" : "M"}${x(k, i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const names = { PRE: "Sleep before", TASK: "Task", POST: "Sleep after" }, dec = max < 1 ? 2 : 1;
+  let g = `<defs><clipPath id="introClip"><rect x="0" y="${T}" width="${W}" height="${H - T - B}"/></clipPath></defs>`;
+  const ticks = beat === 2 ? [0, 0.1, 0.2, 0.3].filter(v => v <= max) : [0, max / 2, max];
+  g += ticks.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--glass-line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v.toFixed(dec)}</text>`).join("");
+  order.forEach(k => {
+    const shown = beat === 0 ? k === "TASK" : true, fresh = (beat === 0 && k === "TASK") || (beat === 1 && k !== "TASK");
+    const col = k === "TASK" ? "var(--accent)" : beat === 2 && k === "POST" ? "var(--ok)" : "var(--ink-3)";
+    g += `<text x="${x0(k) + segW / 2}" y="${H - 10}" text-anchor="middle" style="opacity:${shown ? 1 : .35}">${names[k]}</text>`;
+    const dim = beat === 2 && k === "TASK";
+    if (shown) g += `<path class="seg${fresh ? " draw" : ""}" d="${path(k)}" pathLength="1" stroke="${col}" style="--len:1${dim ? ";opacity:.3" : ""}" ${dim ? 'clip-path="url(#introClip)"' : ""}/>`;
+  });
+  if (beat === 2) {
+    const m = d.epoch_mean;
+    [["PRE", m.PRE], ["POST", m.POST]].forEach(([k, v], i) => { g += `<g class="fade" style="--d:${200 + i * 350}ms"><line x1="${x0(k)}" x2="${x0(k) + segW}" y1="${y(v)}" y2="${y(v)}" stroke="${k === "POST" ? "var(--ok)" : "var(--ink)"}" stroke-width="2.5" stroke-dasharray="6 5"/><text x="${x0(k) + 4}" y="${y(v) + 18}" class="halo" style="fill:var(--ink)">average ${v.toFixed(3)}</text></g>`; });
+  }
+  svg.innerHTML = g;
+}
+function drawIntro() {
+  const [h, p] = INTRO[introBeat], d = introData;
+  $("#introStep").textContent = `What is reactivation? · ${introBeat + 1} of 3`;
+  $("#introTitle").textContent = h;
+  $("#introText").textContent = introBeat === 2 && d
+    ? `Yes, in this rat: the average after the task (${d.epoch_mean.POST.toFixed(3)}) is above the average before it (${d.epoch_mean.PRE.toFixed(3)}), and the gap beats all 500 shuffled controls. That is reactivation.`
+    : p || "That is the question each of the four methods answers.";
+  $("#introDots").querySelectorAll("span").forEach((s, i) => s.classList.toggle("on", i === introBeat));
+  $("#introNext").textContent = introBeat === 2 ? "Show me the recordings" : "Next";
+  introChart(introBeat);
+}
+function openIntro() {
+  introFocus = document.activeElement; introBeat = 0; drawIntro();
+  const el = $("#intro"); el.removeAttribute("aria-hidden"); el.removeAttribute("inert"); el.classList.add("on"); $("#scrim").classList.add("on");
+  setTimeout(() => $("#introNext").focus(), 60);
+}
+function closeIntro() {
+  const el = $("#intro"); el.classList.remove("on"); el.setAttribute("aria-hidden", "true"); el.setAttribute("inert", "");
+  if (!$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on");
+  try { localStorage.setItem("rd-intro-seen", "1"); } catch (e) {}
+  if (introFocus) introFocus.focus();
+}
+$("#introNext").addEventListener("click", () => { if (introBeat < 2) { introBeat++; drawIntro(); } else closeIntro(); });
+$("#introSkip").addEventListener("click", closeIntro);
+$("#scrim").addEventListener("click", () => { if ($("#intro").classList.contains("on")) closeIntro(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#intro").classList.contains("on")) { e.stopImmediatePropagation(); closeIntro(); } }, true);
+document.addEventListener("click", e => { if (e.target.closest("[data-intro]")) openIntro(); });
+let introSeen = false; try { introSeen = localStorage.getItem("rd-intro-seen") === "1"; } catch (e) {}
+if (!introSeen && !location.hash) setTimeout(openIntro, 450);
 function openLearn() {
   openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p>${f.viz === "binsize" ? binsizeViz() : ""}<span class="src">${f.src}</span></div>`).join("") + `<button class="figlink" data-figs>See the figures</button>`);
 }
