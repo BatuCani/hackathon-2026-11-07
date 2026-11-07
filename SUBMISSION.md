@@ -84,7 +84,7 @@ State lives in files, not in a chat session.
 
 Data: one RIKEN CBS session (mouse05), the 300 most active of 6,920 cells, NREM frames only in PRE and POST, a wake bout as TASK, two splits ([PROBLEM.md](PROBLEM.md), [results/loader/frame_counts.json](results/loader/frame_counts.json)).
 
-**Overall verdict, by the locked rule: not enough evidence** (provisional until `toolbox/verdict.py` writes it to [results/real/](results/real/); hand-applied here).
+**Overall verdict, by the locked rule: not enough evidence** ([results/real/verdict.json](results/real/verdict.json), [results/real/summary.md](results/real/summary.md), written by `toolbox.verdict.compute_verdict`; JOURNAL.md RECORD 16:32).
 Only M1 is counted in both splits (M3 is eligible in Split A only; M2 and M4 fail their method tests), and the rule needs at least two.
 No counted method says "yes" in either split: how likely = 0/2 in Split A (M1, M3), 0/1 in Split B (M1).
 
@@ -144,7 +144,7 @@ low that this says anything about reactivation in general, because there is one 
 - **M2 needs at least two sessions;** splits A and B are two pseudo-sessions of the same recording, so even a "yes" would not be independent replication (caveat in every M2 result file).
 - **The answer key is signed by the team lead, not a scientist.** [PROBLEM.md](PROBLEM.md) was signed 2026-11-07 16:11 CET by Batu (team lead) on behalf of the team, after the first results; no scientist sign-off was available. The open choices (TASK frames, cell selection, block-swap) were decided by the team lead at 15:45 CET before any real-data result, and the referee in [tests/referee/](tests/referee/) (written 15:30 CET) is locked at that same signature with no threshold changed after any result.
 - **Predictions that failed.** M1 was predicted negative in both splits and came out slightly positive in Split B; M2 was predicted "yes" in both splits and said "no" (JOURNAL.md "RECORD T2 real data", "RECORD T5 real data", both labelled contradicted).
-- **Loop wiring.** A fresh clone reproduces all eight real-data result files byte for byte with one command ([run.py](run.py), 61 s; JOURNAL.md "RECORD T8"), but `run.py` writes them as `mouse05_split{A,B}__M{1-4}.json` next to the committed `M{n}_split{A,B}.json`, does not write `M2_verdict.json` (that comes from [scripts/run_m2.py](scripts/run_m2.py)), and does not yet run the method tests or the verdict rule; the fast test suite has one expected failure, T-M4-1.
+- **Loop wiring.** A fresh clone reproduces all eight real-data result files byte for byte with one command ([run.py](run.py), 61 s; JOURNAL.md "RECORD T8"), but `run.py` writes them as `mouse05_split{A,B}__M{1-4}.json` next to the committed `M{n}_split{A,B}.json`, does not write `M2_verdict.json` (that comes from [scripts/run_m2.py](scripts/run_m2.py)), and does not yet run the method tests or the verdict rule; the fast test suite marks T-M4-1 as a recorded xfail and runs in CI ([.github/workflows/tests.yml](.github/workflows/tests.yml)).
 
 ## What it would need next
 
@@ -166,7 +166,7 @@ curl -L --fail --output mouse_data.zip \
 unzip mouse_data.zip mouse_data/sleep_data.mat
 
 # tests (fast; add -m slow for the 50-seed counted method tests)
-uv run --python 3.12 --group dev pytest -m "not slow"   # expect 1 failure: T-M4-1, the open M4 test
+uv run --python 3.12 --group dev pytest -m "not slow"   # T-M4-1 shows as xfail: the recorded M4 failure; CI runs the same on main (.github/workflows/tests.yml)
 
 # every real-data result, seed 0, 500 N1 shuffles -> results/real/mouse05_split{A,B}__M{1-4}.json (61 s;
 # byte-identical to the committed results/real/M{n}_split{A,B}.json, see JOURNAL.md RECORD T8)

@@ -70,7 +70,7 @@ Say, one line each:
 
 ## 2:20-2:40 Verdict
 
-Show: stay on [results/figures/real_scores.png](results/figures/real_scores.png), then the verdict lines in [SUBMISSION.md](SUBMISSION.md) "What the loop found".
+Show: stay on [results/figures/real_scores.png](results/figures/real_scores.png), then [results/real/summary.md](results/real/summary.md) (the verdict the code wrote: not enough evidence, counted M1, 0/2 in Split A, 0/1 in Split B).
 
 Say:
 "The verdict rule needs at least two methods that are eligible and pass their tests.
