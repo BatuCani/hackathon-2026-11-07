@@ -125,3 +125,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: contradicted
 - Note: Formula hand-checked (3x3 matrices give EV = REV = 1, since 3 pairs span 2 centered dimensions, hence min_cells = 4). With the locked rule (D2 > 0, p_N1 < 0.05), positive 10/10, no_sleep_coactivity, noise_only and reversed 0/10 each, but pre_existing 6/10 false "yes" (prediction <= 2/10 contradicted): N1 breaks PRE and POST co-activity alike, so its null sits near 0 while chance EV vs REV differences do not.
 - Note: Added supplementary details.p_blockswap (20 s PRE/POST block labels permuted, as M3); with it pre_existing passes but positive drops to 8/10 (< 9/10). Both shortfalls are strict xfails, thresholds unchanged; M2 does not pass its method tests yet, so it should not count toward the verdict. No real-data run: the loader (T1) is not on main.
+
+### 2026-11-07 15:47 CET PREDICT T5 real data (Engineer A, M2 worker)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md key D2 "D2 > 0 in both splits A and B, and p_N1 < 0.05 in each split" | prediction: D2 > 0 in both splits but small (< 0.05), p_N1 < 0.05 in both (N1 flagged pre-existing structure in the synthetic controls), p_blockswap >= 0.05 in at least one split; locked-rule answer "yes" with the two-pseudo-session caveat, which the failed pre_existing control makes uninterpretable on its own.
+- Command: OMP_NUM_THREADS=2 uv run --python 3.12 python scripts/run_m2.py --data /Users/batu/hackathon-data/riken/mouse_data/sleep_data.mat --seed 0
+- Git SHA: the commit adding this entry
+- Result file: results/real/M2_splitA.json, results/real/M2_splitB.json, results/real/M2_verdict.json
+- Label: -
+- Note: Loader defaults (300 most active cells over both TASK bouts, PROBLEM.md decisions 15:45), 500 shuffles.
