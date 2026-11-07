@@ -7,7 +7,7 @@ It runs four standard methods (Tingley and Peyrache 2020: M1 cell-pair correlati
 The question, number, unit and "yes" threshold per method are fixed in [PROBLEM.md](PROBLEM.md), and a method only counts if it passes planted-truth synthetic controls ([tests/referee/](tests/referee/)).
 On the one public RIKEN calcium session the answer is **not enough evidence**, and no counted method says "yes".
 On 8 rat electrophysiology sessions with known reactivation (DANDI:000044, used only as a positive control) M3 and M4 are significant in 8/8, M2 in 7/8 and M1 in 6/8, so the toolbox can say "yes" on real data.
-Submission text: [SUBMISSION.md](SUBMISSION.md); demo script: [DEMO.md](DEMO.md).
+Submission text: [SUBMISSION.md](SUBMISSION.md); demo script: [DEMO.md](DEMO.md); UX prototype: [app/index.html](app/index.html) (see [app/README.md](app/README.md)).
 
 ## Team
 
