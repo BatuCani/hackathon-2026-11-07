@@ -217,3 +217,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/M1_splitA.json, results/real/M1_splitB.json
 - Label: -
 - Note: 500 shuffles, seed 0, N1 shifts PRE and POST only. No block-swap term: the M1 key does not use one.
+
+### 2026-11-07 16:02 CET RECORD T2 real data (Engineer A, crewmate)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT T2 real data 16:00 above
+- Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 uv run --python 3.12 python scripts/run_m1.py --seed 0
+- Git SHA: f325ad1
+- Result file: results/real/M1_splitA.json, results/real/M1_splitB.json
+- Label: contradicted
+- Note: Both splits eligible (300 cells, 0 dropped). Split A: r(C_TASK, C_POST) = 0.153, r(C_TASK, C_PRE) = 0.222, D1 = -0.0691, p_N1 = 1.0 (PRE 1300, TASK 1824, POST 999). Split B: r(C_TASK, C_POST) = 0.145, r(C_TASK, C_PRE) = 0.139, D1 = +0.00608, p_N1 = 97/501 = 0.194 (PRE 2657, TASK 651, POST 2669).
+- Note: Prediction "D1 < 0 in both splits" is contradicted by Split B's small positive. Prediction "p_N1 > 0.05 in both" and "locked key is not yes" held: neither split has D1 > 0 and p_N1 < 0.05. Referee cases a-d passed before this run (24.1 s of the 30 s budget). No parameters changed after the run.

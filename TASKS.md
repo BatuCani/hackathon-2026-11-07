@@ -13,8 +13,9 @@ Deadline 17:00.
 
 - [x] **T1 Loader** (A): `toolbox/loader.py` reads `sleep_data.mat` into `toolbox.contract.Recording` for Split A and Split B, `fs = 7.65`, stage mapping and splits as in [PROBLEM.md](PROBLEM.md).
   Done when `tests/test_loader.py` passes (frame counts per epoch equal the vetting report) and a missing required field stops with a clear message.
-- [ ] **T2 M1 cell-pair correlation** (A): `toolbox/m1_pair_corr.py`, key D1.
+- [x] **T2 M1 cell-pair correlation** (A): `toolbox/m1_pair_corr.py`, key D1.
   Done when positive and negative controls pass on synthetic data and the result JSON for both splits is in `results/`.
+  Real data (16:02): Split A D1 = -0.0691, p_N1 = 1.0; Split B D1 = +0.00608, p_N1 = 0.194. Referee cases a-d pass. See JOURNAL.md RECORD T2.
 - [x] **T3 M3 PCA reactivation strength** (B): `toolbox/assemblies.py`, `toolbox/m3_pca.py`, key D3.
   Done when T-A1 to T-A5 and T-M3-1 to T-M3-8 pass.
   Real data (16:12): Split A D3 = -0.146, p_N1 = 1.0; Split B not eligible (TASK frames 651 < 1500). See JOURNAL.md RECORD T3/T6 real data.
