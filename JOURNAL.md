@@ -313,7 +313,7 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: verified (rate confound not supported; prediction held)
 - Note: Pearson r(log rate ratio, D3) = 0.136, p = 0.749, n = 8: "not supported". POST/PRE NREM rate ratios 0.880 to 1.135 (Gatsby_08022013 0.880, Cicero_09102014 0.939, Gatsby_08282013 0.999, Achilles_11012013 1.064, Achilles_10252013 1.072, Cicero_09012014 1.103, Buddy_06272013 1.122, Cicero_09172014 1.135), all inside the predicted 0.8-1.25. Three sessions have lower POST rates and still a clear M3 "yes" (Gatsby_08022013 D3 = 0.088 at ratio 0.880). On this data the M3 "yes" is not explained by a PRE-to-POST rate change.
 - Note: RIKEN (mean deconvolved activity x fs, not a spike rate, no test): Split A ratio 0.767 (log -0.265), Split B 0.872 (log -0.137). POST activity is lower than PRE in both splits, more than in any DANDI session. With n = 2 this is a hypothesis only, not a result: a POST drop could contribute to the Split A "no" (D3 = -0.146).
-- Note: Limits: n = 8 sessions from 4 rats has low power; one rate ratio per session (population mean), not per assembly. Figure flaw: the two Cicero_09012014/09172014 labels overlap and the Gatsby_08022013 label touches the y axis; not fixed before the 16:38 stop.
+- Note: Limits: n = 8 sessions from 4 rats has low power; one rate ratio per session (population mean), not per assembly. Figure label overlap fixed after the stop (fixed label offsets, redrawn from the JSON with --plot-only; numbers unchanged).
 ### 2026-11-07 16:34 CET JUDGE/RECORD Loop 2: M1 and M2 on DANDI:000044, 8 sessions (Engineer B)
 
 - Step: JUDGE, RECORD

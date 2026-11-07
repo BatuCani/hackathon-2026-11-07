@@ -6,6 +6,7 @@ Rate ratio per session = mean POST NREM rate / mean PRE NREM rate over the analy
 (loader defaults, contract.analysis_mask). Pearson r(log rate ratio, D3) across the 8 sessions,
 D3 from results/real/dandi/summary.csv. RIKEN Split A and B ratios are reported, not tested.
 Writes results/real/rate_confound.json and results/figures/rate_confound.png.
+--plot-only redraws the figure from the JSON without loading data.
 """
 
 from __future__ import annotations
@@ -81,18 +82,45 @@ def main() -> None:
     (ROOT / "results/real/rate_confound.json").write_text(json.dumps(out, indent=2) + "\n")
     print(f"r = {r:.3f}, p = {p:.3g}: {out['verdict']}")
 
-    fig, ax = plt.subplots(figsize=(4.5, 3.5), dpi=150)
+    plot(out)
+
+
+# Label offsets in points (dx, dy, ha), chosen so no label overlaps another or leaves the axes.
+LABEL_POS = {
+    "Achilles_10252013": (6, -3, "left"),
+    "Achilles_11012013": (-6, -3, "right"),
+    "Buddy_06272013": (0, -11, "center"),
+    "Cicero_09012014": (0, 7, "center"),
+    "Cicero_09102014": (6, -3, "left"),
+    "Cicero_09172014": (0, -11, "center"),
+    "Gatsby_08022013": (6, -3, "left"),
+    "Gatsby_08282013": (6, -3, "left"),
+}
+
+
+def plot(out: dict) -> None:
+    sids = sorted(out["dandi"])
+    x = np.array([out["dandi"][s]["log_rate_ratio"] for s in sids])
+    y = np.array([out["dandi"][s]["D3"] for s in sids])
+    fig, ax = plt.subplots(figsize=(5, 3.6), dpi=150)
     ax.scatter(x, y, color="#2a6fb0", zorder=3)
-    for i, (s, xi, yi) in enumerate(zip(sids, x, y)):
-        ax.annotate(s, (xi, yi), fontsize=6, xytext=(-4, 5 if i % 2 else -9), textcoords="offset points", ha="right")
+    for s, xi, yi in zip(sids, x, y):
+        dx, dy, ha = LABEL_POS.get(s, (5, 3, "left"))
+        ax.annotate(s, (xi, yi), fontsize=6, xytext=(dx, dy), textcoords="offset points", ha=ha, va="center")
     ax.axvline(0, color="#999", lw=0.8, ls="--")
+    ax.set_xlim(x.min() - 0.03, x.max() + 0.05)
+    ax.set_ylim(y.min() - 0.012, y.max() + 0.01)
     ax.set_xlabel("log(POST NREM rate / PRE NREM rate)")
     ax.set_ylabel("M3 score D3")
-    ax.set_title(f"DANDI:000044, n = 8: r = {r:.2f}, p = {p:.2g}", fontsize=9)
+    ax.set_title(f"DANDI:000044, n = {out['n']}: r = {out['pearson_r']:.2f}, p = {out['p']:.2g}", fontsize=9)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(ROOT / "results/figures/rate_confound.png")
 
-
 if __name__ == "__main__":
-    main()
+    import sys
+
+    if "--plot-only" in sys.argv:  # redraw the figure from results/real/rate_confound.json
+        plot(json.loads((ROOT / "results/real/rate_confound.json").read_text()))
+    else:
+        main()
