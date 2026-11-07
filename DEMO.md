@@ -60,7 +60,7 @@ Show: FIGURE_METHODS (results/figures/, per-method score with N1 null), else the
 
 Say, one line each:
 
-- **M1 cell-pair correlation:** M1_SENTENCE
+- **M1 cell-pair correlation:** "The simplest method, cell-pair correlation, passes all four referee cases, and finds TASK pairs closer to sleep before than after in Split A, D1 = -0.069, p = 1.0; Split B is flat, +0.006, p = 0.19."
 - **M2 explained variance vs. reverse:** "Split A points the wrong way, D2 = -0.026; Split B's tiny +0.002 is significant only against a null that M2 already fails on synthetic data, so M2 does not vote."
 - **M3 PCA:** "Fifteen real assemblies, but they are stronger in sleep before the wake bout than after, D3 = -0.146, p = 1.0; Split B is too short to score."
 - **M4 ICA:** "Same direction, D4 = -0.061, p = 1.0, and ICA failed one of its own tests, so it does not vote."
@@ -71,7 +71,7 @@ Show: FIGURE_VERDICT (results/figures/) or [results/real/](results/real/) verdic
 
 Say:
 "The verdict rule needs at least two methods that are eligible and pass their tests.
-Verdict: VERDICT_PENDING.
+Only cell-pair correlation is eligible and tested in both splits, so the verdict is: not enough evidence, and no counted method says yes in either split.
 The patterns are real in sleep, but not specific to sleep after waking, which is what you expect: this recording has no task, so nothing was learned."
 
 ## 2:40-3:00 Where it got stuck, what next, how to run

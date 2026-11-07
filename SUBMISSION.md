@@ -80,20 +80,23 @@ State lives in files, not in a chat session.
 
 Data: one RIKEN CBS session (mouse05), the 300 most active of 6,920 cells, NREM frames only in PRE and POST, a wake bout as TASK, two splits ([PROBLEM.md](PROBLEM.md), [results/loader/frame_counts.json](results/loader/frame_counts.json)).
 
-**Overall verdict: VERDICT_PENDING** (provisional reading: *not enough evidence*; fewer than two counted methods).
+**Overall verdict, by the locked rule: not enough evidence** (provisional until `toolbox/verdict.py` writes it to [results/real/](results/real/); hand-applied here).
+Only M1 is counted in both splits (M3 is eligible in Split A only; M2 and M4 fail their method tests), and the rule needs at least two.
+No counted method says "yes" in either split: how likely = 0/2 in Split A (M1, M3), 0/1 in Split B (M1).
 
 Per method, on real data, 500 N1 shuffles, seed 0:
 
 | Method | Split A | Split B | Counts toward the verdict? | Result files |
 |---|---|---|---|---|
-| M1 cell-pair correlation | M1_PENDING | M1_PENDING | M1_PENDING | [results/real/](results/real/) |
+| M1 cell-pair correlation | D1 = -0.069, p_N1 = 1.0 | D1 = +0.006, p_N1 = 0.19 | yes: passes referee cases a-d, eligible in both splits | [M1_splitA.json](results/real/M1_splitA.json), [M1_splitB.json](results/real/M1_splitB.json) |
 | M2 explained variance vs. reverse | D2 = -0.026, p_N1 = 1.0 | D2 = +0.0017, p_N1 = 0.002, p_blockswap = 0.25 | no: fails its pre-existing control (6/10 false "yes") | [M2_splitA.json](results/real/M2_splitA.json), [M2_splitB.json](results/real/M2_splitB.json), [M2_verdict.json](results/real/M2_verdict.json) |
 | M3 PCA reactivation strength | D3 = -0.146, p_N1 = 1.0 (15 significant components) | not eligible: TASK frames 651 < 1500 | passes its method tests; eligible in Split A only | [M3_splitA.json](results/real/M3_splitA.json), [M3_splitB.json](results/real/M3_splitB.json) |
 | M4 ICA reactivation strength | D4 = -0.061, p_N1 = 1.0 | not eligible: TASK frames 651 < 1500 | no: fails T-M4-1 (PCA 0.817 vs < 0.8 required) | [M4_splitA.json](results/real/M4_splitA.json), [M4_splitB.json](results/real/M4_splitB.json) |
 
 In words:
 
-- In Split A, every method that could be scored points the wrong way: TASK patterns are expressed more strongly in sleep **before** the wake bout than after it (M2: r(TASK, PRE) 0.222 > r(TASK, POST) 0.153; M3 and M4: D < 0, p_N1 = 1.0).
+- In Split A, all four methods point the wrong way: TASK patterns are expressed more strongly in sleep **before** the wake bout than after it (M1 and M2: r(TASK, PRE) 0.222 > r(TASK, POST) 0.153; M1 D1 = -0.069; M3 and M4: D < 0; all p_N1 = 1.0).
+- In Split B, M1 is slightly positive (D1 = +0.006) but not significant (p_N1 = 0.19).
 - TASK patterns are significantly expressed in PRE and in POST each on its own (M3 p_n1_pre_alone = p_n1_post_alone = 0.002), so co-activity structure is real, but it is not specific to sleep after the wake bout.
 - The one nominal "yes" (M2 Split B, p_N1 = 0.002 on D2 = 0.0017) is exactly the failure mode M2 showed on synthetic data with assemblies already present in PRE; the block-swap null does not support it (p = 0.25).
 
@@ -125,6 +128,7 @@ low that this says anything about reactivation in general, because there is one 
 - **Split B is ineligible for M3 and M4.** 651 TASK frames < 5 x 300 cells; the rule was not relaxed after seeing the data ([results/real/M3_splitB.json](results/real/M3_splitB.json)). This leaves M3 scorable in one split only, so it cannot meet "yes in each split" either way.
 - **M2 needs at least two sessions;** splits A and B are two pseudo-sessions of the same recording, so even a "yes" would not be independent replication (caveat in every M2 result file).
 - **The answer key is not signed.** [PROBLEM.md](PROBLEM.md) still shows an empty scientist signature block (SIGNATURE_STATUS); the open choices (TASK frames, cell selection, block-swap) were decided by the team lead at 15:45 CET before any real-data result, and the referee in [tests/referee/](tests/referee/) is still marked PROPOSED.
+- **Predictions that failed.** M1 was predicted negative in both splits and came out slightly positive in Split B; M2 was predicted "yes" in both splits and said "no" (JOURNAL.md "RECORD T2 real data", "RECORD T5 real data", both labelled contradicted).
 - **Loop wiring.** [run.py](run.py) runs the methods and writes byte-identical results on synthetic data ([tests/test_run.py](tests/test_run.py)); the method tests are not yet wired into the same command, and the M3/M4 real-data run used a scratch script calling the same `toolbox` functions (JOURNAL.md "RECORD T3/T6 real data").
 
 ## What it would need next
