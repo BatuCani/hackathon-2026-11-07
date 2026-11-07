@@ -332,6 +332,12 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 .word { font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; color: var(--ink-3); margin-bottom: 6px; }
 .word[data-tone="ok"] { color: var(--ok); } .word[data-tone="warn"] { color: var(--warn); } .word[data-tone="err"] { color: var(--err); } .word[data-tone="run"] { color: var(--accent); }
 .mchip .word { font-size: 30px; margin: 2px 0 0; }
+.method-strip { align-items: start; }
+.why { margin-top: 8px; font-size: 13px; color: var(--ink-2); }
+.why summary { display: inline-block; cursor: pointer; color: var(--accent); font-weight: 500; list-style: none; }
+.why summary::-webkit-details-marker { display: none; }
+.why p { margin: 6px 0 0; max-width: 52ch; line-height: 1.45; }
+.why[open] p { animation: mxIn 360ms var(--spring) both; }
 .big { font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
 .big small { font-size: 20px; color: var(--ink-3); font-weight: 600; letter-spacing: -0.02em; }
 .card .line { font-size: 13.5px; color: var(--ink-2); }
@@ -940,7 +946,7 @@ function renderCards() {
       <div class="card-top"><div><h2>${m.name}</h2><div class="msub">${m.sub}</div></div><span class="pill" data-pill></span></div>
       <div class="card-body"></div></div>`).join("");
   $("#cards").querySelectorAll(".card").forEach(c => {
-    c.addEventListener("click", e => { if (e.target.closest("[data-retry]")) return; openMethod(c.dataset.m); });
+    c.addEventListener("click", e => { if (e.target.closest("[data-retry], .why")) return; openMethod(c.dataset.m); });
     c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openMethod(c.dataset.m); } });
   });
   METHODS.forEach(m => updateCard(m.id));
@@ -951,6 +957,15 @@ function statsFor(mid) {
   return { res, el, yes: el.filter(isYes).length, med: el.length ? median(el.map(r => r.score)) : null, na: res.filter(r => !r.el) };
 }
 // One word per method: Yes / No / N/A / Error, plus one plain line. Numbers live behind Details.
+// Why a method is shown but not counted, in plain words (JOURNAL.md, method tests; thresholds were never changed afterwards).
+const WHY = {
+  M2: ["Fooled by a fake test case.", "On synthetic data where the pattern already existed before the task, it still said yes. With the stricter block-swap test it then found only 8 of 10 real cases; it needed 9 of 10."],
+  M4: ["Didn't pass its own benchmark.", "In the overlapping-assembly test ICA recovered 0.911, which passes, but the test also requires PCA to stay below 0.8 and PCA got 0.817, so the pre-set test failed. The thresholds were not changed afterwards."]
+};
+function whyBlock(mid) {
+  const w = WHY[mid]; if (!w) return "";
+  return `<details class="why"><summary>Why?</summary><p><b>${w[0]}</b> ${w[1]}</p><p class="muted">Shown for transparency, not used for the verdict.</p></details>`;
+}
 function shortReason(reason) { return /TASK frames/.test(reason || "") ? "Too few task frames" : "Data cannot support it"; }
 function methodWord(mid) {
   const r = S.run[mid] || { status: "idle" }, st = statsFor(mid), n = st.res.length;
@@ -960,7 +975,7 @@ function methodWord(mid) {
   const yes = st.yes * 2 > st.el.length, trusted = CONTROLS[mid];
   const na = st.na.length ? ` · ${st.na.length} N/A` : "";
   return { w: yes ? "Yes" : "No", tone: yes ? (trusted ? "ok" : "warn") : "na",
-    line: `${st.yes} of ${st.el.length} session${st.el.length === 1 ? "" : "s"} say${st.el.length === 1 ? "s" : ""} yes${na} · ${trusted ? "trusted" : "not counted, failed our tests"}` };
+    line: `${st.yes} of ${st.el.length} session${st.el.length === 1 ? "" : "s"} say${st.el.length === 1 ? "s" : ""} yes${na} · ${trusted ? "trusted" : "not used for the verdict"}` };
 }
 function updateCard(mid, fresh) {
   const card = document.querySelector(`.card[data-m="${mid}"]`); if (!card) return;
@@ -979,7 +994,7 @@ function updateCard(mid, fresh) {
   if (r.status === "na") body.innerHTML = `<div class="word" data-tone="na">N/A</div><div class="line">${W.line}. Skipped, not broken.</div>`;
   if (r.status === "error") body.innerHTML = `<div class="word" data-tone="err">Error</div><div class="line">${W.line}</div><button class="btn ghost mini-retry" data-retry>Retry ${METHODS.find(x => x.id === mid).name}</button>`;
   if (r.status === "done") {
-    body.innerHTML = `<div class="word" data-tone="${W.tone}">${W.w}</div><div class="line">${W.line}</div>`;
+    body.innerHTML = `<div class="word" data-tone="${W.tone}">${W.w}</div><div class="line">${W.line}</div>${whyBlock(mid)}`;
   }
   const retryBtn = body.querySelector("[data-retry]"); if (retryBtn) retryBtn.addEventListener("click", () => retry(mid));
   if (fresh) { card.classList.remove("materialize"); void card.offsetWidth; card.classList.add("materialize"); }
@@ -1004,9 +1019,12 @@ function renderSummary() {
   $("#methodStrip").innerHTML = METHODS.map(m => {
     const r = S.run[m.id] || { status: "idle" }, st = statsFor(m.id);
     const W = methodWord(m.id) || { w: "…", tone: "run", line: "Still running" };
-    return `<button class="mchip glass thin" data-m="${m.id}"><strong>${m.name}</strong><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span></button>`;
+    return `<div class="mchip glass thin" role="button" tabindex="0" data-m="${m.id}"><strong>${m.name}</strong><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span>${W.w !== "Error" ? whyBlock(m.id) : ""}</div>`;
   }).join("");
-  $("#methodStrip").querySelectorAll(".mchip").forEach(b => b.addEventListener("click", () => openMethod(b.dataset.m)));
+  $("#methodStrip").querySelectorAll(".mchip").forEach(b => {
+    b.addEventListener("click", e => { if (!e.target.closest(".why")) openMethod(b.dataset.m); });
+    b.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && !e.target.closest(".why")) { e.preventDefault(); openMethod(b.dataset.m); } });
+  });
 }
 function chart(kind) {
   const d = ds(), W = 460, H = 250, L = 46, R = 10, T = 12, B = 34;
