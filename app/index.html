@@ -508,7 +508,7 @@ details.more[open] summary { margin-bottom: 10px; }
         <span class="muted">.mat, .nwb, .npz, .json or .csv. Field names are read where the browser can.</span>
       </label>
       <div class="examples">
-        <p class="example-label">Or open a bundled example with real results</p>
+        <p class="example-label">Ready recordings, already mapped. Tap one to switch.</p>
         <button class="example glass thin" data-ds="riken" aria-pressed="false">
           <strong>RIKEN mouse05</strong>
           <span class="meta">Two-photon calcium · 300 cells · 7.65 Hz · 2 splits</span>
@@ -1152,6 +1152,7 @@ function fromHash() {
     enable("summary"); go("summary", true);
   }
 }
+if (!S.ds && !S.custom) pickDataset("riken"); // demo: a ready recording is preselected, Run works immediately
 requestAnimationFrame(() => { moveInd(); fromHash(); });
 addEventListener("hashchange", fromHash);
 document.fonts && document.fonts.ready.then(moveInd);
