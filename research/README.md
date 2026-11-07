@@ -3,7 +3,7 @@
 Merged from two independent literature passes (Claude and Codex) on 2026-11-07, for the Claude Impact Lab x Foresight hackathon at CIC Berlin.
 
 ## How to use this folder
-- This README is the index. [BUILD_APPROACH.md](BUILD_APPROACH.md) is a time-boxed build plan.
+- This README is the index. [ADDENDUM.md](ADDENDUM.md) holds the second research pass: surrogate/shuffle controls, bin-size effects, preplay critiques, cortical reactivation, Python packages, no-registration datasets and agent systems for spike data. [BUILD_APPROACH.md](BUILD_APPROACH.md) is a time-boxed build plan.
 - Third-party papers and code are **not stored here**. Run `bash research/scripts/fetch_sources.sh` to pull open-access full text (Europe PMC API) and clone the reference repos into `research/_fetched/` (git-ignored).
 - The one PDF kept in `papers/` is Takigawa et al. 2024, which is CC BY.
 
@@ -39,11 +39,18 @@ What not to overclaim:
 - Thresholds (bin width, smoothing, speed cutoff, burst, ripple) depend on data and experiment; log them.
 - Do not compare algorithms by raw detection counts alone.
 
+## Update after the second pass (details and per-item verification in ADDENDUM.md)
+- **Data without registration:** DANDI:000044 (Grosmark & Buzsaki; CC-BY-4.0, NWB, 4 rats, PRE sleep / novel maze / POST sleep). Its description matches CRCNS hc-11. It is 73 GB, so stream only the Units table. Title, size and licence were re-checked against the DANDI API. Other sets (000978, 001695, Zenodo 7114733 and 5587779) are in ADDENDUM section 6.
+- **Python null-model toolbox:** `pynapple` 0.11.4 (MIT; `jitter_timestamps`, `shuffle_ts_intervals`, `decode_bayes`) and `Elephant` 1.2.1 (BSD-3; `spike_train_surrogates`, `cell_assembly_detection`). Versions and licences re-checked on PyPI. `nelpy`, `non-local-detector` and `replay-trajectory-classification` lag on PyPI; install from GitHub.
+- **Shuffle theory:** van der Meer, Kemere & Diba 2020 (doi:10.1098/rstb.2019.0238) says the central problem is constructing and interpreting chance distributions. Platkiewicz 2017 and Louis 2010 show spike-centred jitter can inflate false positives and that dithering in operational time conserves rate and ISI.
+- **Closest prior art for the project:** SpikeLab (bioRxiv 2026, doi:10.64898/2026.04.25.720833) and Magland et al. 2025 (Sci Data, doi:10.1038/s41597-025-06285-x). Read them before pitching novelty.
+- **Open gap the searches did not close:** no paper found that compares rate-matched replay shuffles with cell-ID or place-field shuffles, and no systematic bin-size study of replay. A loop that sweeps shuffle type and bin size on one dataset would address both; this is a suggestion, not a finding.
+
 ## Code (clone with the fetch script)
 | Repo | Use | Language / licence |
 |---|---|---|
 | [bendor-lab/replay_detection_cross_validation](https://github.com/bendor-lab/replay_detection_cross_validation) | Companion code to Takigawa 2024: Bayesian decoding and track log-odds on simulated replay | MATLAB, CC0-1.0 |
-| [DavidTingley/RnR_methods](https://github.com/DavidTingley/RnR_methods) | Anchor paper toolbox: `ReactStrength` (PCA/ICA), `replay_Bayesian`, `replay_RankOrder`, `compareReplayMethods`, `compareNoiseDegradation`. No Python version, so a port is a clear gap. | MATLAB, LICENSE file present |
+| [DavidTingley/RnR_methods](https://github.com/DavidTingley/RnR_methods) | Anchor paper toolbox: `ReactStrength` (PCA/ICA), `replay_Bayesian`, `replay_RankOrder`, `compareReplayMethods`, `compareNoiseDegradation`. No Python version, so a port is a clear gap. | MATLAB, GPL-3.0 (GitHub API) |
 | [Eden-Kramer-Lab/replay_trajectory_classification](https://github.com/Eden-Kramer-Lab/replay_trajectory_classification) | State-space decoding, sorted or clusterless spikes. Stretch goal after a baseline. | Python, MIT |
 | [LorenFrankLab/non_local_detector](https://github.com/LorenFrankLab/non_local_detector) | Newer HMM / Bayesian package for non-local activity (last commit 2026-11-06) | Python, MIT |
 | [kemerelab/UncoveringTemporalStructureHippocampus](https://github.com/kemerelab/UncoveringTemporalStructureHippocampus) | Notebooks for Maboudi 2018 (HMM vs Bayesian replay) | Python notebooks, MIT |
@@ -91,7 +98,7 @@ AI research loops (the hackathon format). Titles and IDs checked against the arX
 30. Ifargan, Hafner, Kern, Alcalay, Kishony (2024). *Autonomous LLM-driven research from data to human-verifiable research papers.* arXiv:2404.17605.
 
 ## Open data (not downloaded; check licence and format first)
-- CRCNS hc-11 (Buzsaki lab): eight bilateral silicon-probe recordings from four Long-Evans rats. https://crcns.org/data-sets/hc/hc-11/about-hc-11 (free account needed).
+- DANDI:000044 is the no-registration route to the same Grosmark & Buzsaki recordings (see update above). CRCNS hc-11 (Buzsaki lab): eight bilateral silicon-probe recordings from four Long-Evans rats. https://crcns.org/data-sets/hc/hc-11/about-hc-11 (free account needed).
 - CRCNS hippocampus index: https://crcns.org/data-sets/hc
 - Neurosharing paper describing the CRCNS spike/LFP sets: PMC4097350.
 - DANDI post on place-cell recordings from the Space Shuttle: https://about.dandiarchive.org/blog/2026/02/27/place-cells-in-space-hippocampal-recordings-from-the-space-shuttle/
@@ -99,6 +106,6 @@ AI research loops (the hackathon format). Titles and IDs checked against the arX
 - No dataset has been tested with the code here.
 
 ## Gaps
-- No search yet for firing-rate-matched shuffles beyond the sources above, or for cortical reactivation tools.
+- Shuffle-comparison and bin-size studies for replay were searched for and not found (see ADDENDUM). figshare, OSF and CRCNS were not searched.
 - The AI-loop papers were not read in depth.
 - `fetch_sources.sh` was syntax-checked only; Europe PMC returns no full text for non-open-access papers, and the script skips those.
