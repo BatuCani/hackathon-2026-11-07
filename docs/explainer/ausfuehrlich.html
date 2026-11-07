@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Shift Happens — ausführlich erklärt</title>
+<style>
+  @page { size: A4; margin: 11mm 12mm 11mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9.6pt;
+    line-height: 1.30;
+    color: #1d1d1f;
+    margin: 0;
+  }
+  h1 { font-size: 18pt; line-height: 1.12; margin: 0 0 2px; }
+  h2 {
+    font-size: 12pt;
+    margin: 8px 0 2px;
+    color: #243f9e;
+    page-break-after: avoid;
+  }
+  h3 { font-size: 10.4pt; margin: 6px 0 2px; page-break-after: avoid; }
+  p { margin: 2px 0; }
+  .sub { color: #555; font-size: 8.6pt; margin: 0 0 6px; }
+  .lead { font-size: 10.2pt; }
+  .box {
+    background: #f4f1ea;
+    border-radius: 6px;
+    padding: 5px 9px;
+    margin: 4px 0;
+    page-break-inside: avoid;
+  }
+  .answer { background: #eef3e6; }
+  table { border-collapse: collapse; width: 100%; margin: 5px 0 8px; }
+  td, th {
+    border-bottom: 1px solid #ddd;
+    padding: 3px 5px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #f6f6f6; font-weight: 650; }
+  .tight td, .tight th { font-size: 8.4pt; padding: 2px 4px; }
+  figure { margin: 3px 0 5px; break-inside: avoid; page-break-inside: avoid; }
+  figure img { display: block; width: 100%; max-height: 38mm; object-fit: contain; object-position: left center; }
+  figure.loop img { width: 62mm; max-height: none; height: auto; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
+  figcaption { font-size: 8pt; color: #444; margin-top: 1px; }
+  ul, ol { margin: 2px 0 4px 16px; padding: 0; }
+  li { margin: 1px 0; }
+  .y { color: #1f7a3f; font-weight: 650; }
+  .n { color: #b3261e; font-weight: 650; }
+  .muted { color: #555; }
+  dl.gloss { columns: 2; column-gap: 12px; margin: 2px 0; font-size: 8.5pt; }
+  dl.gloss dt { font-weight: 650; break-after: avoid; }
+  dl.gloss dd { margin: 0 0 3px; }
+  a { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<h1>Shift Happens — ausführlich erklärt</h1>
+<p class="sub">Claude Impact Lab, 7. November 2026 · Team Shift Happens · Repo github.com/BatuCani/hackathon-2026-11-07<br>
+Quellen, alle aus diesem Repo: README.md, PROBLEM.md, JOURNAL.md, SUBMISSION.md, journal/engineer-b.md, research/, results/real/, results/figures/. Keine Zahl in diesem Text steht außerhalb dieser Dateien.</p>
+
+<p class="lead"><b>In einem Satz.</b> Die Werkzeugkiste findet Reaktivierung dort, wo sie bekannt ist (acht von acht Ratten-Sitzungen). Auf der einen Maus mit Calcium-Bildern sagt sie ehrlich <b>zu wenig Belege</b>: nur eine Methode darf in beiden Hälften mitstimmen, und die sagt nicht ja.</p>
+
+<div class="box answer">
+<b>Was „zu wenig Belege“ heißt und was nicht.</b>
+Es heißt nicht „wir haben Reaktivierung entdeckt“. Es heißt auch nicht „wir haben bewiesen, dass keine da ist“.
+Die Regel war vorher festgelegt: Mindestens zwei Methoden, die ihre eigenen Tests bestanden haben, müssen in beiden Hälften der Aufnahme mitstimmen.
+Nur M1 darf das. M3 darf nur in Hälfte A, und sagt dort nein. M2 und M4 sind durch ihre eigenen Tests disqualifiziert.
+Quelle: PROBLEM.md „Overall verdict“, results/real/summary.md, SUBMISSION.md „What the loop found“.
+</div>
+
+<h2>1. Worum es geht</h2>
+<p>Wenn ein Tier etwas erlebt, sind bestimmte Nervenzellen gleichzeitig aktiv. Im Schlaf danach taucht dieses gemeinsame Muster oft wieder auf. Das nennt man <b>Reaktivierung</b>. Sie gilt als ein Stück des Erinnerns. Man schaut immer dieselben Zellen in drei Abschnitten an: <b>PRE</b> (Schlaf davor), <b>TASK</b> (das Erlebnis), <b>POST</b> (Schlaf danach). Reaktivierung heißt: POST ähnelt TASK mehr als PRE. PRE ist die Kontrolle, ob das Muster schon vorher da war. Quelle: PROBLEM.md, Zitat aus research/team-brief.md; research/source-of-truth.md §1.</p>
+<p><b>Replay</b> ist etwas anderes: dort kehrt auch die zeitliche Reihenfolge wieder, oft zeitlich gerafft. Dieses Projekt misst nur Reaktivierung (gleichzeitiges Feuern, ohne Reihenfolge). Die Sequenz-Methoden M5 bis M8 aus dem Team-Brief sind bewusst nicht gebaut. Quelle: research/briefing.md, Zitat aus dem Abstract von Tingley und Peyrache 2020; research/README.md.</p>
+
+<h2>2. Das Problem</h2>
+<div class="box">
+Die üblichen Messmethoden wurden für schnelle Elektroden gebaut. Die zählen einzelne, kurze Impulse (Spikes). Viele Labore filmen heute stattdessen das langsame Leuchten von Kalzium in den Zellen. Nachbarbilder sind dann nicht unabhängig, das Signal ist „verschmiert“. Ob die alten Tests auf solchen Daten noch ehrlich sind, ist nicht geprüft. Das Übersichts-Paper sagt selbst: Die Methoden widersprechen sich oft, und zwei Lücken sind offen. Die Feuerrate kann eine Korrelation vortäuschen, und niemand hat systematisch die Breite der Zeitfenster variiert.
+</div>
+<p>Wörtlich, Abschnitt 3b-v, zitiert in research/briefing.md und SUBMISSION.md: eine Erregbarkeitsänderung könne die Paar-Korrelation „at least in part“ erklären, und diese Prüfung „is still missing“. Zur Fensterbreite: eine systematische Variation „is lacking“. Auf einem Datensatz stimmen zwei Replay-Maße kaum überein (R = 0,126). Quelle: research/briefing.md Abschnitt 2. Kalzium sieht tausende Zellen. Ein ungültiger Test erzeugt falsche Reaktivierung. Quelle: SUBMISSION.md „Open problem“.</p>
+<p><b>Unsere Frage</b>, festgeschrieben bevor es Ergebnisse gab (PROBLEM.md): Ähnelt in der RIKEN-Maus der NREM-Schlaf danach dem Wachabschnitt mehr als der NREM-Schlaf davor, je Methode? Und wie wahrscheinlich ist Reaktivierung, wenn nur Methoden zählen, die auf künstlichen Daten mit bekannter Wahrheit bestehen?</p>
+
+<h2>3. Das Paper und die vier Methoden</h2>
+<p>Anker ist die Übersicht von Tingley und Peyrache (2020), <i>On the methods for reactivation and replay analysis</i>, Phil. Trans. R. Soc. B 375: 20190231. Sie ist eine Methodenkritik, kein neues Experiment. Die Formeln stehen in research/source-of-truth.md. Der MATLAB-Code des Papers (RnR_methods) ist GPL und wurde nicht kopiert; die Werkzeugkiste ist in Python neu geschrieben (Apache 2.0). Quelle: research/briefing.md, README.md „Licences“.</p>
+<p>Jede Methode liefert eine Zahl. „Ja“ heißt: die Zahl ist positiv (Schlaf danach ähnelt dem Erlebnis mehr als Schlaf davor) und sie ist seltener als in 5 von 100 Zufallsversionen. Der Zufall ist überall derselbe, N1, siehe Abschnitt 5. Eine Methode, die ihre eigenen Tests nicht besteht, wird berichtet, stimmt aber nicht mit. Quelle: PROBLEM.md „ANSWER KEY“.</p>
+
+<h3>M1 — Paar-Korrelation. Analogie: der Sitzplan</h3>
+<p>Man schreibt für jeden Abschnitt auf, welche Zellen zusammen aktiv waren, wie ein Sitzplan: wer saß neben wem. Dann vergleicht man den Plan des Erlebnisses mit dem Plan des Schlafs danach und mit dem Plan des Schlafs davor. Die Zahl D1 ist die Ähnlichkeit TASK–POST minus die Ähnlichkeit TASK–PRE, als Differenz zweier Korrelationen, ohne Einheit. Ja, wenn D1 &gt; 0 und p &lt; 0,05 in jeder Hälfte, und wenn in PRE und in POST mindestens 300 NREM-Bilder liegen. Quelle: PROBLEM.md, M1-Zeile. Schwäche laut Paper: das Maß sieht die Vorgeschichte nur indirekt und hängt an der Feuerrate. Quelle: research/source-of-truth.md, M1.</p>
+
+<h3>M2 — erklärte Varianz gegen die Gegenprobe. Analogie: die Erklärung abzüglich gestern</h3>
+<p>M2 fragt nicht nur „ähnelt der Schlaf danach dem Erlebnis?“, sondern „ähnelt er ihm mehr, als man aus dem Schlaf davor schon erwarten würde?“. EV ist dieser bereinigte Anteil. REV ist dieselbe Rechnung mit vertauschtem Vorher und Nachher. Wenn die Gegenprobe genauso viel „erklärt“, war es nicht das Erlebnis. D2 = EV − REV, ohne Einheit. Ja nur, wenn D2 in beiden Hälften positiv ist und beide p-Werte unter 0,05 liegen. Das Paper verlangt dafür mehrere Sitzungen. Hier gibt es nur zwei Hälften derselben Aufnahme, deshalb stünde selbst ein Ja unter diesem Vorbehalt. Quelle: PROBLEM.md, M2; research/briefing.md, Tabelle der Methodenfamilien.</p>
+
+<h3>M3 — Hauptkomponenten. Analogie: die lautesten Akkorde im Chor</h3>
+<p>Während des Erlebnisses sucht die Methode Gruppen von Zellen, die gemeinsam lauter werden als Zufall. Das sind die „Akkorde“. Danach fragt sie, ob diese Akkorde im Schlaf danach stärker klingen als im Schlaf davor. D3 ist diese Differenz, in quadrierten z-Werten pro Bild. Ja, wenn D3 &gt; 0 und p &lt; 0,05, mindestens zehn Zellen, mindestens eine Komponente über der Zufallsgrenze, und mindestens fünf Bilder pro Zelle in TASK. Quelle: PROBLEM.md, M3. Die klassische Zufallsgrenze heißt Marchenko-Pastur. Sie setzt voraus, dass die Zeitpunkte unabhängig sind. Genau das ist bei Kalzium fraglich, siehe Abschnitt 5.</p>
+
+<h3>M4 — unabhängige Komponenten. Analogie: überlappende Chöre entmischen</h3>
+<p>Hauptkomponenten stehen senkrecht aufeinander. Wenn zwei Gruppen sich Zellen teilen, verschmiert PCA sie. ICA versucht, die überlappenden Gruppen auseinanderzuziehen. D4 ist dieselbe Differenz wie D3, nur mit diesen entmischten Mustern. Die Schwelle ist wie bei M3, aber es braucht mindestens zwei bedeutsame Komponenten. Das Paper behauptet, ICA trenne überlappende Gruppen dort, wo PCA scheitert. Der eigene Test T-M4-1 hat diese Behauptung in der festgelegten Form nicht bestätigt (Abschnitt 7). Quelle: research/briefing.md Abschnitt 2e; journal/engineer-b.md Eintrag 2; PROBLEM.md, M4.</p>
+
+<h2>4. Die Daten</h2>
+<p>Zwei Datensätze, mit völlig verschiedener Rolle. DANDI ist keine biologische Vergleichsgruppe zur Maus. Art, Hirnregion, Messtechnik und Aufgabe sind überall anders. Quelle: SUBMISSION.md, mehrfach wiederholt.</p>
+<table>
+<tr><th></th><th>RIKEN, der eigentliche Fall</th><th>DANDI:000044, nur Positivkontrolle</th></tr>
+<tr><td>Was</td><td>Eine Maus (mouse05), Cortex, Zwei-Photonen-Kalzium, eine Schlaf-Sitzung. 6.920 Zellen mal 19.000 Bilder, zwei getrennte Stücke zu je 9.500 Bildern.</td><td>Vier Ratten, Hippocampus (CA1), Elektroden. Acht Sitzungen mit bekanntem Schlaf vor und nach einer echten Lernaufgabe (Grosmark und Buzsáki 2016).</td></tr>
+<tr><td>Zeit</td><td>7,65 Bilder pro Sekunde. Die Rate steht nicht in der Datei, sie kommt aus der Datenbeschreibung. Ein Bild dauert etwa 131 ms.</td><td>Spikes in Fenstern von 100 ms. Aufgabe = alle Bins der Maze-Phase. Pyramidenzellen, 41 bis 120 pro Sitzung.</td></tr>
+<tr><td>Aufgabe</td><td>Keine. Ein Wachabschnitt zwischen zwei NREM-Phasen steht für TASK. Es wurde dabei nichts gelernt. Ein Nein ist deshalb der erwartbare Ausgang.</td><td>Echtes Labyrinth: lineare Bahn oder Kreisbahn, je nach Sitzung. PRE, MAZE, POST sind im Datensatz beschriftet.</td></tr>
+<tr><td>Schlaf</td><td>Nur NREM in PRE und POST. Kodierung: 0 und 0,5 wach, 1 NREM, 2 REM. Die Aktivität ist die rohe OASIS-Entfaltung (Variable <i>spike</i>), nicht geglättet.</td><td>Nur NREM in PRE und POST, über die mitgelieferten Schlafstadien.</td></tr>
+<tr><td>Rolle</td><td>Die Frage aus PROBLEM.md.</td><td>Prüft, ob die Werkzeugkiste „ja“ sagen kann, wo Reaktivierung schon bekannt ist. Sonst wäre ein Nein bei der Maus wertlos.</td></tr>
+</table>
+<p>Quellen: PROBLEM.md „Data and fixed choices“; research/datasets/calcium-vetting.md; research/datasets/ephys.md; SUBMISSION.md „Data and sources“. Die Dateien selbst liegen nicht im Repo (Zenodo 17667863, CC BY 4.0; DANDI wird gestreamt).</p>
+<p><b>Zwei Hälften, vorher festgelegt.</b> Hälfte A: Wachphase Bilder 5481–7306 (1.825 Bilder, etwa 239 s), davor 1.300 NREM-Bilder (170 s), danach 999 (131 s). Hälfte B: Wachphase Bilder 15006–15657 (651 Bilder, etwa 85 s), davor 2.657 NREM-Bilder (347 s), danach 2.669 (349 s). Die Hälften kreuzen die Lücke zwischen den beiden Aufnahmestücken nicht. Quelle: PROBLEM.md.</p>
+<p><b>Welche Zellen.</b> Mit allen 6.920 Zellen wäre die Regel „mindestens fünf TASK-Bilder pro Zelle“ in beiden Hälften verletzt. Vor jedem Ergebnis wurde entschieden: die 300 aktivsten Zellen, gemessen an der mittleren entfalteten Aktivität über beide Wachphasen zusammen, damit A und B dieselben Zellen nutzen. Die Fünf-Bilder-Regel wurde nicht gelockert. Hälfte B hat 651 TASK-Bilder und braucht 1.500. M3 und M4 sind dort <b>nicht zulässig</b>, das ist kein Nein. Quelle: PROBLEM.md „Not decided yet“, JOURNAL.md RECORD T1.</p>
+
+<h2>5. Der Zufall: N1 gegen Marchenko-Pastur</h2>
+<p>Ein p-Wert sagt, wie oft ein reiner Zufall ein mindestens so großes Ergebnis erzeugt. Der Zufall muss das behalten, was an den Daten echt ist, und nur das zerstören, was man prüfen will.</p>
+<p><b>N1, die Analogie der versetzten Tonspuren.</b> Jede Zelle behält ihre eigene Spur, auch ihr langsames Auf und Ab. Die Spur wird nur ringförmig verschoben, jede Zelle um einen eigenen Zufallsbetrag. Wer mit wem gemeinsam aktiv war, geht kaputt. Das eigene Zeitmuster jeder Zelle bleibt. 500 solche Verschiebungen, Startwert (Seed) 0, nur innerhalb einer Hälfte, nie über die Lücke. Der p-Wert ist einseitig: (1 + Anzahl der Zufallsversionen, die mindestens so hoch liegen wie der echte Wert) geteilt durch 501. Kleinster möglicher p-Wert: 1/501, also 0,002. Alpha = 0,05. Quelle: PROBLEM.md „Null model N1“; research/team-brief.md, zitiert in JOURNAL.md RECORD T4. Der Teamname kommt von dieser Verschiebung. Quelle: README.md „Team“.</p>
+<p><b>Marchenko-Pastur</b> ist eine Formel aus der Zufallsmatrix-Theorie. Sie sagt, wie groß der größte „Akkord“ wäre, wenn die Zeitpunkte unabhängiges Rauschen wären. Das Paper behandelt sie als nahezu sichere Grenze für Spike-Daten. Kalzium ist nicht unabhängig: Nachbarbilder hängen zusammen. Die Formel wird dann zu streng im falschen Sinn, sie ruft Muster aus, die nur der langsame Verlauf erzeugt.</p>
+<figure>
+<img src="../../results/figures/eigenvalue_bounds.png" alt="Eigenwert-Spektrum synthetischen Kalzium-Rauschens gegen Marchenko-Pastur und N1">
+<figcaption>Synthetisches Kalzium-Rauschen, Zeitkonstante 1 s, keine eingebauten Gruppen, Seed 0. 14 Eigenwerte liegen über Marchenko-Pastur, keiner über N1. Quelle: results/figures/README.md.</figcaption>
+</figure>
+<p>Über 50 solcher Zufallsläufe: Marchenko-Pastur markiert in <span class="n">50 von 50</span> mindestens fünf falsche Komponenten. Die N1-Grenze markiert in <span class="y">2 von 50</span> mindestens eine. Die Schwellen (mindestens 45 von 50 bzw. höchstens 5 von 50) waren vorher festgelegt, beide Tests gelten als verifiziert. Quelle: journal/engineer-b.md Eintrag 3, Test T-N1-8; JOURNAL.md RECORD T4; README.md „Key findings“.</p>
+<figure>
+<img src="../../results/figures/null_distribution_example.png" alt="N1-Verteilung des M3-Werts auf einer künstlichen Positivkontrolle">
+<figcaption>Beispiel, nicht die Maus: N1-Verteilung des M3-Werts auf einer künstlichen Sitzung mit eingebauter Reaktivierung, Seed 0. Beobachteter Wert 0,156, einseitiger p = 0,010. Der echte Wert sitzt über dem Zufall. Quelle: results/figures/README.md. Gezeichnet mit 100 Verschiebungen, nicht mit den 500 der echten Läufe.</figcaption>
+</figure>
+<p>N1 ist keine Garantie. Liegen Gruppen schon im Schlaf davor, erzeugt N1 bei M3 zu viele Fehlalarme. Zusätzlich wird ein Blocktausch berichtet (20-Sekunden-Blöcke, PRE/POST neu gemischt). Er ist eine Zusatzspalte, nicht Teil der Ja-Schwelle für M3 und M4. Quelle: journal/engineer-b.md; PROBLEM.md, Entscheidung 15:45.</p>
+
+<h2>6. Der Research-Loop</h2>
+<p>Zustand lebt in Dateien, nicht im Chat. Reihenfolge: Literatur lesen, Frage und Antwortschlüssel sperren, Schiedsrichter-Tests schreiben, dann pro Aufgabe lesen, vorhersagen, rechnen, urteilen, aufschreiben. Eine Vorhersage wird committet, bevor der Lauf startet. Ein Befund ist eine Zahl mit einer Ergebnisdatei. Fehlschläge bleiben stehen, Schwellen werden danach nicht verschoben. Labels: <b>verifiziert</b> (Vorhersage eingetroffen), <b>widersprochen</b> (nicht eingetroffen), <b>zu wenig Belege</b>. Quelle: README.md „Research loop“; JOURNAL.md „Loop“.</p>
+<figure class="loop">
+<img src="../../research/research-loop.png" alt="Diagramm des Research-Loops">
+<figcaption>Der Loop als Bild: Frage, Antwortschlüssel, gesperrter Schiedsrichter, Schleife, Befunde, Abgabe. Quelle: research/research-loop.png, verwiesen in README.md.</figcaption>
+</figure>
+<p>Der Antwortschlüssel wurde am 7. Nov 2026 um 16:11 von Batu als Team-Lead unterschrieben, ohne Wissenschaftlerin im Team. Die Entscheidungen (Wachphasen, 300 Zellen, kein Pflicht-Blocktausch) liegen im Commit 20a62a8 um 15:44, vor dem ersten echten Ergebnis um 15:48. Am Schlüssel wurde nach einem Ergebnis nichts geändert. Quelle: PROBLEM.md „Signature“; JOURNAL.md RECORD T0 sign-off.</p>
+
+<table class="tight">
+<thead><tr><th>Loop</th><th>Vorhersage, vorher festgeschrieben</th><th>Ergebnis</th><th>Label</th></tr></thead>
+<tbody>
+<tr><td>T1 Lader</td><td>Bildzahlen wie im Vetting-Bericht. Zellzahl nach der Entscheidung: 300 in beiden Hälften.</td><td>A: 1.300 / 1.825 / 999. B: 2.657 / 651 / 2.669. Dieselben 300 Zellen. B für M3/M4 unzulässig.</td><td class="y">verifiziert</td></tr>
+<tr><td>T-N1-8 Grenze</td><td>Marchenko-Pastur viele Fehlalarme; N1 selten (etwa 1 von 20).</td><td>MP mindestens 5 falsche Komponenten in 50/50. N1 mindestens eine in 2/50.</td><td class="y">verifiziert</td></tr>
+<tr><td>T-M4-1 Überlapp</td><td>ICA trifft die wahren Gruppen mit Ähnlichkeit mindestens 0,9, PCA bleibt unter 0,8.</td><td>Seed 0: ICA 0,911, PCA 0,817. PCA liegt über der Schwelle. Über Seeds 0–9 erreicht ICA 0,9 nur in 5 von 10.</td><td class="n">widersprochen</td></tr>
+<tr><td>T5 M2, künstlich</td><td>Positivkontrolle mindestens 9/10. Vorhandene Gruppen: höchstens 2/10 falsche Ja.</td><td>Positiv 10/10. Vorhandene Gruppen: 6/10 falsche Ja. Mit Blocktausch fällt die Positivkontrolle auf 8/10.</td><td class="n">widersprochen</td></tr>
+<tr><td>T5 M2, RIKEN</td><td>D2 &gt; 0 und p &lt; 0,05 in beiden Hälften, also Ja, aber wegen des Tests nicht deutbar.</td><td>A: D2 = −0,026, p = 1,0. B: D2 = +0,0017, p = 0,002, Blocktausch p = 0,25. Schlüssel-Antwort: nein.</td><td class="n">widersprochen</td></tr>
+<tr><td>T2 M1, RIKEN</td><td>D1 &lt; 0 in beiden Hälften, p &gt; 0,05, also kein Ja.</td><td>A: D1 = −0,069, p = 1,0. B: D1 = +0,006, p = 0,19. Kein Ja. Das kleine Plus in B widerspricht dem erwarteten Minus.</td><td class="n">widersprochen</td></tr>
+<tr><td>T3/T6 M3 und M4, RIKEN</td><td>B unzulässig. A zulässig. Vorzeichen in A ungewiss, eher ≤ 0. Gesamt höchstens zu wenig Belege.</td><td>B unzulässig (651 &lt; 1.500). A: D3 = −0,146, D4 = −0,061, beide p = 1,0, 15 Komponenten.</td><td class="y">verifiziert</td></tr>
+<tr><td>T7 Urteilsregel</td><td>Die drei Ausgänge und die Sonderfälle (zu wenige Methoden, umgekehrte Richtung) wie in PROBLEM.md.</td><td>Neun Tests bestehen, inklusive der Textausgabe für summary.md.</td><td class="y">verifiziert</td></tr>
+<tr><td>DANDI M3/M4</td><td>M3 sagt in mindestens 6 von 8 Sitzungen ja. M4 dieselbe Richtung. Blocktausch seltener signifikant als N1.</td><td>M3 ja in 8/8, D3 von +0,028 bis +0,144, p = 0,002 überall. M4 8/8, D4 von +0,028 bis +0,125. Blocktausch p = 0,002 in 16/16, also nicht seltener.</td><td class="y">verifiziert</td></tr>
+<tr><td>Loop 2, M1/M2 auf DANDI</td><td>Beide bestehen „ja in mindestens 6 von 8“. Erwartet: M1 in 8/8, M2 in mindestens 7/8, mittleres EV &gt; mittleres REV.</td><td>M1 ja in 6/8, M2 in 7/8. Mittleres EV 0,088 &gt; mittleres REV 0,025. Die 8/8 für M1 traf nicht zu, die Bestehenslinie schon.</td><td class="y">verifiziert</td></tr>
+<tr><td>Loop 3, Feuerrate</td><td>Nicht gestützt: der Zusammenhang zwischen Ratenänderung und D3 ist schwach (|r| &lt; 0,3 oder p ≥ 0,05).</td><td>r = 0,136, p = 0,749, n = 8. Ratenverhältnisse POST/PRE zwischen 0,880 und 1,135.</td><td class="y">verifiziert</td></tr>
+<tr><td>Loop 4, Fensterbreite</td><td>Robust: M3 sagt ja bei 50, 100 und 200 ms in drei großen Sitzungen (9 von 9). 200 Verschiebungen statt 500, vorher so entschieden.</td><td>Keine Ergebnisdatei. results/real/dandi_binsize.json und results/figures/binsize_m3.png fehlen. Im Journal steht kein RECORD.</td><td>kein Befund</td></tr>
+<tr><td>T8, ein Befehl</td><td>Ein frischer Clone schreibt dieselben acht JSON-Dateien Byte für Byte.</td><td>Acht sha256-Treffer, 61 Sekunden, Seed 0, 500 Verschiebungen, Commit b11e8d0.</td><td class="y">verifiziert</td></tr>
+<tr><td>Urteil, 16:32</td><td>Die gesperrte Regel, angewandt auf die acht RIKEN-Dateien.</td><td>Zu wenig Belege. Wie wahrscheinlich: 0/2 in Hälfte A, 0/1 in Hälfte B.</td><td>aufgeschrieben</td></tr>
+</tbody>
+</table>
+<p class="muted">Zeilen aus JOURNAL.md (PREDICT/RECORD mit Uhrzeit) und journal/engineer-b.md Einträge 2 und 3. Loop 4: die eigene Regel der Vorhersage sagt, ein fehlender Lauf zählt als zu wenig Belege. Das ist kein Ergebnis „robust“.</p>
+
+<h2>7. Kontrollen: darf die Methode überhaupt abstimmen?</h2>
+<p>Vor den echten Daten bekommt jede Methode künstliche Sitzungen mit bekannter Antwort. Vier Sorten, beschrieben in SUBMISSION.md: eingebaute Reaktivierung, reines Rauschen, Gruppen die schon in PRE da sind, und eine reine Feuerraten-Änderung. Dazu die Umkehr (POST und PRE vertauscht) und Gleichaktivität ohne Schlafbezug. Eine Methode zählt nur, wenn sie die Positivfälle erkennt und die Negativfälle nicht als Ja verkauft.</p>
+<figure>
+<img src="../../results/figures/controls_m3_m4.png" alt="Anteil der Seeds, in denen M3 und M4 ja sagen">
+<figcaption>Anteil der Seeds mit Ja für M3 und M4. Gestrichelt 0,9 (Positivfall soll darüber liegen), gepunktet 0,1 (alle anderen sollen darunter liegen). In diesem Bild: Positivkontrolle 0,95 für beide. Gleichaktivität ohne Schlaf 0,15, knapp über 0,1. Vorhandene Gruppen 0,10. Andere Gruppen 0,00 (M3) und 0,05 (M4). Rauschen und Umkehr 0. Dieses Bild rechnet mit 20 Seeds und 100 Verschiebungen neu. Die gezählten M3-Tests nutzen 50 Seeds und bestehen. Die beiden Läufe wurden nicht verrechnet. Quelle: results/figures/README.md; SUBMISSION.md „Where it got stuck“.</figcaption>
+</figure>
+<figure>
+<img src="../../results/figures/reactivation_strength_example.png" alt="Reaktivierungsstärke R(t) in PRE, TASK und POST">
+<figcaption>Dieselbe künstliche Positivkontrolle, Seed 0. Ungemittelte Mittelwerte: PRE 0,105, TASK 1,284, POST 0,261. Differenz POST − PRE = 0,156. Die Kurven sind über 5 s geglättet, die Zahlen nicht. Quelle: results/figures/README.md.</figcaption>
+</figure>
+<ul>
+<li><b>M3 besteht</b> die Tests T-A1 bis T-A5 und T-M3-1 bis T-M3-8. Positivkontrolle 50/50, Umkehr 50/50, Gleichaktivität ohne Schlaf 1/50. Quelle: SUBMISSION.md; journal/engineer-b.md Eintrag 3.</li>
+<li><b>M1 besteht</b> die Schiedsrichter-Fälle a–d und ist in beiden Hälften zulässig. Quelle: SUBMISSION.md, Tabelle.</li>
+<li><b>M2 besteht nicht.</b> Mit der gesperrten N1-Regel sagt M2 in 6 von 10 künstlichen Sitzungen ja, in denen die Gruppen schon vorher da waren. Erlaubt waren höchstens 2 von 10. N1 zerstört das gemeinsame Muster in PRE und POST gleichermaßen, der Zufall liegt dann nahe null, und kleine EV-gegen-REV-Differenzen wirken signifikant. Der Blocktausch heilt diesen Fehlalarm, senkt aber die Positivkontrolle auf 8 von 10 (gebraucht werden 9). Beides bleibt ein dokumentierter Fehlschlag. M2 stimmt nicht mit. Quelle: JOURNAL.md RECORD T5; tests/test_m2.py, genannt in SUBMISSION.md.</li>
+<li><b>M4 besteht nicht.</b> T-M4-1: ICA 0,911 (das reicht), PCA 0,817 (die Schwelle verlangt unter 0,8). Die Schwelle wurde nicht verschoben. M4 stimmt nicht mit, auch wenn die Zahl auf echten Daten berichtet wird. Quelle: journal/engineer-b.md Eintrag 2; JOURNAL.md RECORD T8.</li>
+</ul>
+
+<h2>8. Was auf den echten Daten herauskam</h2>
+<h3>Die Maus</h3>
+<p>300 aktivste Zellen, nur NREM in PRE und POST, Wachphase als Ersatz-Aufgabe, 500 N1-Verschiebungen, Seed 0. Quelle: results/real/summary.md und README.md „Results“.</p>
+<table class="tight">
+<tr><th>Methode</th><th>Hälfte A</th><th>Hälfte B</th><th>Stimmt mit?</th></tr>
+<tr><td>M1, D1</td><td>−0,069, p = 1,0, nein</td><td>+0,006, p = 0,19, nein</td><td>ja, beide Hälften</td></tr>
+<tr><td>M2, D2</td><td>−0,026, p = 1,0</td><td>+0,0017, p = 0,002, Blocktausch 0,25</td><td>nein, Test nicht bestanden</td></tr>
+<tr><td>M3, D3</td><td>−0,146, p = 1,0, 15 Komponenten</td><td>nicht zulässig, 651 &lt; 1.500 Bilder</td><td>nur in A, und dort nein</td></tr>
+<tr><td>M4, D4</td><td>−0,061, p = 1,0</td><td>nicht zulässig, gleicher Grund</td><td>nein, T-M4-1</td></tr>
+</table>
+<figure>
+<img src="../../results/figures/real_scores.png" alt="Balken der vier Methoden auf den beiden RIKEN-Hälften">
+<figcaption>Balken je Methode und Hälfte. Ein Stern wäre p &lt; 0,05. „n.s.“ ist zulässig, aber nicht signifikant. Ein Kreuz ist unzulässig und hat keinen Wert. Der einzige signifikant positive Balken ist M2 in Hälfte B, und M2 darf nicht mitstimmen. Quelle: results/figures/README.md.</figcaption>
+</figure>
+<p>In Hälfte A zeigen alle vier in die falsche Richtung. Das Wachmuster ist im Schlaf <b>davor</b> stärker als danach. Für M1 und M2: Ähnlichkeit TASK–PRE 0,222, TASK–POST 0,153. Die Muster sind in PRE und in POST jeweils für sich echt (M3, p jeweils 0,002), sie sind nur nicht spezifisch für den Schlaf nach dem Wachabschnitt. Das eine nominelle Ja (M2, Hälfte B) ist genau die Sorte Fehlalarm, die M2 auf künstlichen Daten mit schon vorhandenen Gruppen zeigt. Der Blocktausch stützt es nicht (p = 0,25). Quelle: SUBMISSION.md „In words“; JOURNAL.md RECORD T5 real data.</p>
+
+<h3>Die Ratte, nur als Funktionsprüfung</h3>
+<p>Bestehenslinie, vorher festgeschrieben: ja in mindestens 6 von 8 Sitzungen. Sonst würde die Werkzeugkiste bekannte Reaktivierung verpassen, und das Nein bei der Maus trüge diesen Makel.</p>
+<table class="tight">
+<tr><th>Methode</th><th>Ja, Wert &gt; 0 und p &lt; 0,05</th><th>Spanne</th><th>Wo nein</th></tr>
+<tr><td>M1</td><td class="y">6/8</td><td>−0,053 bis +0,286</td><td>Cicero_09172014, Gatsby_08282013</td></tr>
+<tr><td>M2</td><td class="y">7/8</td><td>−0,038 bis +0,158</td><td>Cicero_09172014. Mittleres EV 0,088 &gt; mittleres REV 0,025</td></tr>
+<tr><td>M3</td><td class="y">8/8</td><td>+0,028 bis +0,144</td><td>keine. p = 0,002, der kleinste mögliche Wert, in jeder Sitzung</td></tr>
+<tr><td>M4</td><td class="y">8/8</td><td>+0,028 bis +0,125</td><td>keine. Berichtet, zählt aber nicht, weil T-M4-1 offen ist</td></tr>
+</table>
+<p>Quelle: README.md „Results“; JOURNAL.md Loop 2 und DANDI-RECORD; results/real/dandi/summary.csv. Die eigene M2-Funktion, die ein Ja in jeder Sitzung verlangt, sagt trotzdem „nein“, weil Cicero fehlt. Das steht in results/real/dandi/M2_verdict.json und ist nicht der Schlüssel von Loop 2.</p>
+<figure>
+<img src="../../results/figures/positive_control_vs_riken.png" alt="DANDI-Sitzungen neben den beiden RIKEN-Hälften">
+<figcaption>Links die acht Ratten-Sitzungen, rechts die Maus. M3 und M4 liegen bei den Ratten überall im Plus mit p = 0,002. Hälfte A der Maus ist nicht signifikant, Hälfte B ist für M3 und M4 unzulässig. Quelle: results/figures/README.md; README.md „Key findings“.</figcaption>
+</figure>
+<p>Die Methoden sind sich nicht einig, genau die Warnung des Papers. In der Sitzung Cicero_09172014 (zwei Meter, Metall, lineare Bahn) sagen M1 und M2 nein (D1 = −0,053, D2 = −0,038), M3 und M4 sagen ja (D3 = 0,064). Quelle: JOURNAL.md RECORD Loop 2.</p>
+
+<h3>Feuerrate, die offene Lücke aus dem Paper</h3>
+<p>Könnte ein bloßes Mehr-Feuern nach der Aufgabe die M3-Zahl erklären? Vorher festgelegt: Zusammenhang gestützt nur bei r &gt; 0,7 und p &lt; 0,05; nicht gestützt bei |r| &lt; 0,3 oder p ≥ 0,05. Über die acht Sitzungen: Pearson r zwischen dem Logarithmus des Ratenverhältnisses POST/PRE und D3 ist <b>0,136, p = 0,749</b>. Label: verifiziert, nicht gestützt. Drei Sitzungen feuern nachher weniger und haben trotzdem ein klares M3-Ja, zum Beispiel Gatsby_08022013 mit D3 = 0,088 bei Verhältnis 0,880. Quelle: JOURNAL.md RECORD Loop 3; results/real/rate_confound.json.</p>
+<figure>
+<img src="../../results/figures/rate_confound.png" alt="Zusammenhang von Ratenverhältnis und M3-Wert">
+<figcaption>Acht DANDI-Sitzungen. Die M3-Ja-Antworten folgen nicht der Änderung der Feuerrate von PRE nach POST. Quelle: JOURNAL.md RECORD Loop 3.</figcaption>
+</figure>
+<p>Bei der Maus ist die mittlere entfaltete Aktivität nachher niedriger als vorher: Verhältnis 0,767 in A und 0,872 in B, stärker als in jeder Ratten-Sitzung. Mit zwei Hälften ist das eine Hypothese, kein Test. Ein Abfall nach dem Wachabschnitt könnte zum negativen D3 in Hälfte A beitragen. Quelle: dieselbe Journal-Notiz.</p>
+<p><b>Fensterbreite.</b> Die zweite Lücke aus Abschnitt 3b-v hat eine Vorhersage (robust bei 50, 100 und 200 ms) und keinen aufgezeichneten Lauf. Dazu gibt es in diesem Text keine Zahl.</p>
+
+<h2>9. Das Urteil und was es bedeutet</h2>
+<div class="box answer">
+<b>Gesamturteil RIKEN mouse05: zu wenig Belege.</b>
+Gezählt wird M1. Wie wahrscheinlich, als Anteil der mitstimmenden Methoden die ja sagen: 0/2 in Hälfte A (M1 und M3), 0/1 in Hälfte B (nur M1). Keine mitstimmende Methode zeigt die umgekehrte Richtung als Ja. Quelle: results/real/summary.md; results/real/verdict.json; JOURNAL.md 16:32.
+</div>
+<p>Die drei Wörter der Regel, in Alltagssprache:</p>
+<ul>
+<li><b>Reaktivierung wahrscheinlich:</b> mindestens zwei mitstimmende Methoden sagen in beiden Hälften ja, und keine sagt ja, wenn man Nachher und Vorher vertauscht.</li>
+<li><b>Reaktivierung nicht gestützt:</b> keine mitstimmende Methode sagt in irgendeiner Hälfte ja. Dafür muss es genug Methoden geben, die überhaupt mitstimmen dürfen.</li>
+<li><b>Zu wenig Belege:</b> alles andere. Ausdrücklich auch: weniger als zwei Methoden, die mitstimmen dürfen.</li>
+</ul>
+<p>Warum hier der dritte Fall und nicht der zweite: M2 und M4 dürfen nicht mitstimmen, M3 fehlt in Hälfte B. Es bleiben nicht zwei Methoden, die beide Hälften beurteilen. Dass die eine Methode, die das tut, nicht ja sagt, und dass in Hälfte A alle Vorzeichen negativ sind, steht in den Dateien. Es reicht unter der vorher geschriebenen Regel nicht für ein sauberes „nicht gestützt“ über die ganze Aufnahme. Quelle: PROBLEM.md; SUBMISSION.md.</p>
+<p>Vertrauen, wie die Abgabe es selbst setzt: hoch, dass diese Pipeline auf dieser einen Sitzung unter den gesperrten Schlüsseln keine Reaktivierung zeigt. Niedrig, dass das etwas über Reaktivierung im Allgemeinen sagt. Eine Sitzung, ein Tier, keine echte Aufgabe. Quelle: SUBMISSION.md „Confidence“.</p>
+<p>Die Regel steht in toolbox/verdict.py und wurde auf die Ergebnisdateien angewandt. run.py schreibt die acht JSON-Dateien, ruft die Methodentests und das Urteil aber noch nicht selbst auf. M2_verdict.json kommt aus scripts/run_m2.py. Quelle: README.md „How to run“; SUBMISSION.md „Loop wiring“.</p>
+
+<h2>10. Ehrliche Grenzen</h2>
+<ul>
+<li>Eine RIKEN-Sitzung, ein Tier. Hälfte A und B sind Hälften derselben Aufnahme, keine unabhängigen Wiederholungen. Quelle: README.md „Honest limitations“; results/real/M2_verdict.json, im README zitiert.</li>
+<li>Keine Verhaltensaufgabe. Im Wachabschnitt wurde nichts gelernt. Ein negativer Befund ist der erwartete. Eine echte Kalzium-Positivkontrolle gibt es nicht. Quelle: SUBMISSION.md „Where it got stuck“.</li>
+<li>Das Zenodo-Archiv enthält eine Schlaf-Sitzung, nicht die sechs, die das Daten-Paper beschreibt. Quelle: research/datasets/calcium-vetting.md, zitiert in SUBMISSION.md.</li>
+<li>Hälfte B ist für M3 und M4 zu kurz. Die Regel wurde nach dem Sehen der Daten nicht gelockert.</li>
+<li>M2 und M4 fallen durch eigene Tests. Ihre Zahlen auf den echten Daten sind Bericht, keine Stimme.</li>
+<li>Das Kontroll-Bild von M3/M4 (20 Seeds, Gleichaktivität bei 0,15) ist nicht der gezählte Lauf (50 Seeds). Nicht verrechnet.</li>
+<li>Der Schlüssel ist vom Team-Lead unterschrieben, nicht von einer Wissenschaftlerin.</li>
+<li>DANDI ist Elektroden, nicht Kalzium, 100 ms gegen 7,65 Hz, echte Aufgabe gegen Wachphase. Es zeigt, dass die Kiste ja sagen kann. Es zeigt nicht, dass Kalzium-Reaktivierung existiert.</li>
+<li>Die Feuerrate erklärt die DANDI-Ja-Antworten nicht. Bei der Maus ist ein Aktivitätsabfall nur eine Hypothese (n = 2). Der Raten-Test hat wenig Kraft: acht Sitzungen, vier Tiere, eine Zahl pro Sitzung, nicht pro Gruppe. Quelle: JOURNAL.md RECORD Loop 3.</li>
+<li>Die Fensterbreiten-Prüfung (Loop 4) hat keine Ergebnisdatei.</li>
+<li>N1 kann auf langsam driftenden Signalen Fehlalarme erzeugen. Das ist eine Warnung aus der Literatur (Harris 2020, genannt in research/README.md), kein eigener Befund dieser Abgabe.</li>
+<li>Ein frischer Clone trifft die acht RIKEN-Dateien Byte für Byte. Der automatische Testlauf auf GitHub markiert T-M4-1 als bekannten Fehlschlag und ändert die Schwelle nicht. Quelle: JOURNAL.md RECORD T8 und der Eintrag 16:32; .github/workflows/tests.yml, genannt in SUBMISSION.md.</li>
+</ul>
+
+<h2>11. Das Team</h2>
+<table>
+<tr><th>Person</th><th>GitHub</th><th>Rolle</th></tr>
+<tr><td>Batu</td><td>BatuCani</td><td>Engineer A: Lader, M1, M2, Abgabe. Team-Lead, hat den Schlüssel unterschrieben.</td></tr>
+<tr><td>youssef-110</td><td>youssef-110</td><td>Engineer B: N1, M3, M4, DANDI-Positivkontrolle.</td></tr>
+<tr><td>ZixiTang</td><td>ZixiTang</td><td>Kriterium und Urteilsregel.</td></tr>
+</table>
+<p>Keine Wissenschaftlerin im Team. Menschen haben die Frage, den Schlüssel, die Zellauswahl und die Entscheidung festgelegt, welche Fehlschläge Fehlschläge bleiben. Der Code, die Tests, die Literatur-Notizen und das Journal sind überwiegend mit Claude geschrieben. Quelle: README.md „Team“; SUBMISSION.md „How Claude was used“.</p>
+<p>Code Apache 2.0, Text CC BY 4.0. Paper nur zitiert, nicht kopiert. Daten bleiben bei ihren eigenen Lizenzen. Quelle: README.md „Licences“.</p>
+
+<h2>12. Glossar</h2>
+<dl class="gloss">
+<dt>Reaktivierung</dt>
+<dd>Muster aus dem Erlebnis ist im Schlaf danach stärker als davor. Ohne Reihenfolge.</dd>
+<dt>Replay</dt>
+<dd>Auch die Reihenfolge kehrt wieder, oft zeitlich gerafft. Hier nicht gemessen.</dd>
+<dt>PRE, TASK, POST</dt>
+<dd>Schlaf davor, Erlebnis, Schlaf danach. Dieselben Zellen.</dd>
+<dt>NREM</dt>
+<dd>Ruhiger Schlaf ohne schnelle Augenbewegungen. Nur diese Bilder zählen in PRE und POST.</dd>
+<dt>Kalzium-Imaging</dt>
+<dd>Film des Leuchtens in den Zellen, hier 7,65 Bilder pro Sekunde.</dd>
+<dt>Spike / Elektrode</dt>
+<dd>Kurzer Impuls einer Zelle, mit feinen Drähten gemessen. Dafür wurden die Methoden gebaut.</dd>
+<dt>Entfaltung</dt>
+<dd>Rechnung vom langsamen Leuchten zur schärferen Spur. Hier die rohe OASIS-Spur spike.</dd>
+<dt>Zelle / Assembly</dt>
+<dd>Eine Nervenzelle. Eine Assembly ist eine Gruppe, die gemeinsam aktiv ist, ein „Akkord“.</dd>
+<dt>D1, D2, D3, D4</dt>
+<dd>Die eine Zahl jeder Methode. Positiv heißt: danach ähnlicher als davor.</dd>
+<dt>EV und REV</dt>
+<dd>Erklärter Anteil des Schlafs danach, bereinigt um den Schlaf davor. REV vertauscht die beiden.</dd>
+<dt>N1</dt>
+<dd>Jede Zell-Spur wird zufällig im Kreis verschoben. Eigenes Zeitmuster bleibt, Gemeinsamkeit geht kaputt.</dd>
+<dt>Marchenko-Pastur</dt>
+<dd>Formel für Zufalls-Akkorde bei unabhängigen Zeitpunkten. Auf Kalzium hier zu leichtgläubig.</dd>
+<dt>p-Wert</dt>
+<dd>Anteil der Zufallsversionen, die mindestens so extrem sind wie der echte Wert. Hier einseitig, Untergrenze 0,002.</dd>
+<dt>Zulässig</dt>
+<dd>Die Aufnahme erfüllt die Mindestmaße der Methode. Unzulässig ist kein Nein.</dd>
+<dt>Mitstimmen</dt>
+<dd>Zulässig und Tests bestanden. Nur diese Methoden zählen im Gesamturteil.</dd>
+<dt>Positivkontrolle</dt>
+<dd>Ein Fall, in dem die Antwort ja sein muss. Künstlich eingebaut, oder die acht Ratten-Sitzungen.</dd>
+<dt>Seed</dt>
+<dd>Startwert des Zufalls. Seed 0 macht denselben Lauf wiederholbar.</dd>
+<dt>Pseudo-Sitzung</dt>
+<dd>Hälfte A und B sind zwei Stücke derselben Aufnahme, nicht zwei Tiere und nicht zwei Tage.</dd>
+</dl>
+
+<p class="sub">Ende. Alle Abbildungen liegen unter results/figures/ bzw. research/research-loop.png. Die Befehle, die sie zeichnen, stehen in results/figures/README.md und README.md „How to run“.</p>
+</body>
+</html>
