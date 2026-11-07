@@ -1,4 +1,4 @@
-"""Yes/no panels for M1–M4, one method per quadrant.
+"""Yes/no panels for M1-M4, one method per quadrant.
 
 YES is a DANDI:000044 positive-control session (local NWB).
 NO is RIKEN mouse05 split A.
@@ -64,7 +64,7 @@ NO_BG = "#fdecea"
 
 EXPLAINS = {
     "M1": "Pair correlations in TASK should match POST more than PRE. D1 is that difference; the histogram is the N1 null.",
-    "M2": "EV is the TASK–POST link after PRE; REV swaps the two sleeps. Yes when EV is larger and clears the null.",
+    "M2": "EV is the TASK-POST link after PRE; REV swaps the two sleeps. Yes when EV is larger and clears the null.",
     "M3": "PCA templates come from TASK. R(t) is their strength over time; yes when POST exceeds PRE above the null.",
     "M4": "ICA de-mixes those components, then uses the same test: POST above PRE, and above the N1 null.",
 }
@@ -345,7 +345,7 @@ def _sleep_vlim(image: np.ndarray) -> tuple[float, float]:
 def _split_pair(fig, rect):
     """Two axes side by side inside a figure-fraction rectangle."""
     x, y, w, h = rect
-    gap = 0.012
+    gap = 0.036
     aw = (w - gap) / 2
     return fig.add_axes([x, y, aw, h]), fig.add_axes([x + aw + gap, y, aw, h])
 
@@ -386,7 +386,7 @@ def _draw_m2(fig, rect, block, color, bg, ylim) -> None:
 
 def _draw_strength(fig, rect, block, color, bg, score_name: str) -> None:
     x, y, w, h = rect
-    gap = 0.016
+    gap = 0.030
     left_w = (w - gap) * 0.58
     right_w = (w - gap) * 0.42
     ax_h = fig.add_axes([x, y, left_w, h])
@@ -467,26 +467,26 @@ def plot(payload: dict) -> None:
         "savefig.facecolor": "white",
         "axes.titlepad": 2,
     })
-    fig = plt.figure(figsize=(17.2, 13.2))
+    fig = plt.figure(figsize=(18.8, 13.2))
     # Explicit rectangles, in figure fractions, so labels cannot collapse onto each other.
     panels = [
-        ("M1  cell-pair correlation", "m1", (0.055, 0.55, 0.43, 0.41)),
-        ("M2  EV / REV", "m2", (0.545, 0.55, 0.43, 0.41)),
-        ("M3  PCA reactivation strength", "m3", (0.055, 0.085, 0.43, 0.41)),
-        ("M4  ICA reactivation strength", "m4", (0.545, 0.085, 0.43, 0.41)),
+        ("M1  cell-pair correlation", "m1", (0.072, 0.55, 0.41, 0.41)),
+        ("M2  EV / REV", "m2", (0.555, 0.55, 0.41, 0.41)),
+        ("M3  PCA reactivation strength", "m3", (0.072, 0.085, 0.41, 0.41)),
+        ("M4  ICA reactivation strength", "m4", (0.555, 0.085, 0.41, 0.41)),
     ]
     score_name = {"m1": "D1", "m2": "D2", "m3": "D3", "m4": "D4"}
     for title, key, (x, y, w, h) in panels:
         fig.text(x, y + h - 0.004, title, ha="left", va="top", fontsize=13, fontweight="bold", color="#101828")
-        half_gap = 0.012
+        half_gap = 0.052
         hw = (w - half_gap) / 2
         banner_h = 0.032
         banner_y = y + h - 0.058
         plot_y = y + 0.100
         plot_h = banner_y - plot_y - 0.030
         for i, (side, color, bg, tag) in enumerate((
-            ("yes", YES_C, YES_BG, "YES — reactivation detected"),
-            ("no", NO_C, NO_BG, "NO — no reactivation"),
+            ("yes", YES_C, YES_BG, "YES - reactivation detected"),
+            ("no", NO_C, NO_BG, "NO - no reactivation"),
         )):
             hx = x + i * (hw + half_gap)
             label = yes_id if side == "yes" else no_id
@@ -505,7 +505,7 @@ def plot(payload: dict) -> None:
 
     fig.text(
         0.5, 0.034,
-        f"Toolbox M1–M4, seed {SEED}, {N_SHUFFLES} N1 circular shifts "
+        f"Toolbox M1-M4, seed {SEED}, {N_SHUFFLES} N1 circular shifts "
         f"(the locked key uses 500; smallest p here is 1/{N_SHUFFLES + 1:.0f}).  OMP_NUM_THREADS=1.",
         ha="center", va="center", fontsize=8, color="#475467",
     )
