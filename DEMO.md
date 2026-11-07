@@ -13,6 +13,7 @@ Show: the repository front page.
 Say:
 "We are Shift Happens.
 Our question: when a mouse sleeps after doing something, do its neurons replay the patterns from that waking time?
+The open problem: those methods were built for sparse spikes, and nobody has checked whether they hold up on slow calcium data; the field's own review lists that as missing.
 We built an open toolbox that runs the four standard reactivation methods on two-photon calcium data, and only lets a method vote if it first passes tests on data where we planted the answer."
 
 ## 0:20-0:50 Before the loop: question, answer key, referee
