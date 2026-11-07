@@ -466,7 +466,7 @@ html, body { overflow-x: clip; }
 /* Demo import: ready recordings only. Upload and field mapping stay in the code but are not shown. */
 #drop { display: none; }
 .import-grid { grid-template-columns: 1fr; }
-.examples { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.examples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .examples .example-label { grid-column: 1 / -1; margin: 0; }
 @media (max-width: 760px) { .examples { grid-template-columns: 1fr; } }
 #mapping .mapping { background: none; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; margin-top: 8px; }
@@ -583,6 +583,11 @@ html, body { overflow-x: clip; }
         <button class="example glass thin" data-ds="dandi" aria-pressed="false">
           <strong>DANDI:000044</strong>
           <span class="meta">Rat CA1 spikes · 8 sessions · 100 ms bins · positive control</span>
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
+        <button class="example glass thin" data-ds="d718" aria-pressed="false">
+          <strong>DANDI:000718</strong>
+          <span class="meta">Mouse CA1 miniscope · 711 cells · 14.93 Hz · no NREM sleep</span>
           <svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3l5 5-5 5"/></svg>
         </button>
       </div>
@@ -707,6 +712,22 @@ const DATA = {
       tone: "ok"
     }
   }
+};
+// DANDI:000718 (Zaki et al. 2025): research/datasets/calcium-vetting.md, Detail 2. The deposited offline session's
+// processing/sleep/SleepIntervals hold only "wake" and "quiet wake": zero NREM frames, so every method is N/A.
+const D718_NA = "Zero NREM frames: the deposited sleep intervals are only wake and quiet wake";
+DATA.d718 = {
+  title: "DANDI:000718",
+  kind: "Mouse CA1 one-photon miniscope, 711 cells, 14.93 Hz, deposited offline session of 10 min",
+  file: "sub-Ca-EEG3-4_ses-OfflineDay1Session1_ophys.nwb (streamed)",
+  stimNA: "No NREM sleep in this recording, so nothing downstream can be tested.",
+  keys: ["processing/ophys/Fluorescence/Deconvolved/data", "processing/sleep/SleepIntervals", "session_description", "14.93 Hz (timestamps)", "cell index"],
+  map: { deconv: "processing/ophys/Fluorescence/Deconvolved/data", sleep_stage: "processing/sleep/SleepIntervals", session_type: "session_description", fs: "14.93 Hz (timestamps)", ids: "cell index", stim_frames: "" },
+  sessions: [{ id: "OfflineDay1Session1", label: "Offline day 1, session 1", cells: 711 }],
+  results: { M1: [{ el: false, reason: D718_NA }], M2: [{ el: false, reason: D718_NA }], M3: [{ el: false, reason: D718_NA }], M4: [{ el: false, reason: D718_NA }] },
+  caveat: {},
+  verdict: { title: "Cannot be tested", short: "This recording has no NREM sleep, so every method is N/A. That is a limit of the data, not an error.",
+    text: "DANDI:000718 deposits only the first 10-minute offline session; its sleep intervals contain only wake and quiet wake. The NREM sleep happened in later sub-sessions that are not on DANDI (research/datasets/calcium-vetting.md).", tone: "na" }
 };
 // results/real/dandi/summary.csv, verbatim columns used below
 const DANDI_CSV = `session_id,method_id,n_cells,eligible,reason,score,p_n1,p_blockswap,n_sig
@@ -997,7 +1018,7 @@ function updateProgress() {
   $("#h-run").textContent = running ? "Running" : "Finished";
   const parts = [`${done} done`]; if (na) parts.push(`${na} N/A`); if (err) parts.push(`${err} error`);
   $("#progressLine").innerHTML = `<span class="num">${fin} of 4 finished</span><span aria-hidden="true">·</span><span>${parts.join(", ")}</span>`;
-  const any = done > 0;
+  const any = done > 0 || (!running && fin === 4); // an all-N/A run still has a verdict to show
   $("#toSummary").disabled = !any; enable("summary", any);
   $("#runDot").classList.toggle("on", any && S.step !== "summary");
   $("#partialNote").textContent = any && running ? "The summary already shows what has finished." : err ? "The error is isolated; every other result is final." : "";
@@ -1028,7 +1049,7 @@ function whyBlock(mid) {
   const w = WHY[mid]; if (!w) return "";
   return `<details class="why"><summary>Why?</summary><p><b>${w[0]}</b> ${w[1]}</p><p class="muted">Shown for transparency, not used for the verdict.</p></details>`;
 }
-function shortReason(reason) { return /TASK frames/.test(reason || "") ? "Too few task frames" : "Data cannot support it"; }
+function shortReason(reason) { return /TASK frames/.test(reason || "") ? "Too few task frames" : /NREM/.test(reason || "") ? "No NREM sleep in this recording" : "Data cannot support it"; }
 function methodWord(mid) {
   const r = S.run[mid] || { status: "idle" }, st = statsFor(mid), n = st.res.length;
   if (r.status === "error") return { w: "Error", tone: "err", line: "Failed to run. The others are unaffected." };
@@ -1081,7 +1102,7 @@ function renderSummary() {
   $("#methodStrip").innerHTML = METHODS.map(m => {
     const r = S.run[m.id] || { status: "idle" }, st = statsFor(m.id);
     const W = methodWord(m.id) || { w: "…", tone: "run", line: "Still running" };
-    return `<div class="mchip glass thin" role="button" tabindex="0" data-m="${m.id}"><strong>${m.name}</strong><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span>${W.w !== "Error" ? whyBlock(m.id) : ""}</div>`;
+    return `<div class="mchip glass thin" role="button" tabindex="0" data-m="${m.id}"><strong>${m.name}</strong><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span>${r.status === "done" ? whyBlock(m.id) : ""}</div>`;
   }).join("");
   $("#methodStrip").querySelectorAll(".mchip").forEach(b => {
     b.addEventListener("click", e => { if (!e.target.closest(".why")) openMethod(b.dataset.m); });
