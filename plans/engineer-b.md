@@ -4,9 +4,9 @@ As of 2026-11-07, 14:35 CET.
 Written for Engineer B of the team brief.
 Every instruction cites the repo file and section it comes from.
 Files on open PRs are referenced by path:
-`research/briefing.md` and `research/research-loop.png` (https://github.com/BatuCani/hackathon-2026-11-07/pull/1),
-`research/source-of-truth.md` (https://github.com/BatuCani/hackathon-2026-11-07/pull/2),
-`research/team-brief.md` and `research/findings/*.md` (https://github.com/BatuCani/hackathon-2026-11-07/pull/3).
+`research/briefing.md` and `research/research-loop.png` (https://github.com/BatuCani/shift-happens/pull/1),
+`research/source-of-truth.md` (https://github.com/BatuCani/shift-happens/pull/2),
+`research/team-brief.md` and `research/findings/*.md` (https://github.com/BatuCani/shift-happens/pull/3).
 `research/BUILD_APPROACH.md` and `research/README.md` are on main.
 
 Labels used below:

@@ -121,7 +121,7 @@ Diagram: [research/research-loop.png](research/research-loop.png).
 Python 3.12, dependencies from [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock) (numpy, scipy, scikit-learn, h5py; pytest in the `dev` group). `uv run --python 3.12` creates the environment. No API keys. The data is not in this repository.
 
 ```bash
-git clone https://github.com/BatuCani/hackathon-2026-11-07
+git clone https://github.com/BatuCani/shift-happens
 cd hackathon-2026-11-07
 
 # data: RIKEN CBS, Zenodo 17667863, CC BY 4.0 (1.9 GB zip, not in the repo)

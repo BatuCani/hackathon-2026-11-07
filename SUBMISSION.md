@@ -25,7 +25,7 @@ Neuroscience
 
 ## Repository
 
-https://github.com/BatuCani/hackathon-2026-11-07
+https://github.com/BatuCani/shift-happens
 
 ## License
 
@@ -159,7 +159,7 @@ low that this says anything about reactivation in general, because there is one 
 ## How to run it
 
 ```shell
-git clone https://github.com/BatuCani/hackathon-2026-11-07
+git clone https://github.com/BatuCani/shift-happens
 cd hackathon-2026-11-07
 
 # data: RIKEN CBS, Zenodo 17667863, CC BY 4.0 (1.9 GB zip, not in the repo)

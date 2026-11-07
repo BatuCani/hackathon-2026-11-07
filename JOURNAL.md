@@ -296,7 +296,7 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 
 - Step: RECORD
 - Source and quote (READ) or prediction (PREDICT): TASKS.md T8 "Done when a fresh clone reproduces byte-identical result JSON."
-- Command: git clone --depth 1 https://github.com/BatuCani/hackathon-2026-11-07 (SHA b11e8d0); uv run --python 3.12 python run.py --data /Users/batu/hackathon-data/riken/mouse_data/sleep_data.mat --seed 0 --out <scratch>/run-out; uv run --group dev pytest -m "not slow" (CPython 3.14.7, before the 3.12 pin)
+- Command: git clone --depth 1 https://github.com/BatuCani/shift-happens (SHA b11e8d0); uv run --python 3.12 python run.py --data /Users/batu/hackathon-data/riken/mouse_data/sleep_data.mat --seed 0 --out <scratch>/run-out; uv run --group dev pytest -m "not slow" (CPython 3.14.7, before the 3.12 pin)
 - Git SHA: b11e8d0
 - Result file: results/real/M1_splitA.json, results/real/M1_splitB.json, results/real/M2_splitA.json, results/real/M2_splitB.json, results/real/M3_splitA.json, results/real/M3_splitB.json, results/real/M4_splitA.json, results/real/M4_splitB.json
 - Label: verified
