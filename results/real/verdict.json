@@ -1,0 +1,54 @@
+{
+  "counted_methods": [
+    "M1"
+  ],
+  "counted_per_split": {
+    "mouse05_splitA": [
+      "M1",
+      "M3"
+    ],
+    "mouse05_splitB": [
+      "M1"
+    ]
+  },
+  "details": {
+    "all_methods": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "alpha": 0.05,
+    "splits": [
+      "mouse05_splitA",
+      "mouse05_splitB"
+    ]
+  },
+  "failed_control_methods": [
+    "M2",
+    "M4"
+  ],
+  "how_likely": {
+    "mouse05_splitA": 0.0,
+    "mouse05_splitB": 0.0
+  },
+  "how_likely_str": {
+    "mouse05_splitA": "0/2",
+    "mouse05_splitB": "0/1"
+  },
+  "ineligible_methods": {
+    "M3": [
+      "mouse05_splitB: TASK frames 651 < 1500 (5 per cell x 300 cells) (missing: TASK frames >= 1500)"
+    ],
+    "M4": [
+      "mouse05_splitB: TASK frames 651 < 1500 (5 per cell x 300 cells) (missing: TASK frames >= 1500)"
+    ]
+  },
+  "reversed_yes_methods": [],
+  "verdict": "Not enough evidence",
+  "yes_both_splits": [],
+  "yes_per_split": {
+    "mouse05_splitA": [],
+    "mouse05_splitB": []
+  }
+}
