@@ -37,5 +37,6 @@ Deadline 17:00.
 - [x] **T8 One-command repro** (A): `python run.py --data <path to sleep_data.mat> --seed 0` writes every result file and the results table from a fresh clone.
   Done when a fresh clone reproduces byte-identical result JSON.
   Status (16:22): fresh clone of b11e8d0. `uv run --python 3.12 python run.py --data sleep_data.mat --seed 0` (61 s) wrote eight `mouse05_split{A,B}__M{1-4}.json` files, each byte-identical to `results/real/M{n}_split{A,B}.json`, plus `summary.csv`. Fast tests: 117 passed, 1 failed (T-M4-1, pre-existing), 2 xfailed, 20 deselected. See JOURNAL.md RECORD T8.
+- [x] **Loop 2** M1 and M2 on the 8 DANDI:000044 sessions: M1 "yes" 6/8, M2 "yes" 7/8 (mean EV 0.088 > REV 0.025); both pass. See JOURNAL.md RECORD Loop 2.
 - [ ] **T9 Submission issue** (A): open the project-submission issue on https://github.com/xemantic/claude-impact-lab-2026 with the repo link, license (Apache-2.0 code, CC BY 4.0 text), dataset citation and license, and the verdict.
   Done before 17:00.
