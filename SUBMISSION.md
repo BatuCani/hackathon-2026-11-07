@@ -84,7 +84,7 @@ Data: one RIKEN CBS session (mouse05), the 300 most active of 6,920 cells, NREM 
 Only M1 is counted in both splits (M3 is eligible in Split A only; M2 and M4 fail their method tests), and the rule needs at least two.
 No counted method says "yes" in either split: how likely = 0/2 in Split A (M1, M3), 0/1 in Split B (M1).
 
-Per method, on real data, 500 N1 shuffles, seed 0:
+Per method, on real data, 500 N1 shuffles, seed 0 (figure: [results/figures/real_scores.png](results/figures/real_scores.png)):
 
 | Method | Split A | Split B | Counts toward the verdict? | Result files |
 |---|---|---|---|---|
@@ -107,8 +107,11 @@ Result: DANDI_PENDING (run in progress; results will be in [results/real/dandi/]
 
 Methodological finding on synthetic calcium-like data (tau 1 s, no assemblies, 50 seeds; [journal/engineer-b.md](journal/engineer-b.md), JOURNAL.md "RECORD T4"):
 the analytical Marchenko-Pastur bound, the usual way to pick significant PCA components from spike data, flags at least 5 false components in **50/50** runs; the N1 shuffle bound flags at least one in **2/50** (T-N1-8).
+Figure: [results/figures/eigenvalue_bounds.png](results/figures/eigenvalue_bounds.png) (seed 0: 14 eigenvalues above Marchenko-Pastur, 0 above N1).
 Calcium autocorrelation breaks the analytical bound, which is the brief's "tests built for spikes can be too lenient" concern made concrete.
 The same N1 null still gives M3 7/50 false positives when assemblies already exist in PRE, which is why a block-swap p is reported next to it.
+
+Method controls for M3 and M4 at a glance: [results/figures/controls_m3_m4.png](results/figures/controls_m3_m4.png); all figures and the command that draws them: [results/figures/README.md](results/figures/README.md).
 
 How it was verified:
 every prediction was committed before its run (JOURNAL.md PREDICT entries);

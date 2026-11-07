@@ -18,6 +18,7 @@ We built an open toolbox that runs the four standard reactivation methods on two
 ## 0:20-0:50 Before the loop: question, answer key, referee
 
 Show: [research/research-loop.png](research/research-loop.png), top half (boxes 1-3), then [PROBLEM.md](PROBLEM.md) answer-key table.
+Then [results/figures/controls_m3_m4.png](results/figures/controls_m3_m4.png) (fraction of seeds saying yes per control case; dashed line 0.9 = pass for the positive case, dotted line 0.1 = pass for the negatives).
 
 Say:
 "Before any result we wrote the question in the scientist's words, then one number, one unit and one yes-threshold per method, all against the same null: each neuron's trace shifted by its own random offset, 500 times.
@@ -27,6 +28,7 @@ A method that cannot tell those apart does not get a vote."
 ## 0:50-1:20 The loop
 
 Show: diagram boxes 4-8, then [JOURNAL.md](JOURNAL.md) scrolled to "PREDICT T5 real data" and "RECORD T5 real data".
+Optional, if time: [results/figures/null_distribution_example.png](results/figures/null_distribution_example.png) (what one p against N1 looks like).
 
 Say:
 "Every step is read, predict, run, judge, record.
@@ -36,7 +38,7 @@ Claude Code agents ran each task in parallel worktrees; the journal is append-on
 
 ## 1:20-1:35 Synthetic finding: spike tests are too lenient for calcium
 
-Show: FIGURE_MP_VS_N1 (results/figures/, Marchenko-Pastur vs N1 false components), else [journal/engineer-b.md](journal/engineer-b.md) Entry 1.
+Show: [results/figures/eigenvalue_bounds.png](results/figures/eigenvalue_bounds.png) (TASK spectrum of pure calcium-like noise against both bounds: 14 eigenvalues above Marchenko-Pastur, 0 above N1).
 
 Say:
 "First finding, before touching real data.
@@ -46,7 +48,7 @@ Calcium is slow, and that alone breaks the spike-era test."
 
 ## 1:35-1:45 Positive control on real data
 
-Show: [results/real/dandi/summary.csv](results/real/dandi/summary.csv) (or FIGURE_DANDI in results/figures/).
+Show: [results/real/dandi/summary.csv](results/real/dandi/summary.csv).
 
 Say:
 "Does the toolbox find reactivation where it is known to exist?
@@ -56,7 +58,7 @@ Result: DANDI_SENTENCE"
 
 ## 1:45-2:20 Real data, one sentence per method
 
-Show: FIGURE_METHODS (results/figures/, per-method score with N1 null), else the table in [SUBMISSION.md](SUBMISSION.md) "What the loop found".
+Show: [results/figures/real_scores.png](results/figures/real_scores.png) (one bar per method and split; star = p_N1 < 0.05, cross = ineligible).
 
 Say, one line each:
 
@@ -67,7 +69,7 @@ Say, one line each:
 
 ## 2:20-2:40 Verdict
 
-Show: FIGURE_VERDICT (results/figures/) or [results/real/](results/real/) verdict output.
+Show: stay on [results/figures/real_scores.png](results/figures/real_scores.png), then the verdict lines in [SUBMISSION.md](SUBMISSION.md) "What the loop found".
 
 Say:
 "The verdict rule needs at least two methods that are eligible and pass their tests.
