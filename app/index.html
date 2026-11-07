@@ -609,12 +609,13 @@ html, body { overflow-x: clip; }
     <details class="more"><summary>Details</summary><p class="small muted" id="verdictLong" style="max-width:72ch;margin:0 0 14px"></p><div class="chart-grid">
       <div class="chart glass"><h3>Reactivation score</h3><p class="sub">Each dot is one session or split. Above zero means POST resembles TASK more than PRE did.</p><div id="chartScore"></div></div>
       <div class="chart glass"><h3>Evidence against the N1 null</h3><p class="sub">p from 500 circular shifts, log scale. Below the dashed line is p &lt; 0.05.</p><div id="chartP"></div></div>
-    </div><button class="figlink" data-figs>All figures from the repository</button></details>
+    </div>
     <div class="chart glass panels-fig">
       <h3>How each method says yes or no</h3>
-      <p class="sub">Green: DANDI:000044 Buddy_06272013, reactivation detected. Red: RIKEN mouse05 split A, no reactivation. Scores and curves are the toolbox result, 100 N1 shuffles.</p>
+      <p class="sub">Green: DANDI:000044 Buddy_06272013, reactivation detected. Red: RIKEN mouse05 session A, no reactivation. Scores and curves are the toolbox result, 100 shuffled controls.</p>
       <img src="../results/figures/method_panels.png" alt="Four methods, each with a green yes half and a red no half: cell-pair correlation, EV versus REV, PCA reactivation strength, and ICA reactivation strength.">
     </div>
+    <button class="figlink" data-figs>All figures from the repository</button></details>
     <div class="method-strip" id="methodStrip"></div>
     <p class="foot">UX prototype over real results from the Shift Happens toolbox. Only the run timing is simulated. <a href="https://github.com/BatuCani/hackathon-2026-11-07">Repository</a></p>
   </section>
@@ -1148,7 +1149,7 @@ function openMethod(mid) {
 // YES: DANDI:000044 Achilles_11012013 (results/real/dandi/Achilles_11012013__M*.json)
 // NO: RIKEN mouse05 split A (results/real/M*_splitA.json). Stored values only, nothing simulated.
 const MX = {
-  M1: { rule: "Yes if r(TASK, POST) minus r(TASK, PRE) beats the circular-shift null, p < 0.05.",
+  M1: { rule: "Yes if r(TASK, POST) minus r(TASK, PRE) beats the shuffled control, p < 0.05.",
     yes: { bars: [["TASK·PRE", 0.0936], ["TASK·POST", 0.3002]], score: 0.2066, p: 0.002 },
     no: { bars: [["TASK·PRE", 0.2221], ["TASK·POST", 0.1530]], score: -0.0691, p: 1.0 } },
   M2: { rule: "Yes if explained variance (EV) exceeds reverse variance (REV) beyond the null, p < 0.05.",
@@ -1176,18 +1177,19 @@ function mxDots(e, tone) {
 }
 function methodExamples(mid, delay = 0) {
   const m = METHODS.find(x => x.id === mid), c = MX[mid], plot = c.yes.bars ? mxBars : mxDots;
-  const card = (e, yes, d) => `<div class="mx-card" style="--d:${d}ms"><div class="tag ${yes ? "yes" : "no"}">${yes ? "Yes" : "No"}<span>${yes ? "DANDI Achilles 11/01" : "RIKEN split A"}</span></div>${plot(e, yes ? "var(--ok)" : "var(--err)")}<div class="num">score ${fmtS(e.score)} · p ${fmtP(e.p)}</div></div>`;
+  const card = (e, yes, d) => `<div class="mx-card" style="--d:${d}ms"><div class="tag ${yes ? "yes" : "no"}">${yes ? "Yes" : "No"}<span>${yes ? "DANDI Achilles 11/01" : "RIKEN session A"}</span></div>${plot(e, yes ? "var(--ok)" : "var(--err)")}<div class="num">score ${fmtS(e.score)} · p ${fmtP(e.p)}</div></div>`;
   return `<div class="mx"><h4>${m.name}</h4><div class="mx-pair">${card(c.yes, true, delay)}${card(c.no, false, delay + 60)}</div><p class="mx-rule"><b>Rule.</b> ${c.rule}</p></div>`;
 }
 function openMethods() {
   openSheet("How each method decides", "One real yes and one real no per method",
+    `<button class="fig" data-panels style="margin-bottom:6px"><img src="${figSrc("method_panels.png")}" alt="${esc(FIGS[0][1])}"><span>${esc(FIGS[0][1])} Tap to enlarge.</span></button>` +
     METHODS.map((m, i) => methodExamples(m.id, 80 + i * 90)).join("") +
     `<p class="small muted" style="margin-top:6px">Yes: DANDI:000044 positive control. No: RIKEN mouse05 split A. On split B, PCA and ICA are N/A (651 TASK frames, they need 1500). Values from results/real/.</p>`);
 }
-$("#methodsBtn").addEventListener("click", openMethods);
+$("#methodsBtn").addEventListener("click", () => { openMethods(); $("#sheetBody [data-panels]").addEventListener("click", () => openLightbox(figSrc(FIGS[0][0]), FIGS[0][1])); });
 /* ---------- Repository figures (relative paths so GitHub Pages serves them) ---------- */
 const FIGS = [
-  ["method_panels.png", "Each method, with a yes on the rat positive control and a no on mouse calcium split A. 100 shuffles."],
+  ["method_panels.png", "Yes and no for each method with real time courses: rat session Buddy 06/27 says yes, mouse session A says no."],
   ["positive_control_vs_riken.png", "The rat positive control says yes in every session; the mouse calcium recording does not."],
   ["real_scores.png", "Mouse calcium scores per method and session. None of the counted methods is significant."],
   ["controls_m3_m4.png", "PCA and ICA on planted-truth data: yes when reactivation is planted, mostly quiet when it is not."],
