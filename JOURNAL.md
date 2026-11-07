@@ -238,3 +238,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/loader-check/dandi44.txt, toolbox/loader_dandi.py
 - Label: verified
 - Note: All 8 sessions stream and load; pyramidal counts 120, 92, 48, 55, 81, 59, 66, 41 equal ephys.md. Bins 100 ms; TASK >= 5N holds in every session (20,675-55,592 TASK bins vs 205-600). No method was run on real data (PROBLEM.md unsigned). Open: 90-370 MAZE bins are buzcode NREM in 3 sessions and count as TASK under analysis_mask (plan Q5, TASK = non-unscored); bin size and pyramidal-only are [TEAM DECISION]s.
+
+### 2026-11-07 16:10 CET JUDGE/RECORD positive control on real data, DANDI:000044 (Engineer B)
+
+- Step: JUDGE, RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT 16:03 above, pass rule "M3 says yes (D3 > 0 and p_N1 < 0.05) in at least 6 of 8 sessions"
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/run_dandi.py --seed 0 (finished 16:08)
+- Git SHA: d56af87 (toolbox/loader_dandi.py from eng-b/toolbox 1451378, not yet on main)
+- Result file: results/real/dandi/summary.csv and results/real/dandi/<session>__M3.json, __M4.json (R(t) .npz not committed, 131 MB; the command regenerates them)
+- Label: verified (M3 positive control passes 8/8)
+- Note: All 8 sessions eligible for M3 and M4 (n_sig 6-19). M3: D3 > 0 in 8/8 (0.028 to 0.144), p_N1 = 0.002 (= 1/501, the minimum) in 8/8. M4: D4 > 0 in 8/8 (0.028 to 0.125), p_N1 = 0.002 in 8/8 (reported, does not count: T-M4-1 failed).
+- Note: Prediction "p_blockswap less often < 0.05 than p_N1" contradicted: p_blockswap = 0.002 in 16/16 runs. The toolbox detects established reactivation in real hippocampal ephys, so the RIKEN Split A "no" (D3 = -0.146) is not explained by a toolbox that cannot say yes. Remaining differences from RIKEN: ephys spikes vs calcium, 100 ms bins vs 7.65 Hz frames, real task vs a wake bout as pseudo-TASK.
