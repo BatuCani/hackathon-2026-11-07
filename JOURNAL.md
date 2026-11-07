@@ -75,3 +75,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: journal/engineer-b.md Entries 2-3, toolbox/m4_ica.py
 - Label: contradicted
 - Note: T-M4-1 (seed 0) fails: ICA 0.911 passes, PCA 0.817 vs < 0.8 required; over seeds 0-9 ICA reaches 0.9 in 5/10. T-M4-2 to T-M4-4 pass. Threshold not changed.
+
+### 2026-11-07 15:40 CET RECORD loader DANDI:000044 (Engineer B)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): research/datasets/ephys.md section 1 "51-137 total; 41-120 pyramidal (`units.cell_type`)"; prediction: the loader reproduces those pyramidal counts and the PRE/MAZE/POST lengths.
+- Command: uv run --python 3.12 pytest tests/test_loader_dandi.py; uv run --python 3.12 --with remfile python scripts/check_dandi44.py
+- Git SHA: 33d3041 + loader commit
+- Result file: results/loader-check/dandi44.txt, toolbox/loader_dandi.py
+- Label: verified
+- Note: All 8 sessions stream and load; pyramidal counts 120, 92, 48, 55, 81, 59, 66, 41 equal ephys.md. Bins 100 ms; TASK >= 5N holds in every session (20,675-55,592 TASK bins vs 205-600). No method was run on real data (PROBLEM.md unsigned). Open: 90-370 MAZE bins are buzcode NREM in 3 sessions and count as TASK under analysis_mask (plan Q5, TASK = non-unscored); bin size and pyramidal-only are [TEAM DECISION]s.

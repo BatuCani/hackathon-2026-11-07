@@ -1,0 +1,24 @@
+Achilles_10252013: 120 pyramidal units, fs 10.0 Hz, spikes 2792340
+  analysis frames {'PRE': 105690, 'TASK': 20675, 'POST': 53210}; TASK >= 5N: True (20675 vs 600)
+  stages per epoch {'PRE': {'wake': 60955, 'NREM': 105690, 'REM': 13330, 'unscored': 820}, 'TASK': {'wake': 20675, 'NREM': 0, 'REM': 0, 'unscored': 0}, 'POST': {'wake': 85840, 'NREM': 53210, 'REM': 7380, 'unscored': 711}}
+Achilles_11012013: 92 pyramidal units, fs 10.0 Hz, spikes 2119107
+  analysis frames {'PRE': 107560, 'TASK': 26741, 'POST': 53380}; TASK >= 5N: True (26741 vs 460)
+  stages per epoch {'PRE': {'wake': 73180, 'NREM': 107560, 'REM': 10530, 'unscored': 2030}, 'TASK': {'wake': 26741, 'NREM': 0, 'REM': 0, 'unscored': 0}, 'POST': {'wake': 90639, 'NREM': 53380, 'REM': 1330, 'unscored': 902}}
+Buddy_06272013: 48 pyramidal units, fs 10.0 Hz, spikes 554842
+  analysis frames {'PRE': 59530, 'TASK': 23281, 'POST': 20120}; TASK >= 5N: True (23281 vs 240)
+  stages per epoch {'PRE': {'wake': 40709, 'NREM': 59530, 'REM': 6020, 'unscored': 920}, 'TASK': {'wake': 23281, 'NREM': 0, 'REM': 0, 'unscored': 0}, 'POST': {'wake': 56620, 'NREM': 20120, 'REM': 2060, 'unscored': 1287}}
+Cicero_09012014: 55 pyramidal units, fs 10.0 Hz, spikes 1555816
+  analysis frames {'PRE': 73800, 'TASK': 55592, 'POST': 67930}; TASK >= 5N: True (55592 vs 275)
+  stages per epoch {'PRE': {'wake': 62256, 'NREM': 73800, 'REM': 17970, 'unscored': 1290}, 'TASK': {'wake': 55492, 'NREM': 100, 'REM': 0, 'unscored': 20}, 'POST': {'wake': 55412, 'NREM': 67930, 'REM': 12220, 'unscored': 1078}}
+Cicero_09102014: 81 pyramidal units, fs 10.0 Hz, spikes 2277931
+  analysis frames {'PRE': 46410, 'TASK': 30300, 'POST': 84870}; TASK >= 5N: True (30300 vs 405)
+  stages per epoch {'PRE': {'wake': 117916, 'NREM': 46410, 'REM': 7080, 'unscored': 1050}, 'TASK': {'wake': 30300, 'NREM': 0, 'REM': 0, 'unscored': 0}, 'POST': {'wake': 58664, 'NREM': 84870, 'REM': 17200, 'unscored': 1496}}
+Cicero_09172014: 59 pyramidal units, fs 10.0 Hz, spikes 2069449
+  analysis frames {'PRE': 56770, 'TASK': 30758, 'POST': 57850}; TASK >= 5N: True (30758 vs 295)
+  stages per epoch {'PRE': {'wake': 88167, 'NREM': 56770, 'REM': 13430, 'unscored': 1640}, 'TASK': {'wake': 30668, 'NREM': 90, 'REM': 0, 'unscored': 20}, 'POST': {'wake': 78015, 'NREM': 57850, 'REM': 7640, 'unscored': 1312}}
+Gatsby_08022013: 66 pyramidal units, fs 10.0 Hz, spikes 1608759
+  analysis frames {'PRE': 71130, 'TASK': 23351, 'POST': 45770}; TASK >= 5N: True (23351 vs 330)
+  stages per epoch {'PRE': {'wake': 89622, 'NREM': 71130, 'REM': 8760, 'unscored': 1280}, 'TASK': {'wake': 23351, 'NREM': 0, 'REM': 0, 'unscored': 0}, 'POST': {'wake': 58523, 'NREM': 45770, 'REM': 5290, 'unscored': 410}}
+Gatsby_08282013: 41 pyramidal units, fs 10.0 Hz, spikes 1205499
+  analysis frames {'PRE': 86810, 'TASK': 26866, 'POST': 74880}; TASK >= 5N: True (26866 vs 205)
+  stages per epoch {'PRE': {'wake': 65901, 'NREM': 86810, 'REM': 13400, 'unscored': 1500}, 'TASK': {'wake': 26496, 'NREM': 370, 'REM': 0, 'unscored': 60}, 'POST': {'wake': 79733, 'NREM': 74880, 'REM': 3090, 'unscored': 1239}}
