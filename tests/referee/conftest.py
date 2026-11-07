@@ -35,10 +35,19 @@ def pytest_terminal_summary(terminalreporter):
 
 
 def pytest_sessionfinish(session, exitstatus):
-    if _elapsed["total"] > rules.TIME_BUDGET_S and exitstatus == pytest.ExitCode.OK:
-        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+    if not (_elapsed["total"] > rules.TIME_BUDGET_S and exitstatus == pytest.ExitCode.OK):
+        return
+    # Timing only. REFEREE_SKIP_TIME_BUDGET never skips a correctness check.
+    if os.environ.get("REFEREE_SKIP_TIME_BUDGET") == "1":
         print(
-            f"\nreferee FAILED: took {_elapsed['total']:.1f} s, budget is "
-            f"{rules.TIME_BUDGET_S:.0f} s on one core",
+            f"\nreferee time budget not enforced here: {_elapsed['total']:.1f} s "
+            f"of {rules.TIME_BUDGET_S:.0f} s (REFEREE_SKIP_TIME_BUDGET=1)",
             file=sys.stderr,
         )
+        return
+    session.exitstatus = pytest.ExitCode.TESTS_FAILED
+    print(
+        f"\nreferee FAILED: took {_elapsed['total']:.1f} s, budget is "
+        f"{rules.TIME_BUDGET_S:.0f} s on one core",
+        file=sys.stderr,
+    )

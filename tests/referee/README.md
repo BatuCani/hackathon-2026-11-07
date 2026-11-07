@@ -83,6 +83,8 @@ Run once on 2026-11-07 to check that the numbers are reachable, before any real-
 - All four methods together: 21.8 s of the 30 s budget, one core.
 - On main at 11ccb64, with Engineer A's real M2: M2 5/5, 0/5, 0/5, 0/5; referee 19.5 s, M1 still xfail.
 
+Runners are slower than the one-core reference machine and the budget is enforced locally (21.8 s measured).
+
 ## Run
 
 ```sh
