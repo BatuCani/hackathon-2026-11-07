@@ -188,3 +188,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: verified
 - Note: All 9 tests pass covering Reactivation likely, Reactivation not supported, Not enough evidence (split disagreement, ineligible methods, failed controls, reversed veto), zero counted methods, and summary markdown generation for results/real/summary.md.
 
+
+### 2026-11-07 16:03 CET PREDICT positive control on real data, DANDI:000044 (Engineer B)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): research/datasets/ephys.md section 4 "the canonical replay benchmark: Grosmark & Buzsaki 2016 and Chen et al. 2016 used these exact recordings"; PROBLEM.md keys D3/D4 "D > 0 and p_N1 < 0.05 (500 shuffles, seed 0)" | prediction: all 8 sessions eligible for M3 and M4 (41-120 pyramidal units, 20,675-55,592 TASK bins, results/loader-check/dandi44.txt); D3 > 0 with p_N1 < 0.05 in at least 6 of 8 sessions; D4 the same direction; p_blockswap (supplementary column) less often < 0.05 than p_N1.
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/run_dandi.py --seed 0 (loader defaults: 100 ms bins, pyramidal cells, all MAZE bins as TASK; AssemblyParams defaults, 500 shuffles)
+- Git SHA: the commit adding this entry
+- Result file: results/real/dandi/summary.csv and per-session JSON
+- Label: -
+- Note: Pass rule for the positive control, fixed here before the run: M3 says "yes" (D3 > 0 and p_N1 < 0.05) in at least 6 of 8 sessions. Fewer means the toolbox misses established reactivation on real ephys data and the RIKEN "no" must be read with that caveat. M4 is reported but does not count (T-M4-1 failed). toolbox/loader_dandi.py is from eng-b/toolbox (1451378), merging into main separately.
