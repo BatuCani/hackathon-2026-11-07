@@ -61,6 +61,7 @@ State lives in files, not in a chat session.
 1. **Read the literature.**
    Anchor paper Tingley and Peyrache 2020, plus calcium-specific methods and datasets, distilled into [research/source-of-truth.md](research/source-of-truth.md), [research/CALCIUM_METHODS.md](research/CALCIUM_METHODS.md), [research/briefing.md](research/briefing.md) and [research/papers/README.md](research/papers/README.md) (licence check per paper).
    Dataset search over DANDI, CRCNS, GIN, Zenodo, figshare, Dryad and OSF: [research/datasets/README.md](research/datasets/README.md); the chosen RIKEN file was downloaded and opened directly: [research/datasets/calcium-vetting.md](research/datasets/calcium-vetting.md).
+   DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
 2. **Lock the question.**
    [PROBLEM.md](PROBLEM.md) fixes the data, splits, null model, one number, unit and "yes" threshold per method, and the overall verdict rule, before any result.
 3. **Write the referee before the code.**
@@ -95,6 +96,11 @@ In words:
 - In Split A, every method that could be scored points the wrong way: TASK patterns are expressed more strongly in sleep **before** the wake bout than after it (M2: r(TASK, PRE) 0.222 > r(TASK, POST) 0.153; M3 and M4: D < 0, p_N1 = 1.0).
 - TASK patterns are significantly expressed in PRE and in POST each on its own (M3 p_n1_pre_alone = p_n1_post_alone = 0.002), so co-activity structure is real, but it is not specific to sleep after the wake bout.
 - The one nominal "yes" (M2 Split B, p_N1 = 0.002 on D2 = 0.0017) is exactly the failure mode M2 showed on synthetic data with assemblies already present in PRE; the block-swap null does not support it (p = 0.25).
+
+**Positive control on real data, DANDI:000044** ([research/datasets/ephys.md](research/datasets/ephys.md), [scripts/run_dandi.py](scripts/run_dandi.py), JOURNAL.md "PREDICT positive control on real data, DANDI:000044" 16:03).
+DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
+The pass rule was fixed before the run: M3 says "yes" in at least 6 of the 8 sessions (8 sessions, 41-120 pyramidal units, 100 ms bins, all MAZE bins as TASK); fewer would mean the toolbox misses established reactivation, and the RIKEN "no" would carry that caveat.
+Result: DANDI_PENDING (run in progress; results will be in [results/real/dandi/](results/real/dandi/)).
 
 Methodological finding on synthetic calcium-like data (tau 1 s, no assemblies, 50 seeds; [journal/engineer-b.md](journal/engineer-b.md), JOURNAL.md "RECORD T4"):
 the analytical Marchenko-Pastur bound, the usual way to pick significant PCA components from spike data, flags at least 5 false components in **50/50** runs; the N1 shuffle bound flags at least one in **2/50** (T-N1-8).
@@ -153,6 +159,7 @@ No API keys are needed.
 ## Data and sources
 
 - **Data:** Oomoto, Kiyooka, Oizumi, Murayama, *Single-cell calcium imaging dataset of large-scale neuronal activity across wakefulness, sleep, and anesthesia*, RIKEN CBS, [10.60178/cbs.20260708-001](https://doi.org/10.60178/cbs.20260708-001), Zenodo copy [10.5281/zenodo.17667863](https://doi.org/10.5281/zenodo.17667863), CC BY 4.0. Public mouse data; not committed here.
+- **Positive-control data:** DANDI:000044 ([dandiarchive.org/dandiset/000044](https://dandiarchive.org/dandiset/000044)), rat CA1 electrophysiology (the Grosmark and Buzsaki 2016 recordings), streamed by [toolbox/loader_dandi.py](toolbox/loader_dandi.py), not committed. DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
 - **Anchor paper:** Tingley D., Peyrache A. (2020), On the methods for reactivation and replay analysis, Phil. Trans. R. Soc. B 375: 20190231, [10.1098/rstb.2019.0231](https://doi.org/10.1098/rstb.2019.0231). All rights reserved, linked and quoted, not copied.
 - **Other papers and their licences:** [research/papers/README.md](research/papers/README.md) (only redistributable PDFs are committed); datasets considered and rejected: [research/datasets/README.md](research/datasets/README.md).
 - The authors' MATLAB loader (oizumi-lab/mouse_network_2P, no licence) was read as a reference only, not copied.

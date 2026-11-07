@@ -34,7 +34,7 @@ The prediction is committed before the run, so we cannot fit it afterwards.
 Here we predicted M2 would say yes in both splits; it said no, and the journal records that as contradicted.
 Claude Code agents ran each task in parallel worktrees; the journal is append-only, failures included."
 
-## 1:20-1:40 Synthetic finding: spike tests are too lenient for calcium
+## 1:20-1:35 Synthetic finding: spike tests are too lenient for calcium
 
 Show: FIGURE_MP_VS_N1 (results/figures/, Marchenko-Pastur vs N1 false components), else [journal/engineer-b.md](journal/engineer-b.md) Entry 1.
 
@@ -44,7 +44,17 @@ The analytical Marchenko-Pastur bound, the standard way to count assemblies in s
 Our shuffle bound finds them in 2 of 50.
 Calcium is slow, and that alone breaks the spike-era test."
 
-## 1:40-2:20 Real data, one sentence per method
+## 1:35-1:45 Positive control on real data
+
+Show: [results/real/dandi/summary.csv](results/real/dandi/summary.csv) (or FIGURE_DANDI in results/figures/).
+
+Say:
+"Does the toolbox find reactivation where it is known to exist?
+We ran M3 and M4 on DANDI:000044.
+DANDI:000044 (rat CA1, electrophysiology) is used only as a positive control for the methods, not as a biological comparison to the RIKEN mouse cortex calcium data (species, region, modality and task all differ).
+Result: DANDI_SENTENCE"
+
+## 1:45-2:20 Real data, one sentence per method
 
 Show: FIGURE_METHODS (results/figures/, per-method score with N1 null), else the table in [SUBMISSION.md](SUBMISSION.md) "What the loop found".
 
