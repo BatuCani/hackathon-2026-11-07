@@ -436,6 +436,19 @@ details.more[open] summary { margin-bottom: 10px; }
 @media (max-width: 760px) { .examples { grid-template-columns: 1fr; } }
 #mapping .mapping { background: none; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; margin-top: 8px; }
 #mapping .mapping > :not(.actions) { display: none; }
+.figs { display: grid; gap: 14px; }
+.fig { margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; color: inherit; font: inherit; }
+.fig img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-sm); transition: transform 360ms var(--spring-pop); }
+.fig:hover img, .fig:focus-visible img { transform: scale(1.012); }
+.fig span { display: block; margin-top: 7px; font-size: 13px; color: var(--ink-2); }
+.figlink { margin-top: 14px; border: 0; background: none; padding: 0; color: var(--accent); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.lightbox { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 28px; background: rgba(6,10,20,.72); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); opacity: 0; pointer-events: none; transition: opacity 280ms ease; cursor: zoom-out; }
+.lightbox.on { opacity: 1; pointer-events: auto; }
+.lightbox figure { margin: 0; max-width: min(1200px, 100%); transform: scale(.96); transition: transform 460ms var(--spring-pop); }
+.lightbox.on figure { transform: none; }
+.lightbox img { display: block; max-width: 100%; max-height: calc(100vh - 110px); border-radius: 14px; background: #fff; margin: 0 auto; }
+.lightbox figcaption { margin-top: 10px; color: #e8ecf3; font-size: 14px; text-align: center; }
+@media (prefers-reduced-motion: reduce) { .lightbox, .lightbox figure, .fig img { transition: none; } }
 .find { padding: 14px 0; border-top: 1px solid var(--glass-line); }
 .find:first-child { border-top: 0; }
 .find h4 { margin: 0 0 4px; font-size: 15px; letter-spacing: -0.015em; }
@@ -571,13 +584,14 @@ details.more[open] summary { margin-bottom: 10px; }
     <details class="more"><summary>Details</summary><div class="chart-grid">
       <div class="chart glass"><h3>Reactivation score</h3><p class="sub">Each dot is one session or split. Above zero means POST resembles TASK more than PRE did.</p><div id="chartScore"></div></div>
       <div class="chart glass"><h3>Evidence against the N1 null</h3><p class="sub">p from 500 circular shifts, log scale. Below the dashed line is p &lt; 0.05.</p><div id="chartP"></div></div>
-    </div></details>
+    </div><button class="figlink" data-figs>All figures from the repository</button></details>
     <div class="method-strip" id="methodStrip"></div>
     <p class="foot">UX prototype over real results from the Shift Happens toolbox. Only the run timing is simulated. <a href="https://github.com/BatuCani/hackathon-2026-11-07">Repository</a></p>
   </section>
 </main>
 
 <div class="scrim" id="scrim"></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure" aria-hidden="true"><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
 <aside class="sheet glass" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true" inert>
   <div class="sheet-head"><div><h2 id="sheetTitle"></h2><div class="muted small" id="sheetSub"></div></div>
     <button class="icon-btn" id="sheetClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -1118,8 +1132,37 @@ function openMethods() {
     `<p class="small muted" style="margin-top:6px">Yes: DANDI:000044 positive control. No: RIKEN mouse05 split A. On split B, PCA and ICA are N/A (651 TASK frames, they need 1500). Values from results/real/.</p>`);
 }
 $("#methodsBtn").addEventListener("click", openMethods);
+/* ---------- Repository figures (relative paths so GitHub Pages serves them) ---------- */
+const FIGS = [
+  ["positive_control_vs_riken.png", "The rat positive control says yes in every session; the mouse calcium recording does not."],
+  ["real_scores.png", "Mouse calcium scores per method and session. None of the counted methods is significant."],
+  ["controls_m3_m4.png", "PCA and ICA on planted-truth data: yes when reactivation is planted, mostly quiet when it is not."],
+  ["eigenvalue_bounds.png", "On calcium-like noise the classic spike bound flags 14 false patterns; the shuffle bound flags none."],
+  ["rate_confound.png", "Firing-rate change from before to after sleep does not explain the PCA score (r = 0.136, p = 0.749, 8 sessions)."],
+  ["null_distribution_example.png", "How a p-value is made: the real score against 500 shuffled controls (illustrative synthetic example)."],
+  ["reactivation_strength_example.png", "Reactivation strength over time before, during and after the task (illustrative synthetic example)."]
+];
+const figSrc = f => `../results/figures/${f}`;
+function openFigures() {
+  openSheet("Figures", "From results/figures in the repository. Tap to enlarge.",
+    `<div class="figs">${FIGS.map(([f, c], i) => `<button class="fig" data-i="${i}"><img src="${figSrc(f)}" alt="${esc(c)}" loading="lazy"><span>${esc(c)}</span></button>`).join("")}</div>`);
+  $("#sheetBody").querySelectorAll(".fig").forEach(b => b.addEventListener("click", () => openLightbox(figSrc(FIGS[b.dataset.i][0]), FIGS[b.dataset.i][1])));
+}
+let lbFocus = null;
+function openLightbox(src, cap) {
+  lbFocus = document.activeElement;
+  $("#lbImg").src = src; $("#lbImg").alt = cap; $("#lbCap").textContent = cap;
+  $("#lightbox").classList.add("on"); $("#lightbox").removeAttribute("aria-hidden"); $("#lightbox").tabIndex = -1; $("#lightbox").focus();
+}
+function closeLightbox() {
+  $("#lightbox").classList.remove("on"); $("#lightbox").setAttribute("aria-hidden", "true");
+  if (lbFocus) lbFocus.focus();
+}
+$("#lightbox").addEventListener("click", closeLightbox);
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#lightbox").classList.contains("on")) { e.stopImmediatePropagation(); closeLightbox(); } }, true);
+document.addEventListener("click", e => { if (e.target.closest("[data-figs]")) openFigures(); });
 function openLearn() {
-  openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p><span class="src">${f.src}</span></div>`).join(""));
+  openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p><span class="src">${f.src}</span></div>`).join("") + `<button class="figlink" data-figs>See the figures</button>`);
 }
 $("#learnBtn").addEventListener("click", openLearn);
 
