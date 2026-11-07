@@ -329,6 +329,9 @@ h2 { font-size: 19px; letter-spacing: -0.02em; font-weight: 650; margin: 0; }
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .card-top .msub { font-size: 13px; color: var(--ink-3); }
 .card-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; }
+.word { font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; color: var(--ink-3); margin-bottom: 6px; }
+.word[data-tone="ok"] { color: var(--ok); } .word[data-tone="warn"] { color: var(--warn); } .word[data-tone="err"] { color: var(--err); } .word[data-tone="run"] { color: var(--accent); }
+.mchip .word { font-size: 30px; margin: 2px 0 0; }
 .big { font-size: 40px; font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
 .big small { font-size: 20px; color: var(--ink-3); font-weight: 600; letter-spacing: -0.02em; }
 .card .line { font-size: 13.5px; color: var(--ink-2); }
@@ -581,7 +584,7 @@ details.more[open] summary { margin-bottom: 10px; }
   <section class="screen" id="s-summary" aria-labelledby="h-summary">
     <h1 id="h-summary" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Summary</h1>
     <div class="verdict glass" id="verdict"></div>
-    <details class="more"><summary>Details</summary><div class="chart-grid">
+    <details class="more"><summary>Details</summary><p class="small muted" id="verdictLong" style="max-width:72ch;margin:0 0 14px"></p><div class="chart-grid">
       <div class="chart glass"><h3>Reactivation score</h3><p class="sub">Each dot is one session or split. Above zero means POST resembles TASK more than PRE did.</p><div id="chartScore"></div></div>
       <div class="chart glass"><h3>Evidence against the N1 null</h3><p class="sub">p from 500 circular shifts, log scale. Below the dashed line is p &lt; 0.05.</p><div id="chartP"></div></div>
     </div><button class="figlink" data-figs>All figures from the repository</button></details>
@@ -635,6 +638,7 @@ const DATA = {
     caveat: { M2: "M2 needs at least two sessions; only two pseudo-sessions exist (splits A and B of one recording, same animal, mouse05), so a 'yes' is not independent replication." },
     verdict: {
       title: "Not enough evidence",
+      short: "No trusted method finds reactivation in this mouse recording.",
       text: "No counted method says yes. Correlation counts on both splits and PCA on split A; neither is significant. EV / REV and ICA failed planted-truth controls, so they are shown but not counted.",
       tone: "na"
     }
@@ -651,6 +655,7 @@ const DATA = {
     caveat: {},
     verdict: {
       title: "Yes, in the positive control",
+      short: "Both trusted methods find reactivation in the rat recordings, so the toolbox can say yes.",
       text: "",
       tone: "ok"
     }
@@ -945,6 +950,18 @@ function statsFor(mid) {
   const el = res.filter(r => r.el);
   return { res, el, yes: el.filter(isYes).length, med: el.length ? median(el.map(r => r.score)) : null, na: res.filter(r => !r.el) };
 }
+// One word per method: Yes / No / N/A / Error, plus one plain line. Numbers live behind Details.
+function shortReason(reason) { return /TASK frames/.test(reason || "") ? "Too few task frames" : "Data cannot support it"; }
+function methodWord(mid) {
+  const r = S.run[mid] || { status: "idle" }, st = statsFor(mid), n = st.res.length;
+  if (r.status === "error") return { w: "Error", tone: "err", line: "Failed to run. The others are unaffected." };
+  if (r.status === "na") return { w: "N/A", tone: "na", line: shortReason(st.res.find(x => !x.el).reason) };
+  if (r.status !== "done") return null;
+  const yes = st.yes * 2 > st.el.length, trusted = CONTROLS[mid];
+  const na = st.na.length ? ` · ${st.na.length} N/A` : "";
+  return { w: yes ? "Yes" : "No", tone: yes ? (trusted ? "ok" : "warn") : "na",
+    line: `${st.yes} of ${st.el.length} session${st.el.length === 1 ? "" : "s"} say${st.el.length === 1 ? "s" : ""} yes${na} · ${trusted ? "trusted" : "not counted, failed our tests"}` };
+}
 function updateCard(mid, fresh) {
   const card = document.querySelector(`.card[data-m="${mid}"]`); if (!card) return;
   const r = S.run[mid], body = card.querySelector(".card-body"), pill = card.querySelector("[data-pill]");
@@ -958,15 +975,11 @@ function updateCard(mid, fresh) {
     const fill = body.querySelector(".bar-fill"), total = DUR[mid];
     requestAnimationFrame(() => { fill.style.transition = `transform ${reduced.matches ? 0 : total - 200}ms cubic-bezier(.3,.6,.4,1)`; fill.style.transform = "scaleX(0.92)"; });
   }
-  if (r.status === "na") body.innerHTML = `<div class="quiet">${esc(st.res.find(x => !x.el).reason)}. The data cannot support this method; it is skipped, not broken.</div>`;
-  if (r.status === "error") body.innerHTML = `<div class="quiet" style="color:var(--err)">${esc(r.msg)}</div><button class="btn ghost mini-retry" data-retry>Retry ${METHODS.find(x => x.id === mid).name}</button>`;
+  const W = methodWord(mid);
+  if (r.status === "na") body.innerHTML = `<div class="word" data-tone="na">N/A</div><div class="line">${W.line}. Skipped, not broken.</div>`;
+  if (r.status === "error") body.innerHTML = `<div class="word" data-tone="err">Error</div><div class="line">${W.line}</div><button class="btn ghost mini-retry" data-retry>Retry ${METHODS.find(x => x.id === mid).name}</button>`;
   if (r.status === "done") {
-    const naNote = st.na.length ? ` · ${st.na.length} N/A` : "";
-    body.innerHTML = `<div class="big num"><span data-c>0</span><small>/${st.el.length}</small></div>
-      <div class="line">${d.sessions.length > 2 ? "sessions" : "splits"} significant${naNote} · median <span class="num" data-med></span></div>
-      <div class="line" style="color:${CONTROLS[mid] ? "var(--ink-3)" : "var(--warn)"}">${CONTROLS[mid] ? "Passed planted-truth controls" : "Failed planted-truth controls, not counted"}</div>`;
-    countUp(body.querySelector("[data-c]"), st.yes, v => Math.round(v), 700);
-    countUp(body.querySelector("[data-med]"), st.med, fmtS, 900);
+    body.innerHTML = `<div class="word" data-tone="${W.tone}">${W.w}</div><div class="line">${W.line}</div>`;
   }
   const retryBtn = body.querySelector("[data-retry]"); if (retryBtn) retryBtn.addEventListener("click", () => retry(mid));
   if (fresh) { card.classList.remove("materialize"); void card.offsetWidth; card.classList.add("materialize"); }
@@ -984,13 +997,14 @@ function renderSummary() {
   const errs = METHODS.filter(m => S.run[m.id] && S.run[m.id].status === "error");
   const v = d.verdict;
   const caveat = pending.length ? `<p class="small muted">Provisional: ${pending.map(m => m.name).join(", ")} still running.</p>` : errs.length ? `<p class="small" style="color:var(--err)">${errs.map(m => m.name).join(", ")} failed to run and is excluded until retried.</p>` : "";
-  $("#verdict").innerHTML = `<div><div class="muted small">${esc(d.title)}</div><h2>${v.title}</h2><p>${v.text}</p>${caveat}</div><span class="pill ${pending.length ? "run" : v.tone}">${pending.length ? "Partial" : "Final"}</span>`;
+  $("#verdict").innerHTML = `<div><div class="muted small">${esc(d.title)}</div><h2>${v.title}</h2><p>${v.short || v.text}</p>${caveat}</div><span class="pill ${pending.length ? "run" : v.tone}">${pending.length ? "Partial" : "Final"}</span>`;
+  $("#verdictLong").textContent = v.text;
   $("#chartScore").innerHTML = chart("score");
   $("#chartP").innerHTML = chart("p");
   $("#methodStrip").innerHTML = METHODS.map(m => {
     const r = S.run[m.id] || { status: "idle" }, st = statsFor(m.id);
-    const pill = r.status === "done" ? `<span class="pill ${!CONTROLS[m.id] ? "warn" : st.yes ? "ok" : "na"}">${st.yes}/${st.el.length} significant</span>` : r.status === "na" ? `<span class="pill na">N/A</span>` : r.status === "error" ? `<span class="pill err">Error</span>` : `<span class="pill run">Running</span>`;
-    return `<button class="mchip glass thin" data-m="${m.id}"><strong>${m.name}</strong>${pill}<span class="muted small">${CONTROLS[m.id] ? "Counted" : "Not counted: failed controls"}</span></button>`;
+    const W = methodWord(m.id) || { w: "…", tone: "run", line: "Still running" };
+    return `<button class="mchip glass thin" data-m="${m.id}"><strong>${m.name}</strong><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span></button>`;
   }).join("");
   $("#methodStrip").querySelectorAll(".mchip").forEach(b => b.addEventListener("click", () => openMethod(b.dataset.m)));
 }
