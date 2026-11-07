@@ -1,0 +1,26 @@
+[project]
+name = "reactivation"
+version = "0.1.0"
+description = "Reactivation toolbox for deconvolved calcium data with sleep stages (CIC Berlin hackathon, 2026-11-07)"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "scikit-learn>=1.4",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reactivation"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: counted runs (50 seeds); run with -m slow"]
+addopts = "-m 'not slow'"
