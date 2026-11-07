@@ -228,3 +228,13 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: contradicted
 - Note: Both splits eligible (300 cells, 0 dropped). Split A: r(C_TASK, C_POST) = 0.153, r(C_TASK, C_PRE) = 0.222, D1 = -0.0691, p_N1 = 1.0 (PRE 1300, TASK 1824, POST 999). Split B: r(C_TASK, C_POST) = 0.145, r(C_TASK, C_PRE) = 0.139, D1 = +0.00608, p_N1 = 97/501 = 0.194 (PRE 2657, TASK 651, POST 2669).
 - Note: Prediction "D1 < 0 in both splits" is contradicted by Split B's small positive. Prediction "p_N1 > 0.05 in both" and "locked key is not yes" held: neither split has D1 > 0 and p_N1 < 0.05. Referee cases a-d passed before this run (24.1 s of the 30 s budget). No parameters changed after the run.
+
+### 2026-11-07 15:40 CET RECORD loader DANDI:000044 (Engineer B)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): research/datasets/ephys.md section 1 "51-137 total; 41-120 pyramidal (`units.cell_type`)"; prediction: the loader reproduces those pyramidal counts and the PRE/MAZE/POST lengths.
+- Command: uv run --python 3.12 pytest tests/test_loader_dandi.py; uv run --python 3.12 --with remfile python scripts/check_dandi44.py
+- Git SHA: 33d3041 + loader commit
+- Result file: results/loader-check/dandi44.txt, toolbox/loader_dandi.py
+- Label: verified
+- Note: All 8 sessions stream and load; pyramidal counts 120, 92, 48, 55, 81, 59, 66, 41 equal ephys.md. Bins 100 ms; TASK >= 5N holds in every session (20,675-55,592 TASK bins vs 205-600). No method was run on real data (PROBLEM.md unsigned). Open: 90-370 MAZE bins are buzcode NREM in 3 sessions and count as TASK under analysis_mask (plan Q5, TASK = non-unscored); bin size and pyramidal-only are [TEAM DECISION]s.
