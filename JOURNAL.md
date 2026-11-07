@@ -275,7 +275,7 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Step: PREDICT
 - Source and quote (READ) or prediction (PREDICT): Tingley & Peyrache (2020) section 3b-v: a change in intrinsic excitability (firing rate) between PRE and POST could explain part of the reactivation measures, and "a systematic review and analysis of this possibility is still missing". Answer key fixed before the run: per session, rate ratio = mean POST NREM rate / mean PRE NREM rate over the analysed cells (contract.analysis_mask, loader defaults). Across the 8 DANDI sessions, Pearson r between log rate ratio and the M3 score D3 (results/real/dandi/summary.csv). "Rate confound supported" if r > 0.7 and p < 0.05 (n = 8); "not supported" if |r| < 0.3 or p >= 0.05; otherwise "not enough evidence". The same ratio is reported for RIKEN Split A and Split B (mean deconvolved activity, not a spike rate), no test.
 - Prediction: "not supported". Rate ratios close to 1 (within 0.8-1.25) in all 8 sessions, and |r| < 0.3 or p >= 0.05, because D3 tracks cell count and assembly number (largest in the two Achilles sessions) more than any PRE-to-POST rate change, and z-scoring per epoch in M3 removes most of a rate offset.
-- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/rate_confound.py
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile --with matplotlib python scripts/rate_confound.py
 - Git SHA: the commit adding this entry
 - Result file: results/real/rate_confound.json, results/figures/rate_confound.png
 - Label: -
@@ -303,3 +303,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Note: Each file run.py wrote (`mouse05_split{A,B}__M{1-4}.json`) is byte-identical to the committed `M{n}_split{A,B}.json` (eight sha256 matches). Wall time 61 s on Python 3.12.15, seed 0, 500 shuffles. `--out` only changed the directory. `summary.csv` is written and was not committed. `M2_verdict.json` is committed and is not written by run.py (it comes from scripts/run_m2.py). Fast tests: 117 passed, 1 failed, 2 xfailed, 20 deselected, 235 s. The failure is tests/test_m4.py::test_t_m4_1_overlap_ica_beats_pca (PCA 0.817 vs < 0.8), the open T-M4-1 threshold; no method logic, threshold, or committed result was changed.
 
 2026-11-07 16:32 CET RECORD: toolbox.verdict.compute_verdict on results/real/M1-M4 split JSON (method tests M1 pass, M2 fail, M3 pass, M4 fail) wrote results/real/verdict.json and results/real/summary.md: Not enough evidence, counted M1, how likely 0/2 mouse05_splitA and 0/1 mouse05_splitB. Fast CI: .github/workflows/tests.yml (Python 3.12, pytest -m "not slow"; T-M4-1 xfail strict=False, recorded failure).
+### 2026-11-07 16:35 CET JUDGE/RECORD Loop 3: rate confound on DANDI:000044, 8 sessions (crewmate)
+
+- Step: JUDGE, RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT Loop 3 16:22 above, rule "supported if r > 0.7 and p < 0.05; not supported if |r| < 0.3 or p >= 0.05"
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile --with matplotlib python scripts/rate_confound.py
+- Git SHA: 67f4d6a
+- Result file: results/real/rate_confound.json, results/figures/rate_confound.png
+- Label: verified (rate confound not supported; prediction held)
+- Note: Pearson r(log rate ratio, D3) = 0.136, p = 0.749, n = 8: "not supported". POST/PRE NREM rate ratios 0.880 to 1.135 (Gatsby_08022013 0.880, Cicero_09102014 0.939, Gatsby_08282013 0.999, Achilles_11012013 1.064, Achilles_10252013 1.072, Cicero_09012014 1.103, Buddy_06272013 1.122, Cicero_09172014 1.135), all inside the predicted 0.8-1.25. Three sessions have lower POST rates and still a clear M3 "yes" (Gatsby_08022013 D3 = 0.088 at ratio 0.880). On this data the M3 "yes" is not explained by a PRE-to-POST rate change.
+- Note: RIKEN (mean deconvolved activity x fs, not a spike rate, no test): Split A ratio 0.767 (log -0.265), Split B 0.872 (log -0.137). POST activity is lower than PRE in both splits, more than in any DANDI session. With n = 2 this is a hypothesis only, not a result: a POST drop could contribute to the Split A "no" (D3 = -0.146).
+- Note: Limits: n = 8 sessions from 4 rats has low power; one rate ratio per session (population mean), not per assembly. Figure flaw: the two Cicero_09012014/09172014 labels overlap and the Gatsby_08022013 label touches the y axis; not fixed before the 16:38 stop.

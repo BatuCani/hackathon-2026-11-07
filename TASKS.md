@@ -12,6 +12,8 @@ Deadline 17:00.
 
 ## Loop tasks, in order
 
+- [x] **Loop 3** rate confound (Tingley & Peyrache 2020, 3b-v) on DANDI:000044: r(log POST/PRE NREM rate, D3) = 0.136, p = 0.749, n = 8: not supported. See JOURNAL.md RECORD Loop 3.
+
 - [x] **T1 Loader** (A): `toolbox/loader.py` reads `sleep_data.mat` into `toolbox.contract.Recording` for Split A and Split B, `fs = 7.65`, stage mapping and splits as in [PROBLEM.md](PROBLEM.md).
   Done when `tests/test_loader.py` passes (frame counts per epoch equal the vetting report) and a missing required field stops with a clear message.
 - [x] **T2 M1 cell-pair correlation** (A): `toolbox/m1_pair_corr.py`, key D1.

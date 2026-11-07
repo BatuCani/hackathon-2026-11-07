@@ -1,0 +1,111 @@
+{
+  "question": "Is the M3 D3 on 8 DANDI:000044 sessions explained by a PRE->POST NREM rate change?",
+  "rule": "supported if r > 0.7 and p < 0.05; not supported if |r| < 0.3 or p >= 0.05; else not enough evidence",
+  "n": 8,
+  "pearson_r": 0.13551574601813263,
+  "p": 0.7490016890273428,
+  "verdict": "not supported",
+  "git_sha": "67f4d6a",
+  "dandi": {
+    "Achilles_10252013": {
+      "n_cells": 120,
+      "mean_pre": 0.6364635569432617,
+      "mean_post": 0.6824735325440081,
+      "rate_ratio": 1.0722900393884578,
+      "log_rate_ratio": 0.06979658518511313,
+      "median_cell_log_ratio": 0.03295461912566905,
+      "D3": 0.13921510163509693,
+      "unit": "Hz"
+    },
+    "Achilles_11012013": {
+      "n_cells": 92,
+      "mean_pre": 0.6232598185845716,
+      "mean_post": 0.6630149705963803,
+      "rate_ratio": 1.063785841516453,
+      "log_rate_ratio": 0.06183409389031405,
+      "median_cell_log_ratio": -0.017656665188809928,
+      "D3": 0.14374905663683485,
+      "unit": "Hz"
+    },
+    "Buddy_06272013": {
+      "n_cells": 48,
+      "mean_pre": 0.6077047987009351,
+      "mean_post": 0.6819499668654738,
+      "rate_ratio": 1.1221730819359161,
+      "log_rate_ratio": 0.11526705717831943,
+      "median_cell_log_ratio": 0.023089741357391298,
+      "D3": 0.04664265566126158,
+      "unit": "Hz"
+    },
+    "Cicero_09012014": {
+      "n_cells": 55,
+      "mean_pre": 0.7364227642276423,
+      "mean_post": 0.8121863415548087,
+      "rate_ratio": 1.1028805477063532,
+      "log_rate_ratio": 0.09792543676972049,
+      "median_cell_log_ratio": 0.003050817305144766,
+      "D3": 0.06395279933496151,
+      "unit": "Hz"
+    },
+    "Cicero_09102014": {
+      "n_cells": 81,
+      "mean_pre": 0.7678687809406765,
+      "mean_post": 0.7209821266221251,
+      "rate_ratio": 0.9389392361268902,
+      "log_rate_ratio": -0.06300451312770586,
+      "median_cell_log_ratio": -0.034646106490786616,
+      "D3": 0.027968990207691013,
+      "unit": "Hz"
+    },
+    "Cicero_09172014": {
+      "n_cells": 59,
+      "mean_pre": 1.0368032769754854,
+      "mean_post": 1.1770300162606389,
+      "rate_ratio": 1.1352491281607602,
+      "log_rate_ratio": 0.1268521230244858,
+      "median_cell_log_ratio": 0.052126450283280994,
+      "D3": 0.06384202372260922,
+      "unit": "Hz"
+    },
+    "Gatsby_08022013": {
+      "n_cells": 66,
+      "mean_pre": 0.9283173361621273,
+      "mean_post": 0.8166557424805184,
+      "rate_ratio": 0.8797161387255321,
+      "log_rate_ratio": -0.1281559931767358,
+      "median_cell_log_ratio": -0.05961093704473,
+      "D3": 0.08772077851142203,
+      "unit": "Hz"
+    },
+    "Gatsby_08282013": {
+      "n_cells": 41,
+      "mean_pre": 0.8081596758831314,
+      "mean_post": 0.8074936158015426,
+      "rate_ratio": 0.9991758310870176,
+      "log_rate_ratio": -0.000824508726903198,
+      "median_cell_log_ratio": 0.08065234272155483,
+      "D3": 0.04284109243121792,
+      "unit": "Hz"
+    }
+  },
+  "riken": {
+    "mouse05_splitA": {
+      "n_cells": 300,
+      "mean_pre": 0.04565377620667219,
+      "mean_post": 0.03502079353742189,
+      "rate_ratio": 0.7670952207520499,
+      "log_rate_ratio": -0.26514433831650597,
+      "median_cell_log_ratio": -0.2822052078607249,
+      "unit": "deconvolved activity x fs (not a spike rate)"
+    },
+    "mouse05_splitB": {
+      "n_cells": 300,
+      "mean_pre": 0.03042074883235692,
+      "mean_post": 0.026519605289219293,
+      "rate_ratio": 0.8717604367783284,
+      "log_rate_ratio": -0.13724062128315517,
+      "median_cell_log_ratio": -0.1560213061169489,
+      "unit": "deconvolved activity x fs (not a spike rate)"
+    }
+  }
+}
