@@ -471,6 +471,8 @@ html, body { overflow-x: clip; }
 @media (max-width: 760px) { .examples { grid-template-columns: 1fr; } }
 #mapping .mapping { background: none; box-shadow: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0; margin-top: 8px; }
 #mapping .mapping > :not(.actions) { display: none; }
+.mini-viz { display: block; width: 100%; max-width: 340px; height: auto; margin: 10px 0 4px; }
+.mini-viz text { fill: var(--ink-3); font-size: 9.5px; font-family: inherit; }
 .figs { display: grid; gap: 14px; }
 .fig { margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; color: inherit; font: inherit; }
 .fig img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-sm); transition: transform 360ms var(--spring-pop); }
@@ -764,7 +766,7 @@ const FINDINGS = [
   { h: "The toolbox can say yes", p: "On 8 DANDI:000044 rat CA1 sessions with known reactivation, PCA and ICA are significant in 8/8, correlation in 6/8 and EV / REV in 7/8.", src: "results/real/dandi/summary.csv" },
   { h: "RIKEN, split by split", p: "Split A: every method is eligible and none is significant. Split B: TASK has 651 frames, below the 1500 that PCA and ICA need for 300 cells, so both are N/A there.", src: "results/real/summary.md" },
   { h: "Firing-rate confound: not supported", p: "Across the 8 DANDI sessions, the PRE to POST NREM rate change does not explain the PCA score: r = 0.136, p = 0.749, n = 8.", src: "results/real/rate_confound.json (Loop 3)" },
-  { h: "Bin size: still running", p: "Loop 4 tests PCA robustness to bin size on 3 DANDI sessions. The prediction is registered; no result is on main yet.", src: "JOURNAL.md (PREDICT Loop 4)" },
+  { h: "Bin size does not change the answer", p: "PCA says yes at 50, 100 and 200 ms bins in all 3 DANDI sessions tested (9 of 9, p = 0.005 each, 200 shuffles).", src: "results/real/dandi_binsize.json (Loop 4)", viz: "binsize" },
   { h: "Two methods fail their own tests", p: "EV / REV and ICA failed planted-truth synthetic controls, so the verdict does not count them.", src: "results/real/verdict.json" },
   { h: "Final verdict on calcium", p: "Not enough evidence. No counted method says yes on the one public RIKEN calcium session.", src: "results/real/verdict.json" }
 ];
@@ -1255,8 +1257,18 @@ function closeLightbox() {
 $("#lightbox").addEventListener("click", closeLightbox);
 addEventListener("keydown", e => { if (e.key === "Escape" && $("#lightbox").classList.contains("on")) { e.stopImmediatePropagation(); closeLightbox(); } }, true);
 document.addEventListener("click", e => { if (e.target.closest("[data-figs]")) openFigures(); });
+// results/real/dandi_binsize.json: PCA score (D3) per session at 50 / 100 / 200 ms; all 9 are yes
+const BINSIZE = [["Achilles 10/25", [0.1021, 0.1392, 0.1811]], ["Achilles 11/01", [0.1177, 0.1437, 0.1699]], ["Cicero 09/10", [0.0251, 0.0280, 0.0287]]];
+function binsizeViz() {
+  const W = 300, H = 104, L = 34, Rr = 92, T = 10, B = 22, max = 0.2, x = i => L + i * (W - L - Rr) / 2, y = v => T + (1 - v / max) * (H - T - B);
+  let g = [0, 0.1, 0.2].map(v => `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--glass-line)"/><text x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v.toFixed(1)}</text>`).join("");
+  g += ["50", "100", "200 ms"].map((t, i) => `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${t}</text>`).join("");
+  const nudge = [-4, 7, 3];
+  BINSIZE.forEach(([n, v], k) => { g += `<polyline points="${v.map((d, i) => `${x(i)},${y(d)}`).join(" ")}" fill="none" stroke="var(--ok)" stroke-opacity=".55" stroke-width="1.5"/>` + v.map((d, i) => `<circle cx="${x(i)}" cy="${y(d)}" r="3.2" fill="var(--ok)"/>`).join("") + `<text x="${W - Rr + 8}" y="${y(v[2]) + nudge[k]}">${n}</text>`; });
+  return `<svg class="mini-viz" viewBox="0 0 ${W} ${H}" role="img" aria-label="PCA score at 50, 100 and 200 ms bins for three sessions, all significant">${g}</svg>`;
+}
 function openLearn() {
-  openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p><span class="src">${f.src}</span></div>`).join("") + `<button class="figlink" data-figs>See the figures</button>`);
+  openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p>${f.viz === "binsize" ? binsizeViz() : ""}<span class="src">${f.src}</span></div>`).join("") + `<button class="figlink" data-figs>See the figures</button>`);
 }
 $("#learnBtn").addEventListener("click", openLearn);
 
