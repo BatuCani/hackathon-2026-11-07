@@ -15,11 +15,11 @@ The name comes from the N1 circular-shift null, which is what made the analysis 
 
 | Member | GitHub | Role |
 |---|---|---|
+| ZixiTang | [ZixiTang](https://github.com/ZixiTang) | researcher: research question, criterion and verdict rule |
 | Batu | [BatuCani](https://github.com/BatuCani) | Engineer A: loader, M1, M2, submission |
 | youssef-110 | [youssef-110](https://github.com/youssef-110) | Engineer B: N1 null, M3 PCA, M4 ICA, DANDI positive control |
-| ZixiTang | [ZixiTang](https://github.com/ZixiTang) | criterion and verdict rule |
 
-There is no scientist on the team: the answer key was signed by the team lead ([PROBLEM.md](PROBLEM.md) "Signature").
+The answer key in [PROBLEM.md](PROBLEM.md) was signed by the team lead (see "Signature").
 
 ## The problem in one picture
 
