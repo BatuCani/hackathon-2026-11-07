@@ -11,6 +11,16 @@ On the one public RIKEN calcium session the answer is **not enough evidence**, a
 On 8 rat electrophysiology sessions with known reactivation (DANDI:000044, used only as a positive control) M3 and M4 are significant in 8/8, M2 in 7/8 and M1 in 6/8, so the toolbox can say "yes" on real data.
 Submission text: [SUBMISSION.md](SUBMISSION.md); demo script: [DEMO.md](DEMO.md); UX prototype: [app/index.html](app/index.html) (see [app/README.md](app/README.md)).
 
+## Why this project matters
+
+- **Problem.** Tingley and Peyrache 2020, section 3b-v: "A systematic review and analysis of this possibility is still missing in the field" (firing-rate confound) and "a systemic variation of bin size and its impact on pattern detection is lacking" ([research/briefing.md](research/briefing.md)).
+- **Loop.** Every prediction was committed before its run. Four PREDICT/RECORD pairs are in [JOURNAL.md](JOURNAL.md): the DANDI positive control, Loop 2 (M1 and M2), Loop 3 (rate confound) and Loop 4 (bin size).
+- **Evidence.** Marchenko-Pastur flags at least 5 false components in 50/50 calcium-like noise runs; the N1 bound flags at least one in 2/50 ([journal/engineer-b.md](journal/engineer-b.md), [results/figures/eigenvalue_bounds.png](results/figures/eigenvalue_bounds.png)). DANDI:000044: M3 and M4 yes in 8/8, M1 in 6/8, M2 in 7/8 ([results/real/dandi/summary.csv](results/real/dandi/summary.csv)). M3 stays yes at 50/100/200 ms in 9/9 ([results/real/dandi_binsize.json](results/real/dandi_binsize.json)).
+- **Honesty.** The answer key was locked before the results ([PROBLEM.md](PROBLEM.md)). The RIKEN verdict is "Not enough evidence" ([results/real/verdict.json](results/real/verdict.json), [results/real/summary.md](results/real/summary.md)). Failed predictions stay in the journal, including M2's predicted "yes" in both splits and the Loop 4 peak at 50-100 ms ([JOURNAL.md](JOURNAL.md)).
+- **Reproducibility.** One command, [run.py](run.py), on a fresh clone reproduced the eight real-data JSON files byte for byte ([JOURNAL.md](JOURNAL.md) RECORD T8). The fast suite runs on main ([.github/workflows/tests.yml](.github/workflows/tests.yml)); the last completed tests run succeeded (https://github.com/BatuCani/shift-happens/actions/runs/42388856132).
+
+Live app, no install: https://batucani.github.io/shift-happens/app/
+
 ## Team
 
 The name comes from the N1 circular-shift null, which is what made the analysis honest on calcium data.
