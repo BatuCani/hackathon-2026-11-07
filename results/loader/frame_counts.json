@@ -1,0 +1,20 @@
+{
+ "mouse05_splitA": {
+  "POST_NREM": 999,
+  "PRE_NREM": 1300,
+  "TASK_frames": 1825,
+  "TASK_scored": 1824,
+  "fs": 7.65,
+  "n_cells": 300,
+  "n_frames": 9500
+ },
+ "mouse05_splitB": {
+  "POST_NREM": 2669,
+  "PRE_NREM": 2657,
+  "TASK_frames": 651,
+  "TASK_scored": 651,
+  "fs": 7.65,
+  "n_cells": 300,
+  "n_frames": 9500
+ }
+}

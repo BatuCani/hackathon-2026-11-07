@@ -11,7 +11,7 @@ Deadline 17:00.
 
 ## Loop tasks, in order
 
-- [ ] **T1 Loader** (A): `toolbox/loader.py` reads `sleep_data.mat` into `toolbox.contract.Recording` for Split A and Split B, `fs = 7.65`, stage mapping and splits as in [PROBLEM.md](PROBLEM.md).
+- [x] **T1 Loader** (A): `toolbox/loader.py` reads `sleep_data.mat` into `toolbox.contract.Recording` for Split A and Split B, `fs = 7.65`, stage mapping and splits as in [PROBLEM.md](PROBLEM.md).
   Done when `tests/test_loader.py` passes (frame counts per epoch equal the vetting report) and a missing required field stops with a clear message.
 - [ ] **T2 M1 cell-pair correlation** (A): `toolbox/m1_pair_corr.py`, key D1.
   Done when positive and negative controls pass on synthetic data and the result JSON for both splits is in `results/`.
@@ -28,5 +28,6 @@ Deadline 17:00.
   Done when the rule has a test with hand-made `MethodResult` inputs covering all three outcomes.
 - [ ] **T8 One-command repro** (A): `python run.py --data <path to sleep_data.mat> --seed 0` writes every result file and the results table from a fresh clone.
   Done when a fresh clone reproduces byte-identical result JSON.
+  Status (A, partial): `run.py` wired (loader, every method with `run()`, `results/real/*.json`, `summary.csv`), byte-identical on synthetic data (`tests/test_run.py`); not run on real data until T0 is signed; method tests and verdict not wired yet.
 - [ ] **T9 Submission issue** (A): open the project-submission issue on https://github.com/xemantic/claude-impact-lab-2026 with the repo link, license (Apache-2.0 code, CC BY 4.0 text), dataset citation and license, and the verdict.
   Done before 17:00.
