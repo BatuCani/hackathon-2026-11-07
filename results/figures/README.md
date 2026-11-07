@@ -42,6 +42,15 @@ N1 null distribution of the M3 score on the same positive-control seed.
 The observed score (0.156) and its one-sided p-value (0.010) are marked.
 The observed score sits above the null.
 
+## method_panels.png
+
+Drawn by `scripts/plot_method_panels.py` (100 N1 shuffles, seed 0, one BLAS thread).
+Four panels, in the toolbox numbering: M1 cell-pair correlation, M2 EV/REV, M3 PCA, M4 ICA.
+The green half is DANDI:000044 Buddy_06272013 (local positive-control NWB).
+The red half is RIKEN mouse05 split A.
+Each half shows that method's plot and the decision rule with the computed score and p_N1.
+Heatmap time bins are for display; the score uses every frame.
+
 ## real_scores.png
 
 Drawn by `plot_real_results(results_dir)` when `results/real/*.json` contains method results (verdict files without a score are skipped).
