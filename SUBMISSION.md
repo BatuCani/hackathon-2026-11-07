@@ -6,20 +6,18 @@ Numbers last synced from [results/real/](results/real/) at the time of the commi
 
 ## Title
 
-`[Submission] TEAM_NAME: Calcium sleep reactivation toolbox - four methods, one locked answer key, an honest "not enough evidence"`
+`[Submission] Shift Happens: Calcium sleep reactivation toolbox - four methods, one locked answer key, an honest "not enough evidence"`
 
 ## Team name
 
-TEAM_NAME
+Shift Happens
 
 ## Team members
 
-ROLES
-
-- Batu (@BatuCani), Engineer A (loader, M1, M2, one-command repro)
-- youssef-110 (@youssef-110), Engineer B (N1 null, M3 PCA, M4 ICA, synthetic data and controls)
-- Zixi, criterion and verdict rule
-- SCIENTIST_NAME, scientist, problem owner
+- Batu (@BatuCani), Engineer A (loader, M1, M2, submission)
+- youssef-110 (@youssef-110), Engineer B (N1 null, M3 PCA, M4 ICA, DANDI positive control)
+- ZixiTang (@ZixiTang), criterion and verdict rule
+- No scientist on the team: the answer key was signed by the team lead (see [PROBLEM.md](PROBLEM.md) "Signature").
 
 ## Field
 

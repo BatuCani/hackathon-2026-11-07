@@ -11,7 +11,7 @@ Figures live in [results/figures/](results/figures/); if a figure named below is
 Show: the repository front page.
 
 Say:
-"We are TEAM_NAME.
+"We are Shift Happens.
 Our question: when a mouse sleeps after doing something, do its neurons replay the patterns from that waking time?
 We built an open toolbox that runs the four standard reactivation methods on two-photon calcium data, and only lets a method vote if it first passes tests on data where we planted the answer."
 
