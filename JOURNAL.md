@@ -167,3 +167,24 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Label: verified
 - Note: Split A (eligible, 300 cells, n_sig 15, N1 bound 2.42): D3 = -0.146, p_N1 = 1.0, p_blockswap = 0.768; D4 = -0.061, p_N1 = 1.0, p_blockswap = 0.695. Split B: M3 and M4 not eligible, "TASK frames 651 < 1500 (5 per cell x 300 cells)". Prediction held: B ineligible, A eligible with n_sig >= 2, D3 <= 0 in A.
 - Note: Locked keys D3 and D4: not "yes" (D < 0 in Split A, the only eligible split; Split B cannot be scored). TASK patterns are significantly expressed in both PRE and POST alone (p_n1_pre_alone = p_n1_post_alone = 0.002) but more strongly in PRE, matching M2's r_T,PRE > r_T,POST. M3 passes its method tests; M4 fails T-M4-1, so only M3 counts toward the verdict. No parameters changed after the run.
+
+### 2026-11-07 15:45 CET PREDICT T7 (Zixi / crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md section "Overall verdict (DRAFT, owner Zixi)" "Counted methods = eligible methods that passed their method tests. - Reactivation likely: at least two counted methods say 'yes' in both splits, and no counted method says 'yes' in the reversed direction (POST and PRE swapped). - Reactivation not supported: no counted method says 'yes' in either split. - Not enough evidence: anything else, including fewer than two counted methods."
+- Command: uv run --python 3.12 pytest tests/test_verdict.py
+- Git SHA: 33d3041
+- Result file: tests/test_verdict.py, toolbox/verdict.py
+- Label: -
+- Note: Hand-made MethodResult inputs will test all three outcomes, ineligible methods, failed controls, reverse direction veto, and summary markdown generation.
+
+### 2026-11-07 15:47 CET RECORD T7 (Zixi / crewmate)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md section "Overall verdict (DRAFT, owner Zixi)" "Counted methods = eligible methods that passed their method tests. - Reactivation likely: at least two counted methods say 'yes' in both splits, and no counted method says 'yes' in the reversed direction (POST and PRE swapped). - Reactivation not supported: no counted method says 'yes' in either split. - Not enough evidence: anything else, including fewer than two counted methods."
+- Command: uv run --python 3.12 pytest tests/test_verdict.py
+- Git SHA: 33d3041
+- Result file: tests/test_verdict.py, toolbox/verdict.py
+- Label: verified
+- Note: All 9 tests pass covering Reactivation likely, Reactivation not supported, Not enough evidence (split disagreement, ineligible methods, failed controls, reversed veto), zero counted methods, and summary markdown generation for results/real/summary.md.
+
