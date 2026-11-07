@@ -21,6 +21,7 @@ Deadline 17:00.
   Done when T-N1-1 to T-N1-9 pass. M1 and M3 report `p_n1` only after this lands; build them against the `nulls.py` interface.
 - [ ] **T5 M2 EV vs. REV** (A): `toolbox/m2_ev_rev.py`, key D2, across splits A and B.
   Done when controls pass and the two-pseudo-session caveat is in the result.
+  Status (A, 15:50): implemented; caveat in every result. Controls: locked N1 rule fails pre_existing (6/10), N1 + block-swap fails positive (8/10); synthetic results only (loader not on main). Not ticked. See JOURNAL.md RECORD T5.
 - [ ] **T6 M4 ICA reactivation strength** (B): `toolbox/m4_ica.py`, key D4.
   Status (B, 15:40): implemented; T-M4-2 to T-M4-4 pass, T-M4-1 fails at its locked threshold (PCA 0.817, needs < 0.8). Not ticked. See journal/engineer-b.md Entry 2.
   Done when T-M4-1 to T-M4-4 pass. Cut rule: if M3 is not done by 16:05, M4 is reported `eligible=False, reason="not implemented"`.

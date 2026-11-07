@@ -105,3 +105,23 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: -
 - Label: not enough evidence
 - Note: run.py loads both splits, runs every method module that exposes run() (M3, M4 now; M1, M2 listed as not implemented) and writes results/real/<session>__<method>.json plus summary.csv; two runs on a synthetic .mat give byte-identical files. Not run on the real data: T0 (scientist's signature) is still open, and PROBLEM.md says no result is computed before it.
+### 2026-11-07 15:35 CET PREDICT T5 (Engineer A, M2 worker)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): research/source-of-truth.md M2 "Reactivation can thus be assessed by a significant difference between EV and REV across recording sessions" | synthetic controls (toolbox/controls.py scenarios, tau 1 s, 200 shuffles, seeds 0-9): positive D2 > 0 with p_N1 < 0.05 in >= 9/10; no_sleep_coactivity, pre_existing, noise_only and reversed "yes" in <= 2/10; reversed gives D2 < 0.
+- Command: uv run --python 3.12 pytest tests/test_m2.py -m "not slow"
+- Git SHA: (this commit's parent, branch fm/hackathon-t5-m2)
+- Result file: tests/test_m2.py, results/synthetic/M2_*.json
+- Label: -
+- Note: Loader (T1) is not on main, so no real-data run yet; only synthetic.
+
+### 2026-11-07 15:50 CET RECORD T5 (Engineer A, M2 worker)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PREDICT T5 15:35 above
+- Command: uv run --python 3.12 pytest tests/test_m2.py -m "not slow"; uv run --python 3.12 python scripts/run_m2.py --seed 0
+- Git SHA: parent of the commit adding this entry (branch fm/hackathon-t5-m2)
+- Result file: results/synthetic/M2_splitA.json, results/synthetic/M2_splitB.json, results/synthetic/M2_verdict.json, tests/test_m2.py
+- Label: contradicted
+- Note: Formula hand-checked (3x3 matrices give EV = REV = 1, since 3 pairs span 2 centered dimensions, hence min_cells = 4). With the locked rule (D2 > 0, p_N1 < 0.05), positive 10/10, no_sleep_coactivity, noise_only and reversed 0/10 each, but pre_existing 6/10 false "yes" (prediction <= 2/10 contradicted): N1 breaks PRE and POST co-activity alike, so its null sits near 0 while chance EV vs REV differences do not.
+- Note: Added supplementary details.p_blockswap (20 s PRE/POST block labels permuted, as M3); with it pre_existing passes but positive drops to 8/10 (< 9/10). Both shortfalls are strict xfails, thresholds unchanged; M2 does not pass its method tests yet, so it should not count toward the verdict. No real-data run: the loader (T1) is not on main.

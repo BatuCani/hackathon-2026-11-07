@@ -1,0 +1,27 @@
+{
+ "alpha": 0.05,
+ "answer": "yes",
+ "answer_with_blockswap": "no",
+ "caveat": "M2 needs at least two sessions; only two pseudo-sessions exist (splits A and B of one recording, same animal, mouse05), so a 'yes' is not independent replication.",
+ "data": "synthetic: controls.scenario('positive', seed 0 / 1, tau_s 1.0) as pseudo-splits A / B",
+ "method_id": "M2",
+ "per_split": {
+  "control-positive-0": {
+   "d2": 0.012621259190615753,
+   "eligible": true,
+   "p_blockswap": 0.1157684630738523,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": false
+  },
+  "control-positive-1": {
+   "d2": 0.017598539353672893,
+   "eligible": true,
+   "p_blockswap": 0.01996007984031936,
+   "p_n1": 0.001996007984031936,
+   "yes": true,
+   "yes_with_blockswap": true
+  }
+ },
+ "reason": ""
+}
