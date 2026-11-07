@@ -45,3 +45,33 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: PROBLEM.md, TASKS.md
 - Label: -
 - Note: Loop files created; answer key is DRAFT and awaits the scientist's signature before any result.
+
+### 2026-11-07 15:40 CET RECORD T4 (Engineer B)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): research/team-brief.md section 4 "shift each neuron's trace by its own random circular offset, 500 times; keeps each neuron's autocorrelation, breaks co-activity."
+- Command: uv run --python 3.12 pytest -m slow (50 seeds, 200 shuffles); uv run --python 3.12 pytest -m "not slow"
+- Git SHA: e91b67a (eng-b/n1-m3-m4); port to toolbox/ re-run with identical numbers
+- Result file: journal/engineer-b.md (Entries 1-3, predictions and full counts), toolbox/nulls.py, toolbox/assemblies.py
+- Label: verified
+- Note: T-N1-1 to T-N1-9 pass. On synthetic data with tau 1 s and no assemblies, Marchenko-Pastur gives >= 5 false components in 50/50 seeds, the N1 bound gives >= 1 in 2/50.
+
+### 2026-11-07 15:40 CET RECORD T3 (Engineer B)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): research/source-of-truth.md M4 "the diagonal of the projectors is set at 0"
+- Command: as T4
+- Git SHA: e91b67a
+- Result file: journal/engineer-b.md Entry 3, toolbox/m3_pca.py
+- Label: verified
+- Note: T-A1 to T-A5 and T-M3-1 to T-M3-8 pass (positive 50/50; false positives 1/50, 3/50 with p_blockswap, 2/50; reversal 50/50). p_n1 alone gives 7/50 false positives when assemblies already exist in PRE.
+
+### 2026-11-07 15:40 CET RECORD T6 (Engineer B)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): research/source-of-truth.md M6 "ICA ... successfully separates assemblies of coordinated neurons, even when assemblies have overlapping member neurons [20], a situation in which PCA fails"
+- Command: as T4
+- Git SHA: e91b67a
+- Result file: journal/engineer-b.md Entries 2-3, toolbox/m4_ica.py
+- Label: contradicted
+- Note: T-M4-1 (seed 0) fails: ICA 0.911 passes, PCA 0.817 vs < 0.8 required; over seeds 0-9 ICA reaches 0.9 in 5/10. T-M4-2 to T-M4-4 pass. Threshold not changed.

@@ -52,7 +52,11 @@ def analysis_mask(rec: Recording, epoch: Literal["PRE", "TASK", "POST"]) -> np.n
     TASK -> epoch == "TASK" and sleep_stage != "unscored" (team decision, open
     question Q5 in plans/engineer-b.md).
     """
-    raise NotImplementedError("analysis_mask: implement with the loader (task T1)")
+    if epoch in ("PRE", "POST"):
+        return (rec.epoch == epoch) & (rec.sleep_stage == "NREM")
+    if epoch == "TASK":
+        return (rec.epoch == "TASK") & (rec.sleep_stage != "unscored")
+    raise ValueError(f"epoch must be PRE, TASK or POST, got {epoch!r}")
 
 
 @dataclass(frozen=True)
