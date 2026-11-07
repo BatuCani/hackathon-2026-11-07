@@ -513,6 +513,19 @@ html, body { overflow-x: clip; }
 @keyframes shufDrop { from { opacity: 0; transform: translateY(-90px); } 60% { opacity: .75; } to { opacity: .55; transform: none; } }
 @keyframes shufMark { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .shuf-dots circle, .shuf-mark, .shuf-real { animation: none; opacity: 1; transform: none; } .shuf-dots circle { opacity: .55; } }
+.cmp-card { width: min(820px, 100%); }
+.cmp { margin-top: 14px; }
+.cmp-row { display: grid; grid-template-columns: minmax(110px, .8fr) 1fr 1fr; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--glass-line); animation: mxIn 520ms var(--spring) both; animation-delay: var(--d, 0ms); }
+.cmp-headrow { border-top: 0; padding-top: 0; align-items: end; }
+.cmp-col-head { display: flex; flex-direction: column; gap: 2px; }
+.cmp-col-head strong { font-size: 17px; letter-spacing: -0.015em; }
+.cmp-m { font-weight: 600; font-size: 14px; display: flex; flex-direction: column; gap: 2px; }
+.cmp-m small { font-weight: 400; font-size: 11.5px; color: var(--ink-3); }
+.cmp-cell { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.cmp-cell .word { font-size: 28px; margin: 0; }
+.cmp-verdict strong { font-size: 15px; letter-spacing: -0.01em; }
+@media (max-width: 560px) { .cmp-row { grid-template-columns: 78px 1fr 1fr; gap: 8px; } .cmp-cell { flex-direction: column; gap: 0; } .cmp-cell .word { font-size: 24px; } .cmp-col-head .small { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cmp-row { animation: none; } }
 .figs { display: grid; gap: 14px; }
 .fig { margin: 0; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; color: inherit; font: inherit; }
 .fig img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px var(--glass-line), var(--shadow-sm); transition: transform 360ms var(--spring-pop); }
@@ -614,7 +627,7 @@ html, body { overflow-x: clip; }
         <span class="muted">.mat, .nwb, .npz, .json or .csv. Field names are read where the browser can.</span>
       </label>
       <div class="examples">
-        <p class="example-label">Ready recordings, already mapped. Tap one to switch. <button class="hint-link intro-open" data-intro>What is reactivation?</button></p>
+        <p class="example-label">Ready recordings, already mapped. Tap one to switch. <button class="hint-link intro-open" data-intro>What is reactivation?</button> <button class="hint-link intro-open" data-compare>Rat vs mouse</button></p>
         <button class="example glass thin" data-ds="riken" aria-pressed="false">
           <strong>RIKEN mouse05</strong>
           <span class="meta"><span class="meta-kind">Two-photon calcium</span><span class="meta-items"><span>300 cells</span><span>7.65 Hz</span><span>2 splits</span></span></span>
@@ -675,13 +688,21 @@ html, body { overflow-x: clip; }
       <p class="sub">Green: DANDI:000044 Buddy_06272013, reactivation detected. Red: RIKEN mouse05 session A, no reactivation. Scores and curves are the toolbox result, 100 shuffled controls.</p>
       <img src="../results/figures/method_panels.png" alt="Four methods, each with a green yes half and a red no half: cell-pair correlation, EV versus REV, PCA reactivation strength, and ICA reactivation strength.">
     </div>
-    <button class="figlink" data-figs>All figures from the repository</button></details>
+    <button class="figlink" data-figs>All figures from the repository</button> <button class="figlink" data-compare style="margin-left:14px">Rat vs mouse</button></details>
     <div class="method-strip" id="methodStrip"></div>
     <p class="foot">UX prototype over real results from the Shift Happens toolbox. Only the run timing is simulated. <a href="https://github.com/BatuCani/hackathon-2026-11-07">Repository</a></p>
   </section>
 </main>
 
 <div class="scrim" id="scrim"></div>
+<div class="intro" id="compare" role="dialog" aria-modal="true" aria-labelledby="cmpTitle" aria-hidden="true" inert>
+  <div class="intro-card glass cmp-card">
+    <div class="intro-top"><span class="muted small">Same four methods, two recordings</span><button class="hint-link" id="cmpClose">Close</button></div>
+    <h2 id="cmpTitle">Rat vs mouse</h2>
+    <div class="cmp" id="cmpGrid"></div>
+    <p class="intro-src">Rat: DANDI:000044, 8 sessions (results/real/dandi/summary.csv). Mouse: RIKEN mouse05, sessions A and B (results/real/). EV / REV and ICA failed their own tests, so they are shown but not used for the verdict.</p>
+  </div>
+</div>
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-hidden="true" inert>
   <div class="intro-card glass">
     <div class="intro-top"><span class="muted small" id="introStep">What is reactivation? · 1 of 3</span><button class="hint-link" id="introSkip">Skip</button></div>
@@ -1449,6 +1470,39 @@ addEventListener("keydown", e => { if (e.key === "Escape" && $("#intro").classLi
 document.addEventListener("click", e => { if (e.target.closest("[data-intro]")) openIntro(); });
 let introSeen = false; try { introSeen = localStorage.getItem("rd-intro-seen") === "1"; } catch (e) {}
 if (!introSeen && !location.hash) setTimeout(openIntro, 450);
+/* ---------- Rat vs mouse: the positive control beside the calcium recording ---------- */
+function wordFor(dsId, mid) {
+  const res = DATA[dsId].results[mid], el = res.filter(r => r.el), yes = el.filter(isYes).length, na = res.length - el.length;
+  if (!el.length) return { w: "N/A", tone: "na", line: "Data cannot support it" };
+  const y = yes * 2 > el.length;
+  return { w: y ? "Yes" : "No", tone: y ? (CONTROLS[mid] ? "ok" : "warn") : "na", line: `${yes} of ${el.length} session${el.length === 1 ? "" : "s"} say${el.length === 1 ? "s" : ""} yes${na ? ` · ${na} N/A` : ""}` };
+}
+function renderCompare() {
+  const cols = [["dandi", "Rat", "DANDI:000044 · spikes · positive control"], ["riken", "Mouse", "RIKEN mouse05 · calcium imaging"]];
+  let h = `<div class="cmp-row cmp-headrow"><span></span>${cols.map(([id, who, sub]) => `<div class="cmp-col-head"><strong>${who}</strong><span class="muted small">${sub}</span></div>`).join("")}</div>`;
+  METHODS.forEach((m, i) => {
+    h += `<div class="cmp-row" style="--d:${120 + i * 90}ms"><span class="cmp-m">${m.name}${CONTROLS[m.id] ? "" : `<small>not used for the verdict</small>`}</span>` +
+      cols.map(([id]) => { const W = wordFor(id, m.id); return `<div class="cmp-cell"><span class="word" data-tone="${W.tone}">${W.w}</span><span class="muted small">${W.line}</span></div>`; }).join("") + `</div>`;
+  });
+  h += `<div class="cmp-row cmp-verdict" style="--d:520ms"><span class="cmp-m">Verdict</span>${cols.map(([id]) => { const v = DATA[id].verdict; return `<div class="cmp-cell"><strong style="color:${v.tone === "ok" ? "var(--ok)" : "var(--ink)"}">${v.title}</strong></div>`; }).join("")}</div>`;
+  $("#cmpGrid").innerHTML = h;
+}
+let cmpFocus = null;
+function openCompare() {
+  cmpFocus = document.activeElement; renderCompare();
+  const el = $("#compare"); el.removeAttribute("aria-hidden"); el.removeAttribute("inert"); el.classList.add("on"); $("#scrim").classList.add("on");
+  setTimeout(() => $("#cmpClose").focus(), 60);
+}
+function closeCompare() {
+  const el = $("#compare"); el.classList.remove("on"); el.setAttribute("aria-hidden", "true"); el.setAttribute("inert", "");
+  if (!$("#sheet").classList.contains("on")) $("#scrim").classList.remove("on");
+  if (cmpFocus) cmpFocus.focus();
+}
+$("#cmpClose").addEventListener("click", closeCompare);
+$("#compare").addEventListener("click", e => { if (e.target.id === "compare") closeCompare(); });
+$("#scrim").addEventListener("click", () => { if ($("#compare").classList.contains("on")) closeCompare(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#compare").classList.contains("on")) { e.stopImmediatePropagation(); closeCompare(); } }, true);
+document.addEventListener("click", e => { if (e.target.closest("[data-compare]")) openCompare(); });
 function openLearn() {
   openSheet("What we learned", "Today's findings, each from a file in the repo", FINDINGS.map(f => `<div class="find"><h4>${f.h}</h4><p>${f.p}</p>${f.viz === "binsize" ? binsizeViz() : ""}<span class="src">${f.src}</span></div>`).join("") + `<button class="figlink" data-figs>See the figures</button>`);
 }
