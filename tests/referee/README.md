@@ -70,8 +70,8 @@ Session shape: PRE 800, TASK 600, POST 800 frames, NREM fraction 0.7, so 560 NRE
 
 ## Status of the methods
 
-- M3 and M4 (Engineer B, `toolbox/m3_pca.py`, `toolbox/m4_ica.py`) run against the referee now.
-- M1 and M2 are xfail until `toolbox.m1_pair_corr.run` and `toolbox.m2_ev_rev.run` exist (today the modules hold docstrings only) with the interface `run(rec, *, seed, params=None) -> MethodResult` (plans/engineer-b.md section 2.2); the moment they exist, the tests count.
+- M2, M3 and M4 (`toolbox/m2_ev_rev.py`, `toolbox/m3_pca.py`, `toolbox/m4_ica.py`) run against the referee now.
+- M1 is xfail until `toolbox.m1_pair_corr.run` exists with the interface `run(rec, *, seed, params=None) -> MethodResult` (plans/engineer-b.md section 2.2; today the module holds a docstring only); the moment it exists, the tests count.
 - M2 is defined across sessions (EV > REV across sessions); the referee calls it per session and reads `score` as EV - REV and `p_n1` against N1, as the PROBLEM.md key D2 does per split.
 
 ## Pre-check before proposing (not a finding)
@@ -81,6 +81,7 @@ Run once on 2026-11-07 to check that the numbers are reachable, before any real-
 - Engineer B's M3 and M4 (commit 33d3041): yes in 5/5 of `a_reactivation` and 0/5 of each negative case; the same with `p_n1` alone, without `p_blockswap`.
 - A throwaway reference M1 (key D1) and M2 (key D2) with N1, kept outside the repository: M1 5/5, 0/5, 0/5, 0/5; M2 5/5, 0/5, 2/5, 0/5 (cases a, b, c, d), so M2 sits at the limit in `c_preexisting`.
 - All four methods together: 21.8 s of the 30 s budget, one core.
+- On main at 11ccb64, with Engineer A's real M2: M2 5/5, 0/5, 0/5, 0/5; referee 19.5 s, M1 still xfail.
 
 ## Run
 
