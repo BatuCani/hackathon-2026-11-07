@@ -280,3 +280,14 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: results/real/rate_confound.json, results/figures/rate_confound.png
 - Label: -
 - Note: Existing loaders only, no method code changes. One process, sessions in sequence. Hard stop 16:38; if not done, "not enough evidence".
+
+### 2026-11-07 16:28 CET PREDICT Loop 4: M3 bin-size robustness on DANDI:000044, 3 sessions (crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): Tingley & Peyrache (2020) section 3b-v: "a systemic variation of bin size and its impact on pattern detection is lacking". Answer key fixed before the run: sessions = the 3 with the most pyramidal units in results/real/dandi/summary.csv (Achilles_10252013, 120; Achilles_11012013, 92; Cicero_09102014, 81); bins = 50, 100, 200 ms. Per (session, bin) M3 says "yes" if D3 > 0 and p_N1 < 0.05 (200 shuffles, seed 0). "robust" if "yes" at all three bin sizes in all 3 sessions; "bin-dependent" if any of the 9 flips to "no"; otherwise (a run missing or not eligible) "not enough evidence".
+- Prediction: "robust". All 9 runs "yes", D3 largest at 50-100 ms in the Achilles sessions; at 200 ms the TASK bin count halves (eligibility risk) but the 100 ms runs had p_N1 at the floor.
+- Command: OMP_NUM_THREADS=1 uv run --python 3.12 --with remfile python scripts/binsize_m3.py
+- Git SHA: the commit adding this entry
+- Result file: results/real/dandi_binsize.json, results/figures/binsize_m3.png
+- Label: -
+- Note: Deviation from PROBLEM.md, decided before the run: 200 shuffles instead of 500 to fit the time (min p = 1/201 = 0.005). Loader already takes bin_s (default 0.1 unchanged); no method code changes. One process, sessions in sequence. Hard stop 16:40; whatever exists then is recorded, missing runs count as "not enough evidence".
