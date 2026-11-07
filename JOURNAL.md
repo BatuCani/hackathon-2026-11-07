@@ -75,3 +75,24 @@ Copy this block for each step and fill in every field; write "-" for a field tha
 - Result file: journal/engineer-b.md Entries 2-3, toolbox/m4_ica.py
 - Label: contradicted
 - Note: T-M4-1 (seed 0) fails: ICA 0.911 passes, PCA 0.817 vs < 0.8 required; over seeds 0-9 ICA reaches 0.9 in 5/10. T-M4-2 to T-M4-4 pass. Threshold not changed.
+
+### 2026-11-07 15:45 CET PREDICT T7 (Zixi / crewmate)
+
+- Step: PREDICT
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md section "Overall verdict (DRAFT, owner Zixi)" "Counted methods = eligible methods that passed their method tests. - Reactivation likely: at least two counted methods say 'yes' in both splits, and no counted method says 'yes' in the reversed direction (POST and PRE swapped). - Reactivation not supported: no counted method says 'yes' in either split. - Not enough evidence: anything else, including fewer than two counted methods."
+- Command: uv run --python 3.12 pytest tests/test_verdict.py
+- Git SHA: 33d3041
+- Result file: tests/test_verdict.py, toolbox/verdict.py
+- Label: -
+- Note: Hand-made MethodResult inputs will test all three outcomes, ineligible methods, failed controls, reverse direction veto, and summary markdown generation.
+
+### 2026-11-07 15:47 CET RECORD T7 (Zixi / crewmate)
+
+- Step: RECORD
+- Source and quote (READ) or prediction (PREDICT): PROBLEM.md section "Overall verdict (DRAFT, owner Zixi)" "Counted methods = eligible methods that passed their method tests. - Reactivation likely: at least two counted methods say 'yes' in both splits, and no counted method says 'yes' in the reversed direction (POST and PRE swapped). - Reactivation not supported: no counted method says 'yes' in either split. - Not enough evidence: anything else, including fewer than two counted methods."
+- Command: uv run --python 3.12 pytest tests/test_verdict.py
+- Git SHA: 33d3041
+- Result file: tests/test_verdict.py, toolbox/verdict.py
+- Label: verified
+- Note: All 9 tests pass covering Reactivation likely, Reactivation not supported, Not enough evidence (split disagreement, ineligible methods, failed controls, reversed veto), zero counted methods, and summary markdown generation for results/real/summary.md.
+

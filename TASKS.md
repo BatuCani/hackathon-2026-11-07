@@ -24,7 +24,7 @@ Deadline 17:00.
 - [ ] **T6 M4 ICA reactivation strength** (B): `toolbox/m4_ica.py`, key D4.
   Status (B, 15:40): implemented; T-M4-2 to T-M4-4 pass, T-M4-1 fails at its locked threshold (PCA 0.817, needs < 0.8). Not ticked. See journal/engineer-b.md Entry 2.
   Done when T-M4-1 to T-M4-4 pass. Cut rule: if M3 is not done by 16:05, M4 is reported `eligible=False, reason="not implemented"`.
-- [ ] **T7 Verdict rule** (Zixi): `toolbox/verdict.py` and `toolbox/controls.py` turn method results and control outcomes into the overall verdict defined in [PROBLEM.md](PROBLEM.md).
+- [x] **T7 Verdict rule** (Zixi, draft): `toolbox/verdict.py` and `toolbox/controls.py` turn method results and control outcomes into the overall verdict defined in [PROBLEM.md](PROBLEM.md).
   Done when the rule has a test with hand-made `MethodResult` inputs covering all three outcomes.
 - [ ] **T8 One-command repro** (A): `python run.py --data <path to sleep_data.mat> --seed 0` writes every result file and the results table from a fresh clone.
   Done when a fresh clone reproduces byte-identical result JSON.
