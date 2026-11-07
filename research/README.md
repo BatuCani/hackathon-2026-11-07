@@ -4,6 +4,9 @@ Merged from two independent literature passes (Claude and Codex) on 2026-11-07, 
 
 ## How to use this folder
 - This README is the index. [ADDENDUM.md](ADDENDUM.md) holds the second research pass: surrogate/shuffle controls, bin-size effects, preplay critiques, cortical reactivation, Python packages, no-registration datasets and agent systems for spike data. [BUILD_APPROACH.md](BUILD_APPROACH.md) is a time-boxed build plan.
+- [briefing.md](briefing.md): familiarization briefing on the anchor paper, the lab requirements and candidate questions with proposed answer keys.
+- [research-loop.png](research-loop.png): the team's research-loop diagram (question, answer key, locked referee, loop, findings, submit).
+- [papers/README.md](papers/README.md): full citations, DOI, publisher and PMC links, and the license status of each core paper.
 - Third-party papers and code are **not stored here**. Run `bash research/scripts/fetch_sources.sh` to pull open-access full text (Europe PMC API) and clone the reference repos into `research/_fetched/` (git-ignored).
 - The one PDF kept in `papers/` is Takigawa et al. 2024, which is CC BY.
 
